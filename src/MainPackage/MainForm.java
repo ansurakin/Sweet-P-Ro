@@ -5984,17 +5984,17 @@ public class MainForm extends javax.swing.JApplet {
         jTree3.setBackground(new java.awt.Color(204, 255, 255));
         treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         jTree3.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jTree3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jTree3MouseReleased(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTree3MousePressed(evt);
-            }
-        });
         jTree3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 jTree3MouseDragged(evt);
+            }
+        });
+        jTree3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTree3MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTree3MouseReleased(evt);
             }
         });
         jTree3.addKeyListener(new java.awt.event.KeyAdapter() {
