@@ -7143,7 +7143,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.gridy = 12;
         jPanel171.add(jLabel121, gridBagConstraints);
 
-        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
+        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "дополнительные" }));
         jComboBox15.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -11313,7 +11313,9 @@ private void jButton80MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                                 (val==Order.ORDER_SEND ? "отправлено" : "закрыто")))))+"</td>";
                     } else {
                         Object ss = jTable12.getValueAt(j, i);
-                        s = s+"<td>"+(ss==null || ss.equals(" ") ? "-" : (String)ss)+"</td>";
+                        s = s+"<td>"
+                                +(ss==null || (ss instanceof String && ss.equals(" "))
+                                ? "-" : ss.toString())+"</td>";
                     }
                 }
                 s = s+"</tr>";
