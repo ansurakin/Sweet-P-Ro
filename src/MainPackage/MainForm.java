@@ -7143,7 +7143,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.gridy = 12;
         jPanel171.add(jLabel121, gridBagConstraints);
 
-        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "дополнительные" }));
+        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
         jComboBox15.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -7323,7 +7323,7 @@ public class MainForm extends javax.swing.JApplet {
         jLabel79.setPreferredSize(new java.awt.Dimension(135, 14));
         jPanel124.add(jLabel79);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
         jComboBox2.setMaximumSize(new java.awt.Dimension(130, 32767));
         jComboBox2.setMinimumSize(new java.awt.Dimension(130, 18));
         jComboBox2.setPreferredSize(new java.awt.Dimension(130, 20));
@@ -8644,7 +8644,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         jPanel138.add(jComboBox16, gridBagConstraints);
 
-        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
+        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
         jComboBox17.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setPreferredSize(new java.awt.Dimension(125, 24));
