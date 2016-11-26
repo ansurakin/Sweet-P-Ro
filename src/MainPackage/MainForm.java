@@ -1747,15 +1747,32 @@ public class MainForm extends javax.swing.JApplet {
                     if (userLevel != 1) {
                         jTable10.makeTable(dataaa);
                     }   
-                    break;
+                    break;                    
+                    
                 case 2: //лист дерева - клиент
-                    cl = (CardLayout)jPanel122.getLayout();
-                    cl.show(jPanel122, "card2");                    
                     obj = (Object[]) SelectedNode.getUserObject();
                     Clients.setPosition((Integer) obj[1]);
-
-                    ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?",new Object[]{Clients.getInt("ID")}));                    
+                    ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?",new Object[]{Clients.getInt("ID")}));   
+                    cl = (CardLayout)jPanel122.getLayout();
                     
+                    //TODO подчистить sout 
+                    System.out.println("CurrentUser.get(NAME)" + CurrentUser.get("NAME"));
+                    System.out.println("ExtendedClient.get(USER_CREATOR_NAME)" + ExtendedClient.get("USER_CREATOR_NAME"));
+                    
+                    //если директор, то разрешаем смотреть карточку клиента
+                    if (CurrentUser.getInt("LEVEL")== DIRECTOR){
+                        //ничего не делаем, идём дальше
+                    }
+                    //Сокрытие карточки клиента, если клиент не является клиентом авторизовавшегося сотрудника
+                    else if(ExtendedClient.get("USER_CREATOR_NAME") == null 
+                            || !(ExtendedClient.get("USER_CREATOR_NAME") instanceof String)
+                            || !CurrentUser.getString("NAME").equals(ExtendedClient.get("USER_CREATOR_NAME"))){
+                        System.out.println("accessDenied");
+                        cl.show(jPanel122, "accessDenied");
+                        break;
+                    }
+                    System.out.println("доступ есть");
+                    cl.show(jPanel122, "card2");
                     jButton36.setVisible(CanEditClients);
                     jButton37.setVisible(CanDeleteClients);
                     jButton129.setVisible(false);
@@ -4282,6 +4299,8 @@ public class MainForm extends javax.swing.JApplet {
         jLabel133 = new javax.swing.JLabel();
         jDateChooser14 = new com.toedter.calendar.JDateChooser();
         jButton128 = new javax.swing.JButton();
+        jPanelAccessDenied = new javax.swing.JPanel();
+        jLabelAccessDenied = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jPanel64 = new javax.swing.JPanel();
         jPanel65 = new GradientPanel(GradientPanel.CENTER_HORIZONTAL,DarkInterfaceColor,LightInterfaceColor);
@@ -6823,6 +6842,13 @@ public class MainForm extends javax.swing.JApplet {
 
         jPanel122.add(jPanel195, "card3");
 
+        jPanelAccessDenied.setBackground(new java.awt.Color(204, 255, 255));
+
+        jLabelAccessDenied.setText("В доступе отказано");
+        jPanelAccessDenied.add(jLabelAccessDenied);
+
+        jPanel122.add(jPanelAccessDenied, "accessDenied");
+
         jPanel7.add(jPanel122, java.awt.BorderLayout.CENTER);
 
         jTabbedPane1.addTab("КЛИЕНТЫ", new javax.swing.ImageIcon(getClass().getResource("/Images/Office-Client-Male-Dark-icon.png")), jPanel7); // NOI18N
@@ -7143,7 +7169,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.gridy = 12;
         jPanel171.add(jLabel121, gridBagConstraints);
 
-        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "дополнительные" }));
         jComboBox15.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -7323,7 +7349,7 @@ public class MainForm extends javax.swing.JApplet {
         jLabel79.setPreferredSize(new java.awt.Dimension(135, 14));
         jPanel124.add(jLabel79);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
         jComboBox2.setMaximumSize(new java.awt.Dimension(130, 32767));
         jComboBox2.setMinimumSize(new java.awt.Dimension(130, 18));
         jComboBox2.setPreferredSize(new java.awt.Dimension(130, 20));
@@ -8644,7 +8670,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         jPanel138.add(jComboBox16, gridBagConstraints);
 
-        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
         jComboBox17.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -12959,6 +12985,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JLabel jLabel97;
     private javax.swing.JLabel jLabel98;
     private javax.swing.JLabel jLabel99;
+    private javax.swing.JLabel jLabelAccessDenied;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
@@ -13165,6 +13192,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JPanel jPanel96;
     private javax.swing.JPanel jPanel98;
     private javax.swing.JPanel jPanel99;
+    private javax.swing.JPanel jPanelAccessDenied;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JPasswordField jPasswordField3;
