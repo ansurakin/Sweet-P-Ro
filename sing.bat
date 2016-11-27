@@ -1,0 +1,1 @@
+jarsigner.exe -keystore .keystore D:\Projects\kalym\Sweet-P-Ro\Sweet-P-Ro\dist\Sweet-P-Ro.jar Alex
