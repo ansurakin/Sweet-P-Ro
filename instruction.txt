@@ -1,4 +1,4 @@
-file://////E:/Projects/example/AppletApp/dist
+file://////E:/Projects/example/Sweet-P-Ro/dist
 
 Кодовая база http://sweet-p-ro.sweet-r.com.ua/test/applet
 И добавить в исключения его.
