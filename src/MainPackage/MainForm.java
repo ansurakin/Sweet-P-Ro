@@ -1747,32 +1747,15 @@ public class MainForm extends javax.swing.JApplet {
                     if (userLevel != 1) {
                         jTable10.makeTable(dataaa);
                     }   
-                    break;                    
-                    
+                    break;
                 case 2: //лист дерева - клиент
+                    cl = (CardLayout)jPanel122.getLayout();
+                    cl.show(jPanel122, "card2");                    
                     obj = (Object[]) SelectedNode.getUserObject();
                     Clients.setPosition((Integer) obj[1]);
-                    ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?",new Object[]{Clients.getInt("ID")}));   
-                    cl = (CardLayout)jPanel122.getLayout();
+
+                    ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?",new Object[]{Clients.getInt("ID")}));                    
                     
-                    //TODO подчистить sout 
-                    System.out.println("CurrentUser.get(NAME)" + CurrentUser.get("NAME"));
-                    System.out.println("ExtendedClient.get(USER_CREATOR_NAME)" + ExtendedClient.get("USER_CREATOR_NAME"));
-                    
-                    //если директор, то разрешаем смотреть карточку клиента
-                    if (CurrentUser.getInt("LEVEL")== DIRECTOR){
-                        //ничего не делаем, идём дальше
-                    }
-                    //Сокрытие карточки клиента, если клиент не является клиентом авторизовавшегося сотрудника
-                    else if(ExtendedClient.get("USER_CREATOR_NAME") == null 
-                            || !(ExtendedClient.get("USER_CREATOR_NAME") instanceof String)
-                            || !CurrentUser.getString("NAME").equals(ExtendedClient.get("USER_CREATOR_NAME"))){
-                        System.out.println("accessDenied");
-                        cl.show(jPanel122, "accessDenied");
-                        break;
-                    }
-                    System.out.println("доступ есть");
-                    cl.show(jPanel122, "card2");
                     jButton36.setVisible(CanEditClients);
                     jButton37.setVisible(CanDeleteClients);
                     jButton129.setVisible(false);
@@ -4018,7 +4001,7 @@ public class MainForm extends javax.swing.JApplet {
     }
     
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -4299,8 +4282,6 @@ public class MainForm extends javax.swing.JApplet {
         jLabel133 = new javax.swing.JLabel();
         jDateChooser14 = new com.toedter.calendar.JDateChooser();
         jButton128 = new javax.swing.JButton();
-        jPanelAccessDenied = new javax.swing.JPanel();
-        jLabelAccessDenied = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jPanel64 = new javax.swing.JPanel();
         jPanel65 = new GradientPanel(GradientPanel.CENTER_HORIZONTAL,DarkInterfaceColor,LightInterfaceColor);
@@ -6003,17 +5984,17 @@ public class MainForm extends javax.swing.JApplet {
         jTree3.setBackground(new java.awt.Color(204, 255, 255));
         treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         jTree3.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jTree3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                jTree3MouseDragged(evt);
-            }
-        });
         jTree3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTree3MouseReleased(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jTree3MousePressed(evt);
             }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jTree3MouseReleased(evt);
+        });
+        jTree3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jTree3MouseDragged(evt);
             }
         });
         jTree3.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -6842,13 +6823,6 @@ public class MainForm extends javax.swing.JApplet {
 
         jPanel122.add(jPanel195, "card3");
 
-        jPanelAccessDenied.setBackground(new java.awt.Color(204, 255, 255));
-
-        jLabelAccessDenied.setText("В доступе отказано");
-        jPanelAccessDenied.add(jLabelAccessDenied);
-
-        jPanel122.add(jPanelAccessDenied, "accessDenied");
-
         jPanel7.add(jPanel122, java.awt.BorderLayout.CENTER);
 
         jTabbedPane1.addTab("КЛИЕНТЫ", new javax.swing.ImageIcon(getClass().getResource("/Images/Office-Client-Male-Dark-icon.png")), jPanel7); // NOI18N
@@ -7169,7 +7143,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.gridy = 12;
         jPanel171.add(jLabel121, gridBagConstraints);
 
-        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
         jComboBox15.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox15.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -7349,7 +7323,7 @@ public class MainForm extends javax.swing.JApplet {
         jLabel79.setPreferredSize(new java.awt.Dimension(135, 14));
         jPanel124.add(jLabel79);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
         jComboBox2.setMaximumSize(new java.awt.Dimension(130, 32767));
         jComboBox2.setMinimumSize(new java.awt.Dimension(130, 18));
         jComboBox2.setPreferredSize(new java.awt.Dimension(130, 20));
@@ -8670,7 +8644,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         jPanel138.add(jComboBox16, gridBagConstraints);
 
-        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
         jComboBox17.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -9776,13 +9750,13 @@ public class MainForm extends javax.swing.JApplet {
         jPanel1.add(jPanel73);
 
         getContentPane().add(jPanel1, "card2");
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void jTree1KeyReleased(java.awt.event.KeyEvent evt) {                                   
+    private void jTree1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyReleased
         SelectNodeOfTreeCandies();
-}                                  
+}//GEN-LAST:event_jTree1KeyReleased
 
-    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
         jButton1.setVisible(false);
         jButton2.setVisible(true);
         jButton3.setVisible(true);
@@ -9798,13 +9772,13 @@ public class MainForm extends javax.swing.JApplet {
         jTextArea5.setForeground(Color.black);
         jTextArea5.setEditable(true);
         jTextArea5.setBorder(BorderFactory.createEtchedBorder());
-    }                                     
+    }//GEN-LAST:event_jButton1MousePressed
 
-    private void jButton3MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MousePressed
         SelectNodeOfTreeCandies();
-    }                                     
+    }//GEN-LAST:event_jButton3MousePressed
 
-    private void jButton2MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
         if (SelectedNode.getLevel() == 2) {
             try {
@@ -9840,17 +9814,17 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                     
+    }//GEN-LAST:event_jButton2MousePressed
 
-    private void jTree2MousePressed(java.awt.event.MouseEvent evt) {                                    
+    private void jTree2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree2MousePressed
         SelectNodeOfTreeUsers();
-    }                                   
+    }//GEN-LAST:event_jTree2MousePressed
 
-    private void jTree2KeyReleased(java.awt.event.KeyEvent evt) {                                   
+    private void jTree2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree2KeyReleased
         SelectNodeOfTreeUsers();
-    }                                  
+    }//GEN-LAST:event_jTree2KeyReleased
 
-    private void jButton17MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton17MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton17MousePressed
         jButton17.setVisible(false);
         jButton24.setVisible(true);
         jButton51.setVisible(true);
@@ -9870,9 +9844,9 @@ public class MainForm extends javax.swing.JApplet {
         jTextArea10.setForeground(Color.black);
         jTextArea10.setEditable(true);
         jTextArea10.setBorder(BorderFactory.createEtchedBorder());
-}                                      
+}//GEN-LAST:event_jButton17MousePressed
 
-    private void jButton24MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton24MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton24MousePressed
         String name = jTextField9.getText();
         String login = jTextField10.getText();
         String pass = jTextField12.getText();
@@ -9890,13 +9864,13 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-}                                      
+}//GEN-LAST:event_jButton24MousePressed
 
-    private void jButton51MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton51MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton51MousePressed
         SelectNodeOfTreeUsers();
-}                                      
+}//GEN-LAST:event_jButton51MousePressed
 
-    private void jButton4MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MousePressed
         jButton4.setVisible(false);
         jButton5.setVisible(true);
         jButton6.setVisible(true);
@@ -9920,7 +9894,7 @@ public class MainForm extends javax.swing.JApplet {
         jLabel74.setVisible(false);
         jDateChooser5.setVisible(true);
       
-    }                                     
+    }//GEN-LAST:event_jButton4MousePressed
 
     public boolean checkTheClient(String str) {
         char[] symbols = str.toCharArray();  
@@ -9935,7 +9909,7 @@ public class MainForm extends javax.swing.JApplet {
         return false;
     }
     
-    private void jButton5MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MousePressed
         int clientID = Clients.getInt("ID");
         DefaultMutableTreeNode folderNode = (DefaultMutableTreeNode)jTree3.getSelectionPath().getParentPath().getLastPathComponent();
         int folderID = (int)((Object[])folderNode.getUserObject())[0];
@@ -10159,62 +10133,62 @@ public class MainForm extends javax.swing.JApplet {
                 }
             } 
         }   
-    }                                     
+    }//GEN-LAST:event_jButton5MousePressed
 
-    private void jButton6MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MousePressed
         SelectNodeOfTreeClients();
-    }                                     
+    }//GEN-LAST:event_jButton6MousePressed
 
-    private void jTree3MousePressed(java.awt.event.MouseEvent evt) {                                    
+    private void jTree3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree3MousePressed
         clientDraggedInClientsTree = false;
         SelectNodeOfTreeClients();
-    }                                   
+    }//GEN-LAST:event_jTree3MousePressed
 
-    private void jTree3KeyReleased(java.awt.event.KeyEvent evt) {                                   
+    private void jTree3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree3KeyReleased
         SelectNodeOfTreeClients();
-    }                                  
+    }//GEN-LAST:event_jTree3KeyReleased
 
-    private void jTextField16KeyPressed(java.awt.event.KeyEvent evt) {                                        
+    private void jTextField16KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField16KeyPressed
         if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
             login();
         }
-}                                       
+}//GEN-LAST:event_jTextField16KeyPressed
 
-    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {                                           
+    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
         if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
             login();
         }
-}                                          
+}//GEN-LAST:event_jPasswordField1KeyPressed
 
-    private void jPasswordField2KeyPressed(java.awt.event.KeyEvent evt) {                                           
+    private void jPasswordField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2KeyPressed
         if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
             login();
         }
-}                                          
+}//GEN-LAST:event_jPasswordField2KeyPressed
 
-    private void jPasswordField3KeyPressed(java.awt.event.KeyEvent evt) {                                           
+    private void jPasswordField3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3KeyPressed
         if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
             login();
         }
-}                                          
+}//GEN-LAST:event_jPasswordField3KeyPressed
 
-    private void jButton49MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton49MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton49MousePressed
         jLabel70.setVisible(true);
         jLabel71.setVisible(true);
         jPasswordField2.setVisible(true);
         jPasswordField3.setVisible(true);
         jButton49.setVisible(false);
-}                                      
+}//GEN-LAST:event_jButton49MousePressed
 
-    private void jTree4MousePressed(java.awt.event.MouseEvent evt) {                                    
+    private void jTree4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree4MousePressed
         SelectNodeOfTreeGifts();
-    }                                   
+    }//GEN-LAST:event_jTree4MousePressed
 
-    private void jTree4KeyReleased(java.awt.event.KeyEvent evt) {                                   
+    private void jTree4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree4KeyReleased
         SelectNodeOfTreeGifts();
-    }                                  
+    }//GEN-LAST:event_jTree4KeyReleased
 
-    private void jButton8MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton8MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MousePressed
         int SelectedRow = jTable1.getSelectedRow();
         if ((SelectedRow!=-1) && (SelectedRow!=jTable1.getRowCount()-1)) {
             if (db.UpdateSQL("DELETE FROM gift_candy WHERE id=?", new Object[]{Gift_Candy.getInt(SelectedRow, "ID")})) {
@@ -10224,13 +10198,13 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                     
+    }//GEN-LAST:event_jButton8MousePressed
 
-    private void jButton7MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MousePressed
         addCandyToGift();
-    }                                     
+    }//GEN-LAST:event_jButton7MousePressed
 
-    private void jButton13MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton13MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton13MousePressed
         JTextField[] mas = new JTextField[]{jTextField17, jTextField30, jTextField18, jTextField19, jTextField20};
         for (JTextField ma : mas) {
             ma.setEditable(true);
@@ -10250,9 +10224,9 @@ public class MainForm extends javax.swing.JApplet {
         jButton13.setVisible(false);
         jButton14.setVisible(true);
         jButton15.setVisible(true);
-    }                                      
+    }//GEN-LAST:event_jButton13MousePressed
 
-    private void jButton14MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton14MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton14MousePressed
         try {
             String s = jTextField18.getText();
             double d1 = Double.parseDouble(s.replaceAll(" ", "").replace(',', '.'));
@@ -10269,13 +10243,13 @@ public class MainForm extends javax.swing.JApplet {
         } catch (NumberFormatException | HeadlessException ex) {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");            
         }
-    }                                      
+    }//GEN-LAST:event_jButton14MousePressed
 
-    private void jButton15MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton15MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton15MousePressed
         SelectNodeOfTreePackings();
-    }                                      
+    }//GEN-LAST:event_jButton15MousePressed
 
-    private void jButton9MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jButton9MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MousePressed
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(ChoosedDirectory);
         ImagePreviewPanel preview = new ImagePreviewPanel();
@@ -10297,39 +10271,39 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось подключиться к FTP-серверу \n"+ex.getMessage());
             }
         }
-    }                                     
+    }//GEN-LAST:event_jButton9MousePressed
 
-    private void jTree6KeyReleased(java.awt.event.KeyEvent evt) {                                   
+    private void jTree6KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree6KeyReleased
         SelectNodeOfTreePackings();
-    }                                  
+    }//GEN-LAST:event_jTree6KeyReleased
 
-    private void jTree6MousePressed(java.awt.event.MouseEvent evt) {                                    
+    private void jTree6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree6MousePressed
         SelectNodeOfTreePackings();
-    }                                   
+    }//GEN-LAST:event_jTree6MousePressed
 
-    private void jTable3MousePressed(java.awt.event.MouseEvent evt) {                                     
+    private void jTable3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MousePressed
         SelectNodeOfTableOrders();
-    }                                    
+    }//GEN-LAST:event_jTable3MousePressed
 
-    private void jTable3KeyReleased(java.awt.event.KeyEvent evt) {                                    
+    private void jTable3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable3KeyReleased
         SelectNodeOfTableOrders();
-    }                                   
+    }//GEN-LAST:event_jTable3KeyReleased
 
-    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {                                          
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
         changeTab();
-    }                                         
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
-    private void jButton10MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MousePressed
         GetOrders();
         MakeTableOfOrders();
-    }                                      
+    }//GEN-LAST:event_jButton10MousePressed
 
-    private void jButton11MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton11MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton11MousePressed
         GetGifts();        
         orderComplectationDialog.initDialog(Gifts);
-    }                                      
+    }//GEN-LAST:event_jButton11MousePressed
 
-    private void jButton12MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MousePressed
         int SelectedRow = jTable5.getSelectedRow();
         if ((SelectedRow!=-1) && (SelectedRow<jTable5.getRowCount()-1)) {
             if (db.UpdateSQL("DELETE FROM suborder WHERE id=?",new Object[]{SubOrders.getInt(SelectedRow, "ID")})) {
@@ -10339,9 +10313,9 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton12MousePressed
 
-    private void jButton16MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton16MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton16MousePressed
         int state = Orders.getInt("STATE");
         int date = ((Long)(Calendar.getInstance().getTimeInMillis()/1000)).intValue();
         int id_orders = Orders.getInt("ID"); 
@@ -10477,13 +10451,13 @@ public class MainForm extends javax.swing.JApplet {
 //                }
 //                break;
         }
-    }                                      
+    }//GEN-LAST:event_jButton16MousePressed
 
-    private void jButton22MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton22MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton22MousePressed
         clientChooseDialog.initDialog();
-    }                                      
+    }//GEN-LAST:event_jButton22MousePressed
 
-    private void jButton27MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton27MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton27MousePressed
         jButton27.setVisible(false);
         jButton28.setVisible(true);
         jButton29.setVisible(true);
@@ -10521,9 +10495,9 @@ public class MainForm extends javax.swing.JApplet {
         jTextArea9.setForeground(Color.BLACK);       
         jTextArea9.setBorder(BorderFactory.createEtchedBorder());
         
-    }                                      
+    }//GEN-LAST:event_jButton27MousePressed
 
-    private void jButton28MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton28MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton28MousePressed
         try {
             int type_pay = jComboBox2.getSelectedIndex();
             String name = jTextArea12.getText();
@@ -10557,13 +10531,13 @@ public class MainForm extends javax.swing.JApplet {
             System.out.println("An exception occured!!!\n" + ex);
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton28MousePressed
 
-    private void jButton29MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton29MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton29MousePressed
         SelectNodeOfTableOrders();
-    }                                      
+    }//GEN-LAST:event_jButton29MousePressed
 
-    private void jButton32MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton32MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton32MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
         if (SelectedNode.getLevel() == 1) {
             if (JOptionPane.showConfirmDialog(null, "Действительно удалить фабрику " + Candies.getString("FACTORY_NAME") + " ?", "Удаление фабрики", JOptionPane.YES_NO_OPTION) == 0) {
@@ -10588,18 +10562,18 @@ public class MainForm extends javax.swing.JApplet {
                 }
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton32MousePressed
 
-    private void jButton30MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton30MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton30MousePressed
         if (db.UpdateSQL("INSERT INTO factory (name,discount) VALUES('_НОВАЯ_',0)",null)) {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
             MakeTreeOfCandies();
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton30MousePressed
 
-    private void jButton31MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton31MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton31MousePressed
         if (db.UpdateSQL("INSERT INTO candy (name,id_factory,box_weight,amount_in_box,cost_kg,storage,reserved,comm,last_change_cost) VALUES('_НОВАЯ_',?,1,1,1,0,0,'',0)", new Object[]{Candies.getInt("ID_FACTORY")})) {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
             MakeTreeOfCandies();
@@ -10623,13 +10597,13 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton31MousePressed
 
-    private void jTree1MousePressed(java.awt.event.MouseEvent evt) {                                    
+    private void jTree1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MousePressed
         SelectNodeOfTreeCandies();
-    }                                   
+    }//GEN-LAST:event_jTree1MousePressed
 
-    private void jButton34MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton34MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton34MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode)jTree6.getLastSelectedPathComponent();
         if (SelectedNode!=null) {
             int type;
@@ -10662,9 +10636,9 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton34MousePressed
 
-    private void jButton35MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton35MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton35MousePressed
         if (JOptionPane.showConfirmDialog(null, "Действительно удалить упаковку " + Packings.getString("NAME") + " ?", "Удаление упаковки", JOptionPane.YES_NO_OPTION) == 0) {
             if (db.UpdateSQL("DELETE FROM packing WHERE id=?", new Object[]{Packings.getInt("ID")})) {
                 GetPackings();
@@ -10673,9 +10647,9 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton35MousePressed
 
-    private void jButton36MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton36MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton36MousePressed
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)jTree3.getLastSelectedPathComponent();
         if (selectedNode==null) {
             return;
@@ -10723,9 +10697,9 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton36MousePressed
 
-    private void jButton37MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton37MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton37MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree3.getLastSelectedPathComponent();
         if (SelectedNode == null) {
             return;
@@ -10772,9 +10746,9 @@ public class MainForm extends javax.swing.JApplet {
                 }
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton37MousePressed
 
-    private void jButton38MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton38MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton38MousePressed
         if (db.UpdateSQL("INSERT INTO gift(name,cost_packing) VALUES('_НОВЫЙ_',0)",null)) {
             GetGifts();
             MakeTreeOfGifts();
@@ -10798,9 +10772,9 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton38MousePressed
 
-    private void jButton39MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton39MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton39MousePressed
         if (JOptionPane.showConfirmDialog(null, "Действительно удалить набор " + Gifts.getString("NAME") + " ?", "Удаление набора", JOptionPane.YES_NO_OPTION) == 0) {
             if (db.UpdateSQL("DELETE FROM gift WHERE id=?", new Object[]{Gifts.getInt("ID")})) {
                 GetGifts();
@@ -10809,9 +10783,9 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton39MousePressed
 
-    private void jButton33MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton33MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton33MousePressed
         jTextField21.setBorder(BorderFactory.createEtchedBorder());
         jTextField21.setEditable(true);
         jTextField21.setBackground(Color.WHITE);
@@ -10825,9 +10799,9 @@ public class MainForm extends javax.swing.JApplet {
         jButton33.setVisible(false);
         jButton40.setVisible(true);
         jButton41.setVisible(true);
-    }                                      
+    }//GEN-LAST:event_jButton33MousePressed
 
-    private void jButton40MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton40MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton40MousePressed
         String s = jTextField32.getText();
         double cost_packing = Double.parseDouble(s.replaceAll(" ", "").replace(',', '.'));
         int id = Gifts.getInt("ID");
@@ -10850,13 +10824,13 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton40MousePressed
 
-    private void jButton41MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton41MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton41MousePressed
         SelectNodeOfTreeGifts();
-    }                                      
+    }//GEN-LAST:event_jButton41MousePressed
 
-    private void jButton42MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton42MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton42MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree2.getLastSelectedPathComponent();
         if (SelectedNode!=null) {
             Object[] obj = (Object[]) SelectedNode.getUserObject();
@@ -10890,9 +10864,9 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton42MousePressed
 
-    private void jButton43MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton43MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton43MousePressed
         if (JOptionPane.showConfirmDialog(null, "Действительно удалить пользователя " + Users.getString("NAME") + " ?", "Удаление пользователя", JOptionPane.YES_NO_OPTION) == 0) {
             if (db.UpdateSQL("DELETE FROM user WHERE id=?", new Object[]{Users.getInt("ID")})) {
                 GetUsers();
@@ -10901,33 +10875,33 @@ public class MainForm extends javax.swing.JApplet {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton43MousePressed
 
-    private void jTree10MousePressed(java.awt.event.MouseEvent evt) {                                     
+    private void jTree10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree10MousePressed
         SelectNodeOfTreeInStorage(jTree10,Candies,jTable6,true);
         MakeTableOfStorageCandyReserv();        
-    }                                    
+    }//GEN-LAST:event_jTree10MousePressed
 
-    private void jTree10KeyReleased(java.awt.event.KeyEvent evt) {                                    
+    private void jTree10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree10KeyReleased
         SelectNodeOfTreeInStorage(jTree10,Candies,jTable6,true);
         MakeTableOfStorageCandyReserv();        
-    }                                   
+    }//GEN-LAST:event_jTree10KeyReleased
 
-    private void jTree11MousePressed(java.awt.event.MouseEvent evt) {                                     
+    private void jTree11MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree11MousePressed
         SelectNodeOfTreeInStorage(jTree11,FilteredPackings,jTable8,false);
         MakeTableOfStoragePackingReserv();
-    }                                    
+    }//GEN-LAST:event_jTree11MousePressed
 
-    private void jTree11KeyReleased(java.awt.event.KeyEvent evt) {                                    
+    private void jTree11KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree11KeyReleased
         SelectNodeOfTreeInStorage(jTree11,FilteredPackings,jTable8,false);        
         MakeTableOfStoragePackingReserv();
-    }                                   
+    }//GEN-LAST:event_jTree11KeyReleased
 
-    private void jButton44MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton44MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton44MousePressed
         jTabbedPane2StateChanged(null);
-    }                                      
+    }//GEN-LAST:event_jButton44MousePressed
 
-    private void jTabbedPane2StateChanged(javax.swing.event.ChangeEvent evt) {                                          
+    private void jTabbedPane2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane2StateChanged
         if (!CurrentUser.IsNull()) {
             switch (jTabbedPane2.getSelectedIndex()) {
                 case 0:
@@ -10949,9 +10923,9 @@ public class MainForm extends javax.swing.JApplet {
                     break;
             }
         }
-    }                                         
+    }//GEN-LAST:event_jTabbedPane2StateChanged
 
-    private void jButton52MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton52MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton52MousePressed
         JTree tree;
         if (jTabbedPane2.getSelectedIndex()==0) {
             tree = jTree10;
@@ -10962,14 +10936,14 @@ public class MainForm extends javax.swing.JApplet {
         if (SelectedNode!=null) {
             revenueExpensesDialog.initDialog(true);
         }
-    }                                      
+    }//GEN-LAST:event_jButton52MousePressed
 
-    private void jButton55MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton55MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton55MousePressed
         MakeTableOfUsersStorage();
         MakeTableOfUsersDelivery();
-    }                                      
+    }//GEN-LAST:event_jButton55MousePressed
 
-    private void jButton56MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton56MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton56MousePressed
         JTextField[] mas = new JTextField[]{jTextField23,jTextField40,jTextField42,jTextField44};
         for (JTextField ma : mas) {
             ma.setEditable(true);
@@ -10980,9 +10954,9 @@ public class MainForm extends javax.swing.JApplet {
         jButton56.setVisible(false);
         jButton57.setVisible(true);
         jButton58.setVisible(true);
-    }                                      
+    }//GEN-LAST:event_jButton56MousePressed
 
-    private void jButton57MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton57MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton57MousePressed
         try {
             double stick_cost = Double.parseDouble(jTextField23.getText().replaceAll(" ", "").replace(',', '.'));
             double cost_box_for_1_gift = Double.parseDouble(jTextField40.getText().replaceAll(" ", "").replace(',', '.'));
@@ -10995,13 +10969,13 @@ public class MainForm extends javax.swing.JApplet {
         } catch (NumberFormatException | HeadlessException ex) {
             JOptionPane.showMessageDialog(null, "Неверно введены значения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton57MousePressed
 
-    private void jButton58MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton58MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton58MousePressed
         MakePanelOfConstants();
-    }                                      
+    }//GEN-LAST:event_jButton58MousePressed
 
-    private void jButton59MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton59MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton59MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
         String s;
         if (SelectedNode.getLevel()==0) {
@@ -11054,9 +11028,9 @@ public class MainForm extends javax.swing.JApplet {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
      
-    }                                      
+    }//GEN-LAST:event_jButton59MousePressed
 
-    private void jButton60MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton60MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton60MousePressed
         Calendar cal = (Calendar) jDateChooser1.getCalendar().clone();
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -11116,14 +11090,14 @@ public class MainForm extends javax.swing.JApplet {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-    }                                      
+    }//GEN-LAST:event_jButton60MousePressed
 
-    private void jButton62MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton62MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton62MousePressed
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTableOfOrderCandyForStorage();
-    }                                      
+    }//GEN-LAST:event_jButton62MousePressed
 
-    private void jButton61MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton61MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton61MousePressed
         String s = "<html><center>Заказ для склада<br><br><table border='1'>";
         s = s + "<tr>";
         for (int j = 0; j < jTable9.getColumnCount(); j++) {
@@ -11153,19 +11127,19 @@ public class MainForm extends javax.swing.JApplet {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-    }                                      
+    }//GEN-LAST:event_jButton61MousePressed
 
-    private void jToggleButton1StateChanged(javax.swing.event.ChangeEvent evt) {                                            
+    private void jToggleButton1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton1StateChanged
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandies();
-    }                                           
+    }//GEN-LAST:event_jToggleButton1StateChanged
 
-    private void jToggleButton2StateChanged(javax.swing.event.ChangeEvent evt) {                                            
+    private void jToggleButton2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton2StateChanged
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandies();
-    }                                           
+    }//GEN-LAST:event_jToggleButton2StateChanged
 
-    private void jButton63MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton63MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton63MousePressed
         if (db.UpdateSQL("INSERT INTO gift(name,cost_packing) VALUES(?,?)", new Object[]{Gifts.getString("NAME")+"__2",Gifts.getDouble("COST_PACKING")})) {
             if (db.UpdateSQL("INSERT INTO gift_candy(id_gift,id_candy,amount) SELECT (SELECT max(id) FROM gift),id_candy,amount FROM gift_candy WHERE id_gift=?", new Object[]{Gifts.getInt("ID")})) {
                 GetGifts();
@@ -11176,9 +11150,9 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }                                      
+    }//GEN-LAST:event_jButton63MousePressed
 
-    private void jButton64MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton64MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton64MousePressed
         String s = "<html><center>Состав набора '"+Gifts.getString("NAME") +"'<br><br><table border='1'>";
         s = s + "<tr>";
         for (int j=0;j<jTable1.getColumnCount();j++) {
@@ -11208,17 +11182,17 @@ public class MainForm extends javax.swing.JApplet {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-    }                                      
+    }//GEN-LAST:event_jButton64MousePressed
 
-    private void jToggleButton5StateChanged(javax.swing.event.ChangeEvent evt) {                                            
+    private void jToggleButton5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton5StateChanged
 
-    }                                           
+    }//GEN-LAST:event_jToggleButton5StateChanged
 
-    private void jToggleButton6StateChanged(javax.swing.event.ChangeEvent evt) {                                            
+    private void jToggleButton6StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton6StateChanged
 
-    }                                           
+    }//GEN-LAST:event_jToggleButton6StateChanged
 
-    private void jButton65MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton65MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton65MousePressed
         String s = "<html><center>Список клиентов<br><br><table border='1'>";
         s = s + "<tr>";
         for (int j = 0; j < jTable10.getColumnCount(); j++) {
@@ -11248,35 +11222,35 @@ public class MainForm extends javax.swing.JApplet {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-    }                                      
+    }//GEN-LAST:event_jButton65MousePressed
 
-    private void jButton66MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton66MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton66MousePressed
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandies();
-    }                                      
+    }//GEN-LAST:event_jButton66MousePressed
 
-    private void jButton67MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton67MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton67MousePressed
         GetPackings();
         MakeTreeOfPackings();
-    }                                      
+    }//GEN-LAST:event_jButton67MousePressed
 
-    private void jButton68MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton68MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton68MousePressed
         GetGifts();
         MakeTreeOfGifts();
-    }                                      
+    }//GEN-LAST:event_jButton68MousePressed
 
-    private void jButton69MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton69MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton69MousePressed
         GetCandies(jToggleButton3.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton4.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandiesForGift();
         MakeTableOfCandiesForGift();
-    }                                      
+    }//GEN-LAST:event_jButton69MousePressed
 
-    private void jButton70MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton70MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton70MousePressed
         GetClients(jToggleButton5.isSelected());
         MakeTreeOfClients();
-    }                                      
+    }//GEN-LAST:event_jButton70MousePressed
 
-    private void jButton71MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton71MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton71MousePressed
         if (jTabbedPane2.getSelectedIndex()==0) {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
             MakeTreeOfCandiesInStorage();
@@ -11284,9 +11258,9 @@ public class MainForm extends javax.swing.JApplet {
             GetFilteredPackings();
             MakeTreeOfPackingsInStorage();
         }
-    }                                      
+    }//GEN-LAST:event_jButton71MousePressed
 
-    private void jButton72MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton72MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton72MousePressed
         JTree tree;
         if (jTabbedPane2.getSelectedIndex()==0) {
             tree = jTree10;
@@ -11297,29 +11271,29 @@ public class MainForm extends javax.swing.JApplet {
         if (SelectedNode!=null) {
             revenueExpensesDialog.initDialog(false);
         }
-    }                                      
+    }//GEN-LAST:event_jButton72MousePressed
 
-    private void jButton73MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton73MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton73MousePressed
         GetUsers();
         MakeTreeOfUsers();
-    }                                      
+    }//GEN-LAST:event_jButton73MousePressed
 
-    private void jButton45MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton45MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton45MousePressed
         if (!db.UpdateSQL("UPDATE packing SET filename='' WHERE id=?", new Object[]{Packings.getInt("ID")})) {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         } else {
             RefreshNodePackings();
         }
-    }                                      
+    }//GEN-LAST:event_jButton45MousePressed
 
-private void jButton78MousePressed(java.awt.event.MouseEvent evt) {                                       
+private void jButton78MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton78MousePressed
     if (Users.IsNull()) {
         GetUsers();
     }
     chooseWorkersForPackingDialog.initDialog();
-}                                      
+}//GEN-LAST:event_jButton78MousePressed
 
-private void jButton80MousePressed(java.awt.event.MouseEvent evt) {                                       
+private void jButton80MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton80MousePressed
         String s = "<html><center>Отчет по доставке<br><br><table border='1'>";
         s = s + "<tr>";
         
@@ -11339,9 +11313,7 @@ private void jButton80MousePressed(java.awt.event.MouseEvent evt) {
                                 (val==Order.ORDER_SEND ? "отправлено" : "закрыто")))))+"</td>";
                     } else {
                         Object ss = jTable12.getValueAt(j, i);
-                        s = s+"<td>"
-                                +(ss==null || (ss instanceof String && ss.equals(" "))
-                                ? "-" : ss.toString())+"</td>";
+                        s = s+"<td>"+(ss==null || ss.equals(" ") ? "-" : (String)ss)+"</td>";
                     }
                 }
                 s = s+"</tr>";
@@ -11358,14 +11330,14 @@ private void jButton80MousePressed(java.awt.event.MouseEvent evt) {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-}                                      
+}//GEN-LAST:event_jButton80MousePressed
 
-private void jButton81MousePressed(java.awt.event.MouseEvent evt) {                                       
+private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton81MousePressed
         GetDelivery();
         MakeTableOfDelivery();
-}                                      
+}//GEN-LAST:event_jButton81MousePressed
 
-    private void jButton82MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton82MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton82MousePressed
         if (jTable12.getSelectedRowCount()>1) {
             JOptionPane.showMessageDialog(null, "Необходимо выбрать только одну строку");
             return;
@@ -11401,17 +11373,17 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                     break;
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton82MousePressed
 
-    private void jTable12MousePressed(java.awt.event.MouseEvent evt) {                                      
+    private void jTable12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable12MousePressed
         SelectNodeOfTableDelivery();
-    }                                     
+    }//GEN-LAST:event_jTable12MousePressed
 
-    private void jTable12KeyReleased(java.awt.event.KeyEvent evt) {                                     
+    private void jTable12KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable12KeyReleased
         SelectNodeOfTableDelivery();
-    }                                    
+    }//GEN-LAST:event_jTable12KeyReleased
 
-    private void jButton84MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton84MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton84MousePressed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setCurrentDirectory(ChoosedDirectory);
@@ -11463,9 +11435,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton84MousePressed
 
-    private void jButton85MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton85MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton85MousePressed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setCurrentDirectory(ChoosedDirectory);
@@ -11575,9 +11547,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton85MousePressed
 
-    private void jButton89MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton89MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton89MousePressed
         int index = jTable14.getSelectedRow();
         if (index!=-1) {
             if (JOptionPane.showConfirmDialog(null, "Удалить доставку?","Удаление доставки",JOptionPane.YES_NO_OPTION) == 0) {
@@ -11588,17 +11560,17 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton89MousePressed
 
-    private void jButton90MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton90MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton90MousePressed
         deliveryDialog.initDialog(false);
-    }                                      
+    }//GEN-LAST:event_jButton90MousePressed
 
-    private void jButton91MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton91MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton91MousePressed
         deliveryDialog.initDialog(true);
-    }                                      
+    }//GEN-LAST:event_jButton91MousePressed
 
-    private void jButton97MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jButton97MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton97MousePressed
         int[] rows = jTable12.getSelectedRows();
         if (rows.length==0) {
             //do nothing
@@ -11666,9 +11638,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
             }
         }
-    }                                      
+    }//GEN-LAST:event_jButton97MousePressed
 
-    private void jButton100MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton100MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton100MousePressed
         if (Orders.getInt("STATE")==Order.ORDER_PAY) {
             int id_orders = Orders.getInt("ID"); 
             boolean result = db.DoSQL("START TRANSACTION");
@@ -11781,9 +11753,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         }
-    }                                       
+    }//GEN-LAST:event_jButton100MousePressed
 
-    private void jButton105MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton105MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton105MousePressed
         if (Candies.IsNull()) {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         }
@@ -11823,24 +11795,24 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }        
-    }                                       
+    }//GEN-LAST:event_jButton105MousePressed
 
-    private void jTextField38KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField38KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField38KeyReleased
         GetClients(jToggleButton5.isSelected());
         MakeTreeOfClients();
-    }                                        
+    }//GEN-LAST:event_jTextField38KeyReleased
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if (!Orders.IsNull()) {
             GetOrders();
             MakeTableOfOrders();
         }
-    }                                          
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jTextField39KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField39KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField39KeyReleased
         GetOrders();
         MakeTableOfOrders();
-    }                                        
+    }//GEN-LAST:event_jTextField39KeyReleased
 
     private String GetNameOfMonth(int index) {
         switch (index) {
@@ -11873,7 +11845,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
         }
     }
     
-    private void jButton108MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton108MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton108MousePressed
         if (jTable3.getSelectedRow()==-1) {
             return;
         }
@@ -12017,75 +11989,75 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                     }
             }
         }
-    }                                       
+    }//GEN-LAST:event_jButton108MousePressed
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
         GetDelivery();
         MakeTableOfDelivery();
-    }                                             
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
 
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
         GetDelivery();
         MakeTableOfDelivery();
-    }                                             
+    }//GEN-LAST:event_jRadioButton4ActionPerformed
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         GetDelivery();
         MakeTableOfDelivery();
-    }                                          
+    }//GEN-LAST:event_jComboBox3ActionPerformed
 
-    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
         GetOrders();
         MakeTableOfOrders();
-    }                                             
+    }//GEN-LAST:event_jRadioButton6ActionPerformed
 
-    private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton7ActionPerformed
         GetOrders();
         MakeTableOfOrders();
-    }                                             
+    }//GEN-LAST:event_jRadioButton7ActionPerformed
 
-    private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
         if (jComboBox4.getItemCount()>0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
             } catch (Exception ex) {}
         }
-    }                                          
+    }//GEN-LAST:event_jComboBox4ActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         chooseConsolidatedOrdersDialog.initDialog();
-    }                                          
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         if (!SubOrders.IsNull()) {
             if (Users.IsNull()) {
                 GetUsers();
             }
             choosePackingWorkersDialog.initDialog(Users);
         }
-    }                                          
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jButton74ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton74ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton74ActionPerformed
         jPopupMenu1.show(jButton74, 0, 0);
-    }                                         
+    }//GEN-LAST:event_jButton74ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         labelPrintDialog.initDialog();
-    }                                          
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
         if (jComboBox5.getItemCount()>0) {
             GetDelivery();
             MakeTableOfDelivery();
         }
-    }                                          
+    }//GEN-LAST:event_jComboBox5ActionPerformed
 
-    private void jButton75ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton75ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton75ActionPerformed
         expensesDialog.initDialog(false);
-    }                                         
+    }//GEN-LAST:event_jButton75ActionPerformed
 
-    private void jButton111ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jButton111ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton111ActionPerformed
         int row = jTable20.getSelectedRow();
         if ((row!=-1) && (row!=jTable20.getRowCount()-1)) {
             if (JOptionPane.showConfirmDialog(null, "Удалить запись?", "Удаление записи расхода", JOptionPane.YES_NO_OPTION) == 0) {
@@ -12094,44 +12066,44 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 MakeTableOfExpenses();
             }
         }
-    }                                          
+    }//GEN-LAST:event_jButton111ActionPerformed
 
-    private void jTextField45KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField45KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField45KeyReleased
         GetExpenses();
         MakeTableOfExpenses();
-    }                                        
+    }//GEN-LAST:event_jTextField45KeyReleased
 
-    private void jButton114ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jButton114ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton114ActionPerformed
         expensesDialog.initDialog(true);
-    }                                          
+    }//GEN-LAST:event_jButton114ActionPerformed
 
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
         jToggleButton1.setSelected(true);
         jButton69.doClick();
-    }                                              
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
 
-    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
         jToggleButton2.setSelected(true);
         jButton69.doClick();
-    }                                              
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
 
-    private void jButton23ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton23ActionPerformed
         deleteOrCancelOrder();
-    }                                         
+    }//GEN-LAST:event_jButton23ActionPerformed
 
-    private void jButton50ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton50ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton50ActionPerformed
         if (sessionIsBlocked) {
             unblockSession();
         } else {
             login();
         }
-    }                                         
+    }//GEN-LAST:event_jButton50ActionPerformed
 
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
         changeView_Table_Tree_CandiesForPackage();
-    }                                          
+    }//GEN-LAST:event_jCheckBox3ActionPerformed
 
-    private void jButton115ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jButton115ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton115ActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setCurrentDirectory(ChoosedDirectory);
@@ -12209,22 +12181,22 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }
             }
         
-    }                                          
+    }//GEN-LAST:event_jButton115ActionPerformed
 
-    private void jButton116MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton116MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton116MousePressed
         if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по складу (КОНФЕТЫ) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
             db.UpdateSQL("UPDATE candy SET storage=0, reserved=0", new Object[]{});
             jTabbedPane2StateChanged(null);
             JOptionPane.showMessageDialog(null, "Выполнена очистка склада");
         }
-    }                                       
+    }//GEN-LAST:event_jButton116MousePressed
 
-    private void jButton117MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton117MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton117MousePressed
         GetPackings();
         MakeTableOfOrderPackingForStorage();
-    }                                       
+    }//GEN-LAST:event_jButton117MousePressed
 
-    private void jButton118MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton118MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton118MousePressed
         String s = "<html><center>Заказ для склада<br><br><table border='1'>";
         s = s + "<tr>";
         for (int j = 0; j < jTable22.getColumnCount()-1; j++) {
@@ -12256,9 +12228,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-    }                                       
+    }//GEN-LAST:event_jButton118MousePressed
 
-    private void jButton119MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton119MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton119MousePressed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setCurrentDirectory(ChoosedDirectory);
@@ -12334,9 +12306,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                     }
                 }
             }
-    }                                       
+    }//GEN-LAST:event_jButton119MousePressed
 
-    private void jButton121MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton121MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton121MousePressed
         String s = JOptionPane.showInputDialog("Введите имя новой папки");
         if (s!=null) {
             if (db.UpdateSQL("INSERT INTO folder(name) VALUES(?)", new Object[]{s})) {
@@ -12345,9 +12317,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 MakeTreeOfClients();
             }
         }
-    }                                       
+    }//GEN-LAST:event_jButton121MousePressed
 
-    private void jTree3MouseDragged(java.awt.event.MouseEvent evt) {                                    
+    private void jTree3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree3MouseDragged
         if (!clientDraggedInClientsTree) {
             DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree3.getLastSelectedPathComponent();
             if (SelectedNode != null && SelectedNode.getLevel()==2) {
@@ -12359,9 +12331,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 clientDraggedInClientsTree = true;
             }
         }
-    }                                   
+    }//GEN-LAST:event_jTree3MouseDragged
 
-    private void jTree3MouseReleased(java.awt.event.MouseEvent evt) {                                     
+    private void jTree3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree3MouseReleased
         if (clientDraggedInClientsTree) {
             jTree3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));            
             DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode)jTree3.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
@@ -12380,17 +12352,17 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }
             }
         }
-    }                                    
+    }//GEN-LAST:event_jTree3MouseReleased
 
-    private void jButton126MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton126MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton126MousePressed
         if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по складу (УПАКОВКА) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
             db.UpdateSQL("UPDATE packing SET storage=0, reserved=0", new Object[]{});
             jTabbedPane2StateChanged(null);
             JOptionPane.showMessageDialog(null, "Выполнена очистка склада");
         }
-    }                                       
+    }//GEN-LAST:event_jButton126MousePressed
 
-    private void jButton127ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jButton127ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton127ActionPerformed
         jButton49.setVisible(false);
         jTextField16.setEnabled(false);
         jPasswordField1.setText("");
@@ -12399,9 +12371,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
         sessionIsBlocked = true;
         CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
         cl.show(jPanel1.getParent(), "card2");
-    }                                          
+    }//GEN-LAST:event_jButton127ActionPerformed
 
-    private void jLabel129MousePressed(java.awt.event.MouseEvent evt) {                                       
+    private void jLabel129MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel129MousePressed
         if (jLabel129.isEnabled()) {
             while (true) {
                 String s = JOptionPane.showInputDialog(null, "Введите новый пароль");
@@ -12422,43 +12394,43 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }        
             }
         }
-    }                                      
+    }//GEN-LAST:event_jLabel129MousePressed
 
-    private void jComboBox7ItemStateChanged(java.awt.event.ItemEvent evt) {                                            
+    private void jComboBox7ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox7ItemStateChanged
         GetDelivery();
         MakeTableOfDelivery();
-    }                                           
+    }//GEN-LAST:event_jComboBox7ItemStateChanged
 
-    private void jButton128ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jButton128ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton128ActionPerformed
         SelectNodeOfTreeClients();
-    }                                          
+    }//GEN-LAST:event_jButton128ActionPerformed
 
-    private void jToggleButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void jToggleButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton5ActionPerformed
         GetClients(jToggleButton5.isSelected());
         MakeTreeOfClients();
-    }                                              
+    }//GEN-LAST:event_jToggleButton5ActionPerformed
 
-    private void jToggleButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void jToggleButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton6ActionPerformed
         GetClients(jToggleButton5.isSelected());
         MakeTreeOfClients();
-    }                                              
+    }//GEN-LAST:event_jToggleButton6ActionPerformed
 
-    private void jToggleButton7StateChanged(javax.swing.event.ChangeEvent evt) {                                            
+    private void jToggleButton7StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton7StateChanged
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandies();
-    }                                           
+    }//GEN-LAST:event_jToggleButton7StateChanged
 
-    private void jToggleButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void jToggleButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton8ActionPerformed
         jToggleButton7.setSelected(true);
         jButton69.doClick();
-    }                                              
+    }//GEN-LAST:event_jToggleButton8ActionPerformed
 
-    private void jComboBox9ItemStateChanged(java.awt.event.ItemEvent evt) {                                            
+    private void jComboBox9ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox9ItemStateChanged
         GetClients(jToggleButton5.isSelected());
         MakeTreeOfClients();              
-    }                                           
+    }//GEN-LAST:event_jComboBox9ItemStateChanged
 
-    private void jButton129ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jButton129ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton129ActionPerformed
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)jTree3.getLastSelectedPathComponent();
         if (selectedNode!=null && selectedNode.getLevel()==1) {
             Object[] obj = (Object[])selectedNode.getUserObject();
@@ -12478,41 +12450,41 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
                 }
             }         
         }
-    }                                          
+    }//GEN-LAST:event_jButton129ActionPerformed
 
-    private void jComboBox10ItemStateChanged(java.awt.event.ItemEvent evt) {                                             
+    private void jComboBox10ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox10ItemStateChanged
         try {
             GetClients(jToggleButton5.isSelected());
             MakeTreeOfClients();
         } catch (Exception ex) {}        
-    }                                            
+    }//GEN-LAST:event_jComboBox10ItemStateChanged
 
-    private void jTextField50KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField50KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField50KeyReleased
         GetFilteredPackings();
         MakeTreeOfPackingsInStorage();
-    }                                        
+    }//GEN-LAST:event_jTextField50KeyReleased
 
-    private void jTextField43KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField43KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField43KeyReleased
         GetOrders();
         MakeTableOfOrders();
-    }                                        
+    }//GEN-LAST:event_jTextField43KeyReleased
 
-    private void jTextField46KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField46KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField46KeyReleased
         GetOrders();
         MakeTableOfOrders();
-    }                                        
+    }//GEN-LAST:event_jTextField46KeyReleased
 
-    private void jTextField48KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField48KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField48KeyReleased
         GetOrders();
         MakeTableOfOrders();
-    }                                        
+    }//GEN-LAST:event_jTextField48KeyReleased
 
-    private void jTextField49KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField49KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField49KeyReleased
         GetDelivery();
         MakeTableOfDelivery();
-    }                                        
+    }//GEN-LAST:event_jTextField49KeyReleased
 
-    private void jComboBox12ItemStateChanged(java.awt.event.ItemEvent evt) {                                             
+    private void jComboBox12ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox12ItemStateChanged
         if (jComboBox12.getSelectedIndex()==STORAGE_WORKER_PACKER) {
             int selectedIndex = jComboBox13.getSelectedIndex();
             fillListBrigadiers();
@@ -12523,133 +12495,133 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
             jComboBox13.setVisible(false);
             jLabel89.setVisible(false);
         }
-    }                                            
+    }//GEN-LAST:event_jComboBox12ItemStateChanged
 
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
         GetUsers();
         MakeTreeOfUsers();
-    }                                          
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
 
-    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
         expeditorsDialog.initDialog(CanEditExpeditors);
-    }                                         
+    }//GEN-LAST:event_jButton18ActionPerformed
 
-    private void jComboBox14ItemStateChanged(java.awt.event.ItemEvent evt) {                                             
+    private void jComboBox14ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox14ItemStateChanged
         GetDelivery();
         MakeTableOfDelivery();
-    }                                            
+    }//GEN-LAST:event_jComboBox14ItemStateChanged
 
-    private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         labelPrintDialog.initDialog();
-    }                                         
+    }//GEN-LAST:event_jButton19ActionPerformed
 
-    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
         if (jComboBox6.getItemCount()>0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
             } catch (Exception ex) {}
         }
-    }                                          
+    }//GEN-LAST:event_jComboBox6ActionPerformed
 
-    private void jComboBox15ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void jComboBox15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox15ActionPerformed
         if (jComboBox15.getItemCount()>0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
             } catch (Exception ex) {}
         }
-    }                                           
+    }//GEN-LAST:event_jComboBox15ActionPerformed
 
-    private void jTextField51KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField51KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField51KeyReleased
         GetDelivery();
         MakeTableOfDelivery();
-    }                                        
+    }//GEN-LAST:event_jTextField51KeyReleased
 
-    private void jButton36ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void jButton36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton36ActionPerformed
         // TODO add your handling code here:
-    }                                         
+    }//GEN-LAST:event_jButton36ActionPerformed
 
-    private void jTextField37ActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void jTextField37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField37ActionPerformed
         // TODO add your handling code here:
-    }                                            
+    }//GEN-LAST:event_jTextField37ActionPerformed
 
-    private void jTextField53KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField53KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField53KeyReleased
         filterName = jTextField53.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField53.getText()+"%'";
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandies();
-    }                                        
+    }//GEN-LAST:event_jTextField53KeyReleased
 
-    private void jTextField54KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField54KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField54KeyReleased
         filterName = jTextField54.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField54.getText()+"%'";
         GetCandies(jToggleButton3.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton4.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandiesForGift();
-    }                                        
+    }//GEN-LAST:event_jTextField54KeyReleased
 
-    private void jTextField55KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField55KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField55KeyReleased
         filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField55.getText()+"%'";
         GetCandies(jToggleButton9.isSelected() ? CandiesOrder.ALPHABET : CandiesOrder.COST);
         MakeTreeOfCandiesInStorage();
-    }                                        
+    }//GEN-LAST:event_jTextField55KeyReleased
 
-    private void jToggleButton9StateChanged(javax.swing.event.ChangeEvent evt) {                                            
+    private void jToggleButton9StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton9StateChanged
         filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField55.getText()+"%'";
         GetCandies(jToggleButton9.isSelected() ? CandiesOrder.ALPHABET : CandiesOrder.COST);
         MakeTreeOfCandies();
-    }                                           
+    }//GEN-LAST:event_jToggleButton9StateChanged
 
-    private void jToggleButton10StateChanged(javax.swing.event.ChangeEvent evt) {                                             
+    private void jToggleButton10StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton10StateChanged
         filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField55.getText()+"%'";
         GetCandies(jToggleButton9.isSelected() ? CandiesOrder.ALPHABET : CandiesOrder.COST);
         MakeTreeOfCandies();
-    }                                            
+    }//GEN-LAST:event_jToggleButton10StateChanged
 
-    private void jTextField56KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField56KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField56KeyReleased
         GetPackings();
         MakeTreeOfPackings();
-    }                                        
+    }//GEN-LAST:event_jTextField56KeyReleased
 
-    private void jTextField57KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField57KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField57KeyReleased
         MakeTableOfOrders();
-    }                                        
+    }//GEN-LAST:event_jTextField57KeyReleased
 
-    private void jTextField58KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField58KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField58KeyReleased
         MakeTableOfOrders();
-    }                                        
+    }//GEN-LAST:event_jTextField58KeyReleased
 
-    private void jComboBox16ItemStateChanged(java.awt.event.ItemEvent evt) {                                             
+    private void jComboBox16ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox16ItemStateChanged
         GetDelivery();
         MakeTableOfDelivery();
-    }                                            
+    }//GEN-LAST:event_jComboBox16ItemStateChanged
 
-    private void jComboBox17ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void jComboBox17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox17ActionPerformed
         if (jComboBox17.getItemCount()>0) {
             try {
                 GetDelivery();
                 MakeTableOfDelivery();
             } catch (Exception ex) {}
         }
-    }                                           
+    }//GEN-LAST:event_jComboBox17ActionPerformed
 
-    private void jTextField59KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField59KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField59KeyReleased
         GetDelivery();
         MakeTableOfDelivery();
-    }                                        
+    }//GEN-LAST:event_jTextField59KeyReleased
 
-    private void jTable22MouseClicked(java.awt.event.MouseEvent evt) {                                      
+    private void jTable22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable22MouseClicked
         MakeTableOfStorageOrderPref();
-    }                                     
+    }//GEN-LAST:event_jTable22MouseClicked
 
-    private void jButton20MouseClicked(java.awt.event.MouseEvent evt) {                                       
+    private void jButton20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton20MouseClicked
         ShowGiftsAndSumm();
-    }                                      
+    }//GEN-LAST:event_jButton20MouseClicked
 
-    private void jTextField60KeyReleased(java.awt.event.KeyEvent evt) {                                         
+    private void jTextField60KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField60KeyReleased
         GetDelivery();
         MakeTableOfDelivery();
-    }                                        
+    }//GEN-LAST:event_jTextField60KeyReleased
 
-    private void jButton120MousePressed(java.awt.event.MouseEvent evt) {                                        
+    private void jButton120MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton120MousePressed
         if (jTabbedPane2.getSelectedIndex()==0) {
             if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по выбранной позиции (КОНФЕТЫ) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
                 Object[] obj = (Object[]) ((DefaultMutableTreeNode) jTree10.getLastSelectedPathComponent()).getUserObject();
@@ -12668,10 +12640,10 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
             }             
         }        
         
-    }                                       
+    }//GEN-LAST:event_jButton120MousePressed
 
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -12985,7 +12957,6 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
     private javax.swing.JLabel jLabel97;
     private javax.swing.JLabel jLabel98;
     private javax.swing.JLabel jLabel99;
-    private javax.swing.JLabel jLabelAccessDenied;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
@@ -13192,7 +13163,6 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
     private javax.swing.JPanel jPanel96;
     private javax.swing.JPanel jPanel98;
     private javax.swing.JPanel jPanel99;
-    private javax.swing.JPanel jPanelAccessDenied;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JPasswordField jPasswordField3;
@@ -13431,7 +13401,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {
     private javax.swing.JTree jTree6;
     */
     private PackingsTree jTree6;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 
 
 }
