@@ -1748,13 +1748,26 @@ public class MainForm extends javax.swing.JApplet {
                         jTable10.makeTable(dataaa);
                     }   
                     break;
-                case 2: //лист дерева - клиент
-                    cl = (CardLayout)jPanel122.getLayout();
-                    cl.show(jPanel122, "card2");                    
+                case 2: //лист дерева - клиент                                        
                     obj = (Object[]) SelectedNode.getUserObject();
                     Clients.setPosition((Integer) obj[1]);
-
                     ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?",new Object[]{Clients.getInt("ID")}));                    
+                    
+                    cl = (CardLayout)jPanel122.getLayout();
+                    //если директор, то разрешаем смотреть карточку клиента
+                    if (CurrentUser.getInt("LEVEL")== DIRECTOR){
+                        //ничего не делаем, идём дальше
+                    }
+                    //Сокрытие карточки клиента, если клиент не является клиентом авторизовавшегося сотрудника
+                    else if(ExtendedClient.get("USER_CREATOR_NAME") == null 
+                            || !(ExtendedClient.get("USER_CREATOR_NAME") instanceof String)
+                            || !CurrentUser.getString("NAME").equals(ExtendedClient.get("USER_CREATOR_NAME"))){
+                        System.out.println("accessDenied");
+                        cl.show(jPanel122, "accessDenied");
+                        break;
+                    }
+                    System.out.println("доступ есть");
+                    cl.show(jPanel122, "card2");
                     
                     jButton36.setVisible(CanEditClients);
                     jButton37.setVisible(CanDeleteClients);
