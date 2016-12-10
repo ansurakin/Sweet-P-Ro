@@ -11332,8 +11332,10 @@ private void jButton80MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                                 (val==Order.ORDER_STORAGE ? "на складе" : 
                                 (val==Order.ORDER_SEND ? "отправлено" : "закрыто")))))+"</td>";
                     } else {
-                        Object ss = jTable12.getValueAt(j, i);
-                        s = s+"<td>"+(ss==null || ss.equals(" ") ? "-" : (String)ss)+"</td>";
+                        String ss = "" + jTable12.getValueAt(j, i);
+                        s = s+"<td>"
+                                +((ss==null || ss.equals("") || ss.equals(" "))
+                               ? "-" : ss)+"</td>";
                     }
                 }
                 s = s+"</tr>";
@@ -11640,8 +11642,8 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                         int val = (Integer)jTable12.getValueAt(rows[j], i);
                         s = s+"<td>"+(val==Order.ORDER_PREPARE ? "подготовка" : (val==Order.ORDER_PAY ? "на оплате" : (val==Order.ORDER_PACK ? "на паковке" : (val==Order.ORDER_STORAGE ? "на складе" : (val==Order.ORDER_SEND ? "отправлено" : "закрыто")))))+"</td>";
                     } else {
-                        Object ss = (String)jTable12.getValueAt(rows[j], i);
-                        s = s+"<td>"+(ss==null || ss.equals(" ") ? "-" : (Object)ss)+"</td>";
+                        String ss = "" + jTable12.getValueAt(rows[j], i);
+                        s = s+"<td>"+( (ss==null || ss.equals("") || ss.equals(" ")) ? "-" : ss)+"</td>";
                     }
                 }
                 s = s+"</tr>";
