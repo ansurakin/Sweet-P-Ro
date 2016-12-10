@@ -3257,7 +3257,7 @@ public class MainForm extends javax.swing.JApplet {
         String filterClientName = jTextField51.getText().isEmpty() ? "" : " AND client.official_name LIKE '%"+jTextField51.getText()+"%'";
         String l = (String) jComboBox16.getItemAt(jComboBox16.getSelectedIndex());
         String filterDType = jComboBox16.getSelectedIndex()==0 ? "" : " AND D.delivery_type='"+l+"'";
-        String filterTypePay = jComboBox17.getSelectedIndex()<=0 ? "" : " AND orders.type_pay = '" + (jComboBox17.getSelectedIndex()-1) + "'";
+        String filterTypePay = jComboBoxDeliveryPayment.getSelectedIndex()==0 ? "" : " AND orders.type_pay = '" + (jComboBoxDeliveryPayment.getSelectedIndex()-1) + "'";
         String filterTTN = jTextField60.getText().isEmpty() ? "" : " AND D.TTN LIKE '%"+jTextField60.getText()+"%'";
         
         Delivery.set(db.SelectSQL("SELECT D.id,D.date_time,D.date_send,D.date_close,"
@@ -4499,7 +4499,7 @@ public class MainForm extends javax.swing.JApplet {
         jTextField51 = new javax.swing.JTextField();
         jLabel143 = new javax.swing.JLabel();
         jComboBox16 = new javax.swing.JComboBox();
-        jComboBox17 = new javax.swing.JComboBox();
+        jComboBoxDeliveryPayment = new javax.swing.JComboBox();
         jLabel147 = new javax.swing.JLabel();
         jTextField59 = new javax.swing.JTextField();
         jLabel148 = new javax.swing.JLabel();
@@ -8663,20 +8663,20 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         jPanel138.add(jComboBox16, gridBagConstraints);
 
-        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
-        jComboBox17.setMaximumSize(new java.awt.Dimension(135, 24));
-        jComboBox17.setMinimumSize(new java.awt.Dimension(135, 24));
-        jComboBox17.setPreferredSize(new java.awt.Dimension(125, 24));
-        jComboBox17.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxDeliveryPayment.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBoxDeliveryPayment.setMaximumSize(new java.awt.Dimension(135, 24));
+        jComboBoxDeliveryPayment.setMinimumSize(new java.awt.Dimension(135, 24));
+        jComboBoxDeliveryPayment.setPreferredSize(new java.awt.Dimension(125, 24));
+        jComboBoxDeliveryPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox17ActionPerformed(evt);
+                jComboBoxDeliveryPaymentActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 5;
-        jPanel138.add(jComboBox17, gridBagConstraints);
+        jPanel138.add(jComboBoxDeliveryPayment, gridBagConstraints);
 
         jLabel147.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel147.setForeground(new java.awt.Color(0, 0, 255));
@@ -12614,14 +12614,14 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         MakeTableOfDelivery();
     }//GEN-LAST:event_jComboBox16ItemStateChanged
 
-    private void jComboBox17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox17ActionPerformed
-        if (jComboBox17.getItemCount()>0) {
+    private void jComboBoxDeliveryPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDeliveryPaymentActionPerformed
+        if (jComboBoxDeliveryPayment.getItemCount()>0) {
             try {
                 GetDelivery();
                 MakeTableOfDelivery();
             } catch (Exception ex) {}
         }
-    }//GEN-LAST:event_jComboBox17ActionPerformed
+    }//GEN-LAST:event_jComboBoxDeliveryPaymentActionPerformed
 
     private void jTextField59KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField59KeyReleased
         GetDelivery();
@@ -12810,7 +12810,6 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     */
     private ComboboxUsers jComboBox14;
     private javax.swing.JComboBox jComboBox16;
-    private javax.swing.JComboBox jComboBox17;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JComboBox jComboBox5;
@@ -12827,6 +12826,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     */
     private ComboboxClientState jComboBox8;
     private javax.swing.JComboBox jComboBox9;
+    private javax.swing.JComboBox jComboBoxDeliveryPayment;
     private javax.swing.JComboBox jComboBoxPaymentTypesOrderDetail;
     private javax.swing.JComboBox jComboBoxPaymentTypesOrderList;
     private com.toedter.calendar.JDateChooser jDateChooser1;

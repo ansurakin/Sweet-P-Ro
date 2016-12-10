@@ -10404,18 +10404,10 @@
                             </Constraint>
                           </Constraints>
                         </Component>
-                        <Component class="javax.swing.JComboBox" name="jComboBox17">
+                        <Component class="javax.swing.JComboBox" name="jComboBoxDeliveryPayment">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="7">
-                                <StringItem index="0" value=""/>
-                                <StringItem index="1" value="&#x43d;&#x430;&#x43b;. &#x43f;&#x440;&#x435;&#x434;&#x43e;&#x43f;&#x43b;&#x430;&#x442;&#x430;"/>
-                                <StringItem index="2" value="&#x43d;&#x430;&#x43b;. &#x43f;&#x43e; &#x444;&#x430;&#x43a;&#x442;&#x443;"/>
-                                <StringItem index="3" value="&#x431;&#x435;&#x437;&#x43d;&#x430;&#x43b;. &#x422;&#x41e;&#x412;"/>
-                                <StringItem index="4" value="&#x431;&#x435;&#x437;&#x43d;&#x430;&#x43b;. &#x424;&#x41e;&#x41f;"/>
-                                <StringItem index="5" value="&#x43d;&#x430;&#x43b;&#x43e;&#x436;. &#x43f;&#x43b;&#x430;&#x442;&#x435;&#x436;"/>
-                                <StringItem index="6" value="&#x43f;&#x440;&#x435;&#x434;&#x43e;&#x43f;&#x43b;. &#x43d;&#x430; &#x43a;&#x430;&#x440;&#x442;&#x443;"/>
-                              </StringArray>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;&quot;, &quot;&#x43d;&#x430;&#x43b;. &#x43f;&#x440;&#x435;&#x434;&#x43e;&#x43f;&#x43b;&#x430;&#x442;&#x430;&quot;, &quot;&#x43d;&#x430;&#x43b;. &#x43f;&#x43e; &#x444;&#x430;&#x43a;&#x442;&#x443;&quot;, &quot;&#x431;&#x435;&#x437;&#x43d;&#x430;&#x43b;. &#x422;&#x41e;&#x412;&quot;, &quot;&#x431;&#x435;&#x437;&#x43d;&#x430;&#x43b;. &#x424;&#x41e;&#x41f;&quot;, &quot;&#x43d;&#x430;&#x43b;&#x43e;&#x436;. &#x43f;&#x43b;&#x430;&#x442;&#x435;&#x436;&quot;, &quot;&#x43f;&#x440;&#x435;&#x434;&#x43e;&#x43f;&#x43b;. &#x43d;&#x430; &#x43a;&#x430;&#x440;&#x442;&#x443;&quot;, &quot;&#x424;&#x41e;&#x41f; &#x411;&#x440;&#x443;&#x43a;&#x448;&#x430;&quot;, &quot;&#x424;&#x41e;&#x41f; &#x412;&#x430;&#x446;&#x438;&#x43a;&quot;, &quot;&#x424;&#x41e;&#x41f; &#x41a;&#x430;&#x43b;&#x438;&#x435;&#x432;&#x430;&quot; })" type="code"/>
                             </Property>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[135, 24]"/>
@@ -10428,7 +10420,7 @@
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBox17ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBoxDeliveryPaymentActionPerformed"/>
                           </Events>
                           <Constraints>
                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -11729,11 +11721,11 @@
                             <CodeMethod name="add" class="java.awt.Container" parameterTypes="java.awt.Component, java.lang.Object"/>
                           </StatementProvider>
                           <Parameters>
-                            <CodeExpression id="159_jComboBox17">
-                              <CodeVariable name="jComboBox17" type="8194" declaredType="javax.swing.JComboBox"/>
+                            <CodeExpression id="159_jComboBoxDeliveryPayment">
+                              <CodeVariable name="jComboBoxDeliveryPayment" type="8194" declaredType="javax.swing.JComboBox"/>
                               <ExpressionOrigin>
                                 <ExpressionProvider type="ComponentRef">
-                                  <ComponentRef name="jComboBox17"/>
+                                  <ComponentRef name="jComboBoxDeliveryPayment"/>
                                 </ExpressionProvider>
                               </ExpressionOrigin>
                             </CodeExpression>
