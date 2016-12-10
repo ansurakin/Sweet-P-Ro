@@ -2211,7 +2211,7 @@ public class MainForm extends javax.swing.JApplet {
         }
     }
     
-    public boolean GetOrders() {
+    public boolean GetOrders() {        
         String filter = "";
         if (userLevel==STORAGE_HEAD) { //начальник склада
             int selectedState = jComboBox1.getSelectedIndex()-1;
@@ -2265,7 +2265,7 @@ public class MainForm extends javax.swing.JApplet {
             String filterOrderNumber = jTextField43.getText().isEmpty() ? "" : " AND orders.number LIKE '%"+jTextField43.getText()+"%'";
             String filterGiftName = " AND suborder.id_orders=orders.id AND suborder.id_gift=gift.id AND gift.name LIKE '%"+jTextField48.getText()+"%'";
 //            String filterTypePay = jComboBox15.getSelectedIndex()<=0 ? "" : (jComboBox15.getSelectedIndex()==2 ? " AND orders.type_pay IN (2,3)" : " AND orders.type_pay NOT IN (2,3)");
-            String filterTypePay = jComboBox15.getSelectedIndex()<=0 ? "" : " AND orders.type_pay = '" + (jComboBox15.getSelectedIndex()-1) + "'";
+            String filterTypePay = jComboBoxPaymentTypesOrderList.getSelectedIndex()<=0 ? "" : " AND orders.type_pay = '" + (jComboBoxPaymentTypesOrderList.getSelectedIndex()-1) + "'";
             
             
             String sql;
@@ -2426,34 +2426,46 @@ public class MainForm extends javax.swing.JApplet {
             switch (type_pay) {
                 case 0:
                     jLabel79.setText("наличный, предоплата");
-                    jComboBox2.setSelectedIndex(0);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(0);
                     break;
                 case 1:
                     jLabel79.setText("наличный, по факту");
-                    jComboBox2.setSelectedIndex(1);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(1);
                     break;
                 case 2:
                     jLabel79.setText("безналичный, ТОВ");
-                    jComboBox2.setSelectedIndex(2);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(2);
                     break;
                 case 3:
                     jLabel79.setText("безналичный, ФОП");
-                    jComboBox2.setSelectedIndex(3);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(3);
                     break;
                 case 4:
                     jLabel79.setText("наложенный платеж");
-                    jComboBox2.setSelectedIndex(4);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(4);
                     break;
                 case 5:
                     jLabel79.setText("предоплата на карту");
-                    jComboBox2.setSelectedIndex(5);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(5);
+                    break;
+                case 6:
+                    jLabel79.setText("ФОП Брукша");
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(6);
+                    break;
+                case 7:
+                    jLabel79.setText("ФОП Вацик");
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(7);
+                    break;
+                case 8:
+                    jLabel79.setText("ФОП Калиева");
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(8);
                     break;
                 default:
                     jLabel79.setText("");
-                    jComboBox2.setSelectedIndex(-1);
+                    jComboBoxPaymentTypesOrderDetail.setSelectedIndex(-1);
             }                    
             jLabel79.setVisible(true);
-            jComboBox2.setVisible(false);
+            jComboBoxPaymentTypesOrderDetail.setVisible(false);
             
             jTextArea8.setText(ExtendedOrder.getString("COMM"));            
             jTextArea8.setEditable(false);
@@ -2481,7 +2493,7 @@ public class MainForm extends javax.swing.JApplet {
                 }
             }
             
-            jButton28.setVisible(false);
+            jButtonSaveOrder.setVisible(false);
             jButton29.setVisible(false);
             
             int d = ExtendedOrder.getInt("DATE_PAY");
@@ -4312,7 +4324,7 @@ public class MainForm extends javax.swing.JApplet {
         jLabel139 = new javax.swing.JLabel();
         jTextField48 = new javax.swing.JTextField();
         jLabel121 = new javax.swing.JLabel();
-        jComboBox15 = new javax.swing.JComboBox();
+        jComboBoxPaymentTypesOrderList = new javax.swing.JComboBox();
         jPanel163 = new javax.swing.JPanel();
         filler18 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
         jButton22 = new javax.swing.JButton();
@@ -4334,7 +4346,7 @@ public class MainForm extends javax.swing.JApplet {
         jPanel124 = new javax.swing.JPanel();
         jLabel69 = new javax.swing.JLabel();
         jLabel79 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        jComboBoxPaymentTypesOrderDetail = new javax.swing.JComboBox();
         jPanel129 = new javax.swing.JPanel();
         jLabel76 = new javax.swing.JLabel();
         jTextField33 = new javax.swing.JTextField();
@@ -4368,7 +4380,7 @@ public class MainForm extends javax.swing.JApplet {
         jPanel147 = new javax.swing.JPanel();
         jPanel68 = new javax.swing.JPanel();
         jButton27 = new javax.swing.JButton();
-        jButton28 = new javax.swing.JButton();
+        jButtonSaveOrder = new javax.swing.JButton();
         jButton29 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
@@ -5984,17 +5996,17 @@ public class MainForm extends javax.swing.JApplet {
         jTree3.setBackground(new java.awt.Color(204, 255, 255));
         treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         jTree3.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jTree3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jTree3MouseReleased(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTree3MousePressed(evt);
-            }
-        });
         jTree3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 jTree3MouseDragged(evt);
+            }
+        });
+        jTree3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTree3MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTree3MouseReleased(evt);
             }
         });
         jTree3.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -7143,20 +7155,22 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.gridy = 12;
         jPanel171.add(jLabel121, gridBagConstraints);
 
-        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
-        jComboBox15.setMaximumSize(new java.awt.Dimension(135, 24));
-        jComboBox15.setMinimumSize(new java.awt.Dimension(135, 24));
-        jComboBox15.setPreferredSize(new java.awt.Dimension(125, 24));
-        jComboBox15.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxPaymentTypesOrderList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBoxPaymentTypesOrderList.setSelectedIndex(0);
+        jComboBoxPaymentTypesOrderList.setSelectedItem("");
+        jComboBoxPaymentTypesOrderList.setMaximumSize(new java.awt.Dimension(135, 24));
+        jComboBoxPaymentTypesOrderList.setMinimumSize(new java.awt.Dimension(135, 24));
+        jComboBoxPaymentTypesOrderList.setPreferredSize(new java.awt.Dimension(125, 24));
+        jComboBoxPaymentTypesOrderList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox15ActionPerformed(evt);
+                jComboBoxPaymentTypesOrderListActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 5;
-        jPanel171.add(jComboBox15, gridBagConstraints);
+        jPanel171.add(jComboBoxPaymentTypesOrderList, gridBagConstraints);
 
         jPanel162.add(jPanel171);
 
@@ -7323,11 +7337,11 @@ public class MainForm extends javax.swing.JApplet {
         jLabel79.setPreferredSize(new java.awt.Dimension(135, 14));
         jPanel124.add(jLabel79);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
-        jComboBox2.setMaximumSize(new java.awt.Dimension(130, 32767));
-        jComboBox2.setMinimumSize(new java.awt.Dimension(130, 18));
-        jComboBox2.setPreferredSize(new java.awt.Dimension(130, 20));
-        jPanel124.add(jComboBox2);
+        jComboBoxPaymentTypesOrderDetail.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBoxPaymentTypesOrderDetail.setMaximumSize(new java.awt.Dimension(130, 32767));
+        jComboBoxPaymentTypesOrderDetail.setMinimumSize(new java.awt.Dimension(130, 18));
+        jComboBoxPaymentTypesOrderDetail.setPreferredSize(new java.awt.Dimension(130, 20));
+        jPanel124.add(jComboBoxPaymentTypesOrderDetail);
 
         jPanel132.add(jPanel124);
 
@@ -7602,17 +7616,22 @@ public class MainForm extends javax.swing.JApplet {
         });
         jPanel68.add(jButton27);
 
-        jButton28.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Save-icon.png"))); // NOI18N
-        jButton28.setMaximumSize(new java.awt.Dimension(33, 25));
-        jButton28.setMinimumSize(new java.awt.Dimension(33, 25));
-        jButton28.setOpaque(false);
-        jButton28.setPreferredSize(new java.awt.Dimension(33, 25));
-        jButton28.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButtonSaveOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Save-icon.png"))); // NOI18N
+        jButtonSaveOrder.setMaximumSize(new java.awt.Dimension(33, 25));
+        jButtonSaveOrder.setMinimumSize(new java.awt.Dimension(33, 25));
+        jButtonSaveOrder.setOpaque(false);
+        jButtonSaveOrder.setPreferredSize(new java.awt.Dimension(33, 25));
+        jButtonSaveOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jButton28MousePressed(evt);
+                jButtonSaveOrderMousePressed(evt);
             }
         });
-        jPanel68.add(jButton28);
+        jButtonSaveOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveOrderActionPerformed(evt);
+            }
+        });
+        jPanel68.add(jButtonSaveOrder);
 
         jButton29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Windows-Close-Program-icon.png"))); // NOI18N
         jButton29.setMaximumSize(new java.awt.Dimension(33, 25));
@@ -8644,7 +8663,7 @@ public class MainForm extends javax.swing.JApplet {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         jPanel138.add(jComboBox16, gridBagConstraints);
 
-        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту", "ФОП Брукша", "ФОП Вацик", "ФОП Калиева" }));
+        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "нал. предоплата", "нал. по факту", "безнал. ТОВ", "безнал. ФОП", "налож. платеж", "предопл. на карту" }));
         jComboBox17.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setMinimumSize(new java.awt.Dimension(135, 24));
         jComboBox17.setPreferredSize(new java.awt.Dimension(125, 24));
@@ -10459,7 +10478,7 @@ public class MainForm extends javax.swing.JApplet {
 
     private void jButton27MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton27MousePressed
         jButton27.setVisible(false);
-        jButton28.setVisible(true);
+        jButtonSaveOrder.setVisible(true);
         jButton29.setVisible(true);
         
         if(CurrentUser.getInt("LEVEL")==DIRECTOR){
@@ -10483,7 +10502,7 @@ public class MainForm extends javax.swing.JApplet {
             jTextField41.setForeground(Color.black);
         
             jLabel79.setVisible(false);
-            jComboBox2.setVisible(true);
+            jComboBoxPaymentTypesOrderDetail.setVisible(true);
         }
         
         jTextArea8.setEditable(true);
@@ -10497,9 +10516,10 @@ public class MainForm extends javax.swing.JApplet {
         
     }//GEN-LAST:event_jButton27MousePressed
 
-    private void jButton28MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton28MousePressed
+    private void jButtonSaveOrderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonSaveOrderMousePressed
+        System.out.println("Запрос на сохранение заказа: jComboBox2.getSelectedIndex()="+jComboBoxPaymentTypesOrderDetail.getSelectedIndex());
         try {
-            int type_pay = jComboBox2.getSelectedIndex();
+            int type_pay = jComboBoxPaymentTypesOrderDetail.getSelectedIndex();
             String name = jTextArea12.getText();
             Object[][] obj = db.SelectSQL("SELECT id FROM user WHERE name=?",new Object[]{name});
             Users.set(obj);
@@ -10531,7 +10551,7 @@ public class MainForm extends javax.swing.JApplet {
             System.out.println("An exception occured!!!\n" + ex);
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
-    }//GEN-LAST:event_jButton28MousePressed
+    }//GEN-LAST:event_jButtonSaveOrderMousePressed
 
     private void jButton29MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton29MousePressed
         SelectNodeOfTableOrders();
@@ -12524,14 +12544,14 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         }
     }//GEN-LAST:event_jComboBox6ActionPerformed
 
-    private void jComboBox15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox15ActionPerformed
-        if (jComboBox15.getItemCount()>0) {
+    private void jComboBoxPaymentTypesOrderListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPaymentTypesOrderListActionPerformed
+        if (jComboBoxPaymentTypesOrderList.getItemCount()>0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
             } catch (Exception ex) {}
         }
-    }//GEN-LAST:event_jComboBox15ActionPerformed
+    }//GEN-LAST:event_jComboBoxPaymentTypesOrderListActionPerformed
 
     private void jTextField51KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField51KeyReleased
         GetDelivery();
@@ -12642,6 +12662,10 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         
     }//GEN-LAST:event_jButton120MousePressed
 
+    private void jButtonSaveOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveOrderActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonSaveOrderActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -12703,7 +12727,6 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JButton jButton23;
     private javax.swing.JButton jButton24;
     private javax.swing.JButton jButton27;
-    private javax.swing.JButton jButton28;
     private javax.swing.JButton jButton29;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton30;
@@ -12763,6 +12786,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JButton jButton90;
     private javax.swing.JButton jButton91;
     private javax.swing.JButton jButton97;
+    private javax.swing.JButton jButtonSaveOrder;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
@@ -12785,10 +12809,8 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JComboBox jComboBox14;
     */
     private ComboboxUsers jComboBox14;
-    private javax.swing.JComboBox jComboBox15;
     private javax.swing.JComboBox jComboBox16;
     private javax.swing.JComboBox jComboBox17;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JComboBox jComboBox5;
@@ -12805,6 +12827,8 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     */
     private ComboboxClientState jComboBox8;
     private javax.swing.JComboBox jComboBox9;
+    private javax.swing.JComboBox jComboBoxPaymentTypesOrderDetail;
+    private javax.swing.JComboBox jComboBoxPaymentTypesOrderList;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser10;
     private com.toedter.calendar.JDateChooser jDateChooser11;
