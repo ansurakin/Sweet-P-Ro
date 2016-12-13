@@ -38,10 +38,11 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
-
 public class MainForm extends javax.swing.JApplet {
-    
-    private static enum CandiesOrder {ALPHABET, COST, RELATIVE_COST};
+
+    private static enum CandiesOrder {
+        ALPHABET, COST, RELATIVE_COST
+    };
 
     public ObjectResultSet Candies = new ObjectResultSet();
     public ObjectResultSet Users = new ObjectResultSet();
@@ -67,30 +68,30 @@ public class MainForm extends javax.swing.JApplet {
     public ObjectResultSet Folders = new ObjectResultSet();
     public ObjectResultSet Clients_Folders = new ObjectResultSet();
     public ObjectResultSet Expeditors = new ObjectResultSet();
-    
+
     public static final DecimalFormat FormatUAH = new DecimalFormat("0.00");
     public static final DecimalFormat FormatKG = new DecimalFormat("0.000");
     public static final DecimalFormat FormatPercent = new DecimalFormat("0");
-    
-    public static final Color LightInterfaceColor =  new Color(204,255,255);
-    public static final Color DarkInterfaceColor =  new Color(153,255,255);
-    
+
+    public static final Color LightInterfaceColor = new Color(204, 255, 255);
+    public static final Color DarkInterfaceColor = new Color(153, 255, 255);
+
     public static final int ACCESS_DENIED = -1;
     public static final int DIRECTOR = 0;
     public static final int MANAGER = 1;
     public static final int STORAGE_HEAD = 2;
     public static final int LOGIST = 3;
     public static final int STORAGE_WORKER = 4;
-    
+
     public static final int STORAGE_WORKER_BRIGADIER = 0;
     public static final int STORAGE_WORKER_FORWARDER = 1;
-    public static final int STORAGE_WORKER_PACKER = 2;    
+    public static final int STORAGE_WORKER_PACKER = 2;
     public static final int STORAGE_WORKER_LOADER = 3;
-    
-    private int userLevel = ACCESS_DENIED;        
-    public File ChoosedDirectory = null; 
+
+    private int userLevel = ACCESS_DENIED;
+    public File ChoosedDirectory = null;
     private boolean sessionIsBlocked = false;
-    
+
     private boolean CanSeeCandies = false;
     private boolean CanEditCandies = false;
     private boolean CanDeleteCandies = false;
@@ -121,7 +122,7 @@ public class MainForm extends javax.swing.JApplet {
     private boolean CanEditExpeditors = false;
     private boolean CanSeeOrdersCount = false;
     private boolean newClientMode = false;
-    
+
     private boolean clientDraggedInClientsTree = false;
     private int draggedClientID;
     private int draggedFromFolderID;
@@ -143,14 +144,14 @@ public class MainForm extends javax.swing.JApplet {
     ChooseConsolidatedOrdersDialog chooseConsolidatedOrdersDialog;
     ExpeditorsDialog expeditorsDialog;
     IncomeCallDialog incomeCallDialog;
-    
+
     @Override
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    
+
                     try {
                         for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                             if ("Nimbus".equals(info.getName())) {
@@ -158,12 +159,12 @@ public class MainForm extends javax.swing.JApplet {
                                 break;
                             }
                         }
-                    } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
                         java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                    }                                           
+                    }
 
                     initComponents();
-                    
+
                     String host = "localhost";
                     try {
                         host = MainForm.this.getDocumentBase().getHost();
@@ -171,7 +172,7 @@ public class MainForm extends javax.swing.JApplet {
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                         try {
-                            BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService");
+                            BasicService bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
                             URL codeBase = bs.getCodeBase();
                             host = codeBase.getHost();
                         } catch (Exception e) {
@@ -179,24 +180,24 @@ public class MainForm extends javax.swing.JApplet {
                         }
                     }
                     System.out.println(host);
-                    db = new DATABASE(MainForm.this,host);
+                    db = new DATABASE(MainForm.this, host);
 
                     jComboBox4.removeAllItems();
                     int startYear = 2010;
                     int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-                    for (int i = startYear; i<=currentYear; i++) {
+                    for (int i = startYear; i <= currentYear; i++) {
                         jComboBox4.addItem(i);
                     }
-                    jComboBox4.setSelectedIndex(jComboBox4.getItemCount()-1);
-                    
+                    jComboBox4.setSelectedIndex(jComboBox4.getItemCount() - 1);
+
                     jComboBox5.removeAllItems();
                     startYear = 2010;
                     currentYear = Calendar.getInstance().get(Calendar.YEAR);
-                    for (int i = startYear; i<=currentYear; i++) {
+                    for (int i = startYear; i <= currentYear; i++) {
                         jComboBox5.addItem(i);
                     }
-                    jComboBox5.setSelectedIndex(jComboBox5.getItemCount()-1);
-                    
+                    jComboBox5.setSelectedIndex(jComboBox5.getItemCount() - 1);
+
                     jTable1.setShowGrid(true);
                     jTable1.setGridColor(Color.GRAY);
                     jTable2.setShowGrid(true);
@@ -212,7 +213,7 @@ public class MainForm extends javax.swing.JApplet {
                     jTable7.setShowGrid(true);
                     jTable7.setGridColor(Color.GRAY);
                     jTable8.setShowGrid(true);
-                    jTable8.setGridColor(Color.GRAY);                    
+                    jTable8.setGridColor(Color.GRAY);
                     jTable9.setShowGrid(true);
                     jTable9.setGridColor(Color.GRAY);
 //                    jTable12.getDefaultEditor(String.class).addCellEditorListener(EditConditers);
@@ -237,7 +238,7 @@ public class MainForm extends javax.swing.JApplet {
                     jTable20.setGridColor(Color.GRAY);
                     jTable22.setShowGrid(true);
                     jTable22.setGridColor(Color.GRAY);
-                    
+
                     jDateChooser1.setCalendar(Calendar.getInstance());
                     jDateChooser2.setCalendar(Calendar.getInstance());
                     jDateChooser3.setCalendar(Calendar.getInstance());
@@ -253,8 +254,7 @@ public class MainForm extends javax.swing.JApplet {
                     cal.set(Calendar.DAY_OF_MONTH, 1);
                     jDateChooser13.setCalendar(cal);
                     jDateChooser14.setCalendar(Calendar.getInstance());
-                    
-                    
+
                     jScrollPane6.getViewport().setBackground(LightInterfaceColor);
                     jScrollPane7.getViewport().setBackground(LightInterfaceColor);
                     jScrollPane10.getViewport().setBackground(LightInterfaceColor);
@@ -271,101 +271,101 @@ public class MainForm extends javax.swing.JApplet {
                     jScrollPane39.getViewport().setBackground(LightInterfaceColor);
                     jScrollPane40.getViewport().setBackground(LightInterfaceColor);
                     jScrollPane41.getViewport().setBackground(LightInterfaceColor);
-                    jScrollPane43.getViewport().setBackground(LightInterfaceColor);              
+                    jScrollPane43.getViewport().setBackground(LightInterfaceColor);
 
                     JLabel lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("КОНФЕТЫ ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/candy-cane-icon.png")));
                     jTabbedPane1.setTabComponentAt(0, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("УПАКОВКА");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/upakovka_146.png")));
-                    jTabbedPane1.setTabComponentAt(1, lbl);                    
+                    jTabbedPane1.setTabComponentAt(1, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("НАБОРЫ  ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/gift-icon.png")));
-                    jTabbedPane1.setTabComponentAt(2, lbl);  
+                    jTabbedPane1.setTabComponentAt(2, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("КЛИЕНТЫ ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/Office-Client-Male-Dark-icon.png")));
-                    jTabbedPane1.setTabComponentAt(3, lbl);  
+                    jTabbedPane1.setTabComponentAt(3, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("ЗАКАЗЫ  ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/order-history-icon.png")));
-                    jTabbedPane1.setTabComponentAt(4, lbl);  
+                    jTabbedPane1.setTabComponentAt(4, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("СКЛАД   ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/lock-icon.png")));
-                    jTabbedPane1.setTabComponentAt(5, lbl);  
+                    jTabbedPane1.setTabComponentAt(5, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("ДОСТАВКА");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/Lorry-icon2.png")));
-                    jTabbedPane1.setTabComponentAt(6, lbl);  
+                    jTabbedPane1.setTabComponentAt(6, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("КАДРЫ   ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/user-group-icon.png")));
-                    jTabbedPane1.setTabComponentAt(7, lbl);  
+                    jTabbedPane1.setTabComponentAt(7, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("CONST   ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/gear-icon.png")));
-                    jTabbedPane1.setTabComponentAt(8, lbl);  
+                    jTabbedPane1.setTabComponentAt(8, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("ФИНАНСЫ ");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/coins-icon_big.png")));
-                    jTabbedPane1.setTabComponentAt(9, lbl);  
+                    jTabbedPane1.setTabComponentAt(9, lbl);
 
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("Конфеты");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/candy-icon.png")));
-                    jTabbedPane2.setTabComponentAt(0, lbl);  
+                    jTabbedPane2.setTabComponentAt(0, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("Упаковка");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/upakovka_146_2.png")));
-                    jTabbedPane2.setTabComponentAt(1, lbl); 
+                    jTabbedPane2.setTabComponentAt(1, lbl);
                     lbl = new JLabel();
                     lbl.setForeground(Color.BLUE);
                     lbl.setIconTextGap(5);
-                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);                    
+                    lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
                     lbl.setText("Заказ для склада");
                     lbl.setIcon(new ImageIcon(getClass().getResource("/Images/shopping-cart-icon.png")));
-                    jTabbedPane2.setTabComponentAt(2, lbl);                     
-                    
+                    jTabbedPane2.setTabComponentAt(2, lbl);
+
                     Authorization();
                 }
             });
@@ -375,14 +375,10 @@ public class MainForm extends javax.swing.JApplet {
     }
 
     public void ShowStartScreen() {
-        CardLayout cl = (CardLayout)jPanel1.getParent().getLayout();
+        CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
         cl.show(jPanel1.getParent(), "card2");
     }
-    
 
-    
-    
-    
     private void Authorization() {
         CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
         cl.show(jPanel1.getParent(), "card2");
@@ -406,42 +402,42 @@ public class MainForm extends javax.swing.JApplet {
         }
     }
 
-   public void Start() throws Exception {
-       
-       orderComplectationDialog = new OrderComplectationDialog(MainForm.this,db);
-       clientChooseDialog = new ClientChooseDialog(MainForm.this,db);
-       revenueExpensesDialog = new RevenueExpensesDialog(MainForm.this, db);
-       choosePackingWorkersDialog = new ChoosePackingWorkersDialog(MainForm.this, db);
-       deliveryDialog = new DeliveryDialog(MainForm.this,db);
-       chooseWorkersForPackingDialog = new ChooseWorkersForPackingDialog(MainForm.this,db);
-       productDeliveryDialog = new ProductDeliveryDialog(MainForm.this,db);
-       expensesDialog = new ExpensesDialog(MainForm.this,db);
-       labelPrintDialog = new LabelPrintDialog(MainForm.this,db);
-       chooseConsolidatedOrdersDialog = new ChooseConsolidatedOrdersDialog(MainForm.this,db);
-       expeditorsDialog = new ExpeditorsDialog(MainForm.this,db);
-       incomeCallDialog = new IncomeCallDialog(MainForm.this,db);
-       
-       db.DoSQL("ROLLBACK");
-       
-       Constants.setColumnNames(new String[]{"ID","STICK_COST","COST_BOX_FOR_1_GIFT","CURRENT_NUMBER","FTPaddress","FTPpass"});
-       GetConstants();
-       
-       FTP.setParameters(Constants.getString("FTPaddress"),Constants.getString("FTPpass"));
-       if (!FTP.setConnectionToFTP()) {
+    public void Start() throws Exception {
+
+        orderComplectationDialog = new OrderComplectationDialog(MainForm.this, db);
+        clientChooseDialog = new ClientChooseDialog(MainForm.this, db);
+        revenueExpensesDialog = new RevenueExpensesDialog(MainForm.this, db);
+        choosePackingWorkersDialog = new ChoosePackingWorkersDialog(MainForm.this, db);
+        deliveryDialog = new DeliveryDialog(MainForm.this, db);
+        chooseWorkersForPackingDialog = new ChooseWorkersForPackingDialog(MainForm.this, db);
+        productDeliveryDialog = new ProductDeliveryDialog(MainForm.this, db);
+        expensesDialog = new ExpensesDialog(MainForm.this, db);
+        labelPrintDialog = new LabelPrintDialog(MainForm.this, db);
+        chooseConsolidatedOrdersDialog = new ChooseConsolidatedOrdersDialog(MainForm.this, db);
+        expeditorsDialog = new ExpeditorsDialog(MainForm.this, db);
+        incomeCallDialog = new IncomeCallDialog(MainForm.this, db);
+
+        db.DoSQL("ROLLBACK");
+
+        Constants.setColumnNames(new String[]{"ID", "STICK_COST", "COST_BOX_FOR_1_GIFT", "CURRENT_NUMBER", "FTPaddress", "FTPpass"});
+        GetConstants();
+
+        FTP.setParameters(Constants.getString("FTPaddress"), Constants.getString("FTPpass"));
+        if (!FTP.setConnectionToFTP()) {
 //            JOptionPane.showMessageDialog(null, "Невозможно соединиться с FTP-сервером");
-       }
-       
-       try {
+        }
+
+        try {
             File file = new File("c:\\temp\\temp.tmp");
             file.getParentFile().mkdirs();
             file.delete();
             file.createNewFile();
-       } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Нет доступа к c:\\temp\\ , работа с файлами будет невозможна!"); 
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Нет доступа к c:\\temp\\ , работа с файлами будет невозможна!");
             System.out.println(ex.getMessage() + " 431");
-       }
-       
-       jDateChooser7.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+        }
+
+        jDateChooser7.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("date".equals(e.getPropertyName())) {
@@ -449,9 +445,9 @@ public class MainForm extends javax.swing.JApplet {
                     MakeTableOfDelivery();
                 }
             }
-       });
+        });
 
-       jDateChooser8.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+        jDateChooser8.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("date".equals(e.getPropertyName())) {
@@ -459,9 +455,9 @@ public class MainForm extends javax.swing.JApplet {
                     MakeTableOfFinances();
                 }
             }
-       });
-       
-       jDateChooser9.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+        });
+
+        jDateChooser9.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("date".equals(e.getPropertyName())) {
@@ -469,9 +465,9 @@ public class MainForm extends javax.swing.JApplet {
                     MakeTableOfFinances();
                 }
             }
-       });       
+        });
 
-       jDateChooser10.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+        jDateChooser10.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("date".equals(e.getPropertyName())) {
@@ -479,9 +475,9 @@ public class MainForm extends javax.swing.JApplet {
                     MakeTableOfExpenses();
                 }
             }
-       });        
+        });
 
-       jDateChooser11.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+        jDateChooser11.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("date".equals(e.getPropertyName())) {
@@ -489,385 +485,385 @@ public class MainForm extends javax.swing.JApplet {
                     MakeTableOfExpenses();
                 }
             }
-       });        
-       
-       userLevel = CurrentUser.getInt("LEVEL");
-       
-       switch (userLevel) {
-           case DIRECTOR: //директор
-               jLabel43.setText("Директор");
-               CanSeeCandies = true;
-               CanEditCandies = true;
-               CanDeleteCandies = true;
-               CanSeePackings = true;
-               CanEditPackings = true;
-               CanDeletePackings = true;
-               CanSeeGifts = true;
-               CanEditGifts = true;
-               CanDeleteGifts = true;
-               CanSeeClients = true;
-               CanEditClients = true;
-               CanDeleteClients = true;
-               CanSeeStorage = true;
-               CanEditStorage = true;
-               CanSeeUsers = true;
-               CanEditUsers = true;
-               CanDeleteUsers = true;
-               CanSeeConst = true;
-               CanEditConst = true;
-               CanSeeOrders = true;
-               CanMakeOrders = true;
-               CanEditOrders = true;
-               CanPayOrders = true;
-               CanPackOrders = true;
-               CanDeleteOrders = true;
-               CanSeeDelivery = true;
-               CanSeeFinances = true;
-               CanEditExpeditors = true;
-               CanSeeOrdersCount = true;
-               break;
-           case MANAGER: //менеджер по продажам
-               jLabel43.setText("Менеджер по продажам");
-               CanSeeCandies = true;
-               CanEditCandies = true;
-               CanDeleteCandies = true;
-               CanSeePackings = true;
-               CanEditPackings = true;
-               CanDeletePackings = true;
-               CanSeeGifts = true;
-               CanEditGifts = true;
-               CanDeleteGifts = true;
-               CanSeeClients = true;
-               CanEditClients = true;
-               CanDeleteClients = false;
-               CanSeeStorage = true;
-               CanEditStorage = false;
-               CanSeeUsers = false;
-               CanEditUsers = false;
-               CanDeleteUsers = false;
-               CanSeeConst = false;
-               CanEditConst = false;
-               CanSeeOrders = true;
-               CanMakeOrders = true;
-               CanEditOrders = true;
-               CanPayOrders = false;
-               CanPackOrders = false;
-               CanDeleteOrders = false;    
-               CanSeeDelivery = true;
-               CanSeeFinances = false;
-               CanEditExpeditors = true;
-               break;
-           case STORAGE_HEAD: //начальник склада
-               jLabel43.setText("Начальник склада");
-               CanSeeCandies = true;
-               CanEditCandies = true;
-               CanDeleteCandies = false;
-               CanSeePackings = true;
-               CanEditPackings = true;
-               CanDeletePackings = false;
-               CanSeeGifts = true;
-               CanEditGifts = false;
-               CanDeleteGifts = false;
-               CanSeeClients = false;
-               CanEditClients = false;
-               CanDeleteClients = false;
-               CanSeeStorage = true;
-               CanEditStorage = true;
-               CanSeeUsers = true;
-               CanEditUsers = true;
-               CanDeleteUsers = true;
-               CanSeeConst = false;
-               CanEditConst = false;
-               CanSeeOrders = true;
-               CanMakeOrders = false;
-               CanEditOrders = false;
-               CanPayOrders = false;
-               CanPackOrders = true;
-               CanDeleteOrders = false;    
-               CanSeeDelivery = true;
-               CanSeeFinances = false;
-               CanEditExpeditors = true;
-               break;
-           case LOGIST: //логист
-               jLabel43.setText("Логист");
-               CanSeeCandies = false;
-               CanEditCandies = false;
-               CanDeleteCandies = false;
-               CanSeePackings = false;
-               CanEditPackings = false;
-               CanDeletePackings = false;
-               CanSeeGifts = false;
-               CanEditGifts = false;
-               CanDeleteGifts = false;
-               CanSeeClients = false;
-               CanEditClients = false;
-               CanDeleteClients = false;
-               CanSeeStorage = false;
-               CanEditStorage = false;
-               CanSeeUsers = false;
-               CanEditUsers = false;
-               CanDeleteUsers = false;
-               CanSeeConst = false;
-               CanEditConst = false;
-               CanSeeOrders = false;
-               CanMakeOrders = false;
-               CanEditOrders = false;
-               CanPayOrders = false;
-               CanPackOrders = false;
-               CanDeleteOrders = false;    
-               CanSeeDelivery = true;
-               CanSeeFinances = false;
-               CanEditExpeditors = false;
-               break;
-           case STORAGE_WORKER: //работник склада
-               jLabel43.setText("Работник склада");
-               CanSeeCandies = false;
-               CanEditCandies = false;
-               CanDeleteCandies = false;
-               CanSeePackings = false;
-               CanEditPackings = false;
-               CanDeletePackings = false;
-               CanSeeGifts = false;
-               CanEditGifts = false;
-               CanDeleteGifts = false;
-               CanSeeClients = false;
-               CanEditClients = false;
-               CanDeleteClients = false;
-               CanSeeStorage = false;
-               CanEditStorage = false;
-               CanSeeUsers = false;
-               CanEditUsers = false;
-               CanDeleteUsers = false;
-               CanSeeConst = false;
-               CanEditConst = false;
-               CanSeeOrders = false;
-               CanMakeOrders = false;
-               CanEditOrders = false;
-               CanPayOrders = false;
-               CanPackOrders = false;
-               CanDeleteOrders = false;    
-               CanSeeDelivery = false;
-               CanSeeFinances = false;
-               CanEditExpeditors = false;
-               break;               
-       }
+        });
 
-       if (!CanSeeConst) {
-           jTabbedPane1.remove(jPanel45);
-       }
-       if (!CanSeeUsers) {
-           jTabbedPane1.remove(jPanel5);
-       }
-       if (!CanSeeDelivery) {
-           jTabbedPane1.remove(jPanel19);
-       }
-       if (!CanSeeStorage) {
-           jTabbedPane1.remove(jPanel8);
-       }
-       if (!CanSeeOrders) {
-           jTabbedPane1.remove(jPanel9);
-       }
-       if (!CanSeeClients) {
-           jTabbedPane1.remove(jPanel7);
-       }
-       if (!CanSeeGifts) {
-           jTabbedPane1.remove(jPanel37);
-       }
-       if (!CanSeePackings) {
-           jTabbedPane1.remove(jPanel41);
-       }
-       if (!CanSeeCandies) {
-           try {
-               jTabbedPane1.remove(jPanel4);
-           } catch (Exception ex) {}
-       }
-       if (!CanSeeFinances) {
-           try {
-               jTabbedPane1.remove(jPanel174);
-           } catch (Exception ex) {}
-       }
-       
-       jButton30.setVisible(CanEditCandies);
-       jButton31.setVisible(CanEditCandies);
-       jButton34.setVisible(CanEditPackings);
-       jButton38.setVisible(CanEditGifts);
-       jButton63.setVisible(CanEditGifts);
-       jButton36.setVisible(CanEditClients);
-       jPanel192.setVisible(CanEditStorage);
-       jPanel193.setVisible(CanEditStorage);
-       jButton42.setVisible(CanEditUsers);
-       jPanel101.setVisible(CanEditConst);
-       jButton22.setVisible(CanMakeOrders);
-       jButton23.setVisible(CanDeleteOrders);
-       jLabel144.setVisible(false);
-       jLabel145.setVisible(false);
-       jLabel146.setVisible(false);
-       jTextField57.setVisible(false);
-       jTextField58.setVisible(false);
-       
-       jLabel4.setText((String) CurrentUser.get("NAME"));
- 
-       
-       changeView_Table_Tree_CandiesForPackage();
+        userLevel = CurrentUser.getInt("LEVEL");
 
-       Candies.setColumnNames(new String[]{"ID", "CANDY_NAME", "ID_FACTORY", "BOX_WEIGHT", "AMOUNT_IN_BOX", "COST_KG", "FACTORY_NAME","CANDY_COST","STORAGE","RESERVED","COMM","LAST_CHANGE_COST","ISUSED","DISCOUNT"});
-       Users.setColumnNames(new String[]{"ID", "NAME", "LOGIN", "PASS", "LEVEL", "CAN_ENTER","FINANCE_PASS","PHONE","COMMENT","ID_POSITION","ID_USER_BOSS"});
-       Clients.setColumnNames(new String[]{"ID", "OFFICIAL_NAME","ISUSED","STATE"});
-       ClientsToCheck.setColumnNames(new String[]{"PHONE1","PHONE2","PHONE3","EMAIL1","EMAIL2","EMAIL3","EDRPOU"});
-       Folders.setColumnNames(new String[]{"ID","NAME"});
-       Clients_Folders.setColumnNames(new String[]{"ID_CLIENT","ID_FOLDER"});
-       ExtendedClient.setColumnNames(new String[]{"NAME","DATE_TIME","CONTACT1", "CONTACT2","CONTACT3","PHONE1","ADDITIONAL_PHONE1","FAX","PHONE2","ADDITIONAL_PHONE2","PHONE3","ADDITIONAL_PHONE3","EMAIL1","EMAIL2","EMAIL3", "SITE", "ADDRESS", "COMM","USER_CREATOR_NAME","EDRPOU"});
-       Gifts.setColumnNames(new String[]{"ID", "NAME","COST_PACKING"});
+        switch (userLevel) {
+            case DIRECTOR: //директор
+                jLabel43.setText("Директор");
+                CanSeeCandies = true;
+                CanEditCandies = true;
+                CanDeleteCandies = true;
+                CanSeePackings = true;
+                CanEditPackings = true;
+                CanDeletePackings = true;
+                CanSeeGifts = true;
+                CanEditGifts = true;
+                CanDeleteGifts = true;
+                CanSeeClients = true;
+                CanEditClients = true;
+                CanDeleteClients = true;
+                CanSeeStorage = true;
+                CanEditStorage = true;
+                CanSeeUsers = true;
+                CanEditUsers = true;
+                CanDeleteUsers = true;
+                CanSeeConst = true;
+                CanEditConst = true;
+                CanSeeOrders = true;
+                CanMakeOrders = true;
+                CanEditOrders = true;
+                CanPayOrders = true;
+                CanPackOrders = true;
+                CanDeleteOrders = true;
+                CanSeeDelivery = true;
+                CanSeeFinances = true;
+                CanEditExpeditors = true;
+                CanSeeOrdersCount = true;
+                break;
+            case MANAGER: //менеджер по продажам
+                jLabel43.setText("Менеджер по продажам");
+                CanSeeCandies = true;
+                CanEditCandies = true;
+                CanDeleteCandies = true;
+                CanSeePackings = true;
+                CanEditPackings = true;
+                CanDeletePackings = true;
+                CanSeeGifts = true;
+                CanEditGifts = true;
+                CanDeleteGifts = true;
+                CanSeeClients = true;
+                CanEditClients = true;
+                CanDeleteClients = false;
+                CanSeeStorage = true;
+                CanEditStorage = false;
+                CanSeeUsers = false;
+                CanEditUsers = false;
+                CanDeleteUsers = false;
+                CanSeeConst = false;
+                CanEditConst = false;
+                CanSeeOrders = true;
+                CanMakeOrders = true;
+                CanEditOrders = true;
+                CanPayOrders = false;
+                CanPackOrders = false;
+                CanDeleteOrders = false;
+                CanSeeDelivery = true;
+                CanSeeFinances = false;
+                CanEditExpeditors = true;
+                break;
+            case STORAGE_HEAD: //начальник склада
+                jLabel43.setText("Начальник склада");
+                CanSeeCandies = true;
+                CanEditCandies = true;
+                CanDeleteCandies = false;
+                CanSeePackings = true;
+                CanEditPackings = true;
+                CanDeletePackings = false;
+                CanSeeGifts = true;
+                CanEditGifts = false;
+                CanDeleteGifts = false;
+                CanSeeClients = false;
+                CanEditClients = false;
+                CanDeleteClients = false;
+                CanSeeStorage = true;
+                CanEditStorage = true;
+                CanSeeUsers = true;
+                CanEditUsers = true;
+                CanDeleteUsers = true;
+                CanSeeConst = false;
+                CanEditConst = false;
+                CanSeeOrders = true;
+                CanMakeOrders = false;
+                CanEditOrders = false;
+                CanPayOrders = false;
+                CanPackOrders = true;
+                CanDeleteOrders = false;
+                CanSeeDelivery = true;
+                CanSeeFinances = false;
+                CanEditExpeditors = true;
+                break;
+            case LOGIST: //логист
+                jLabel43.setText("Логист");
+                CanSeeCandies = false;
+                CanEditCandies = false;
+                CanDeleteCandies = false;
+                CanSeePackings = false;
+                CanEditPackings = false;
+                CanDeletePackings = false;
+                CanSeeGifts = false;
+                CanEditGifts = false;
+                CanDeleteGifts = false;
+                CanSeeClients = false;
+                CanEditClients = false;
+                CanDeleteClients = false;
+                CanSeeStorage = false;
+                CanEditStorage = false;
+                CanSeeUsers = false;
+                CanEditUsers = false;
+                CanDeleteUsers = false;
+                CanSeeConst = false;
+                CanEditConst = false;
+                CanSeeOrders = false;
+                CanMakeOrders = false;
+                CanEditOrders = false;
+                CanPayOrders = false;
+                CanPackOrders = false;
+                CanDeleteOrders = false;
+                CanSeeDelivery = true;
+                CanSeeFinances = false;
+                CanEditExpeditors = false;
+                break;
+            case STORAGE_WORKER: //работник склада
+                jLabel43.setText("Работник склада");
+                CanSeeCandies = false;
+                CanEditCandies = false;
+                CanDeleteCandies = false;
+                CanSeePackings = false;
+                CanEditPackings = false;
+                CanDeletePackings = false;
+                CanSeeGifts = false;
+                CanEditGifts = false;
+                CanDeleteGifts = false;
+                CanSeeClients = false;
+                CanEditClients = false;
+                CanDeleteClients = false;
+                CanSeeStorage = false;
+                CanEditStorage = false;
+                CanSeeUsers = false;
+                CanEditUsers = false;
+                CanDeleteUsers = false;
+                CanSeeConst = false;
+                CanEditConst = false;
+                CanSeeOrders = false;
+                CanMakeOrders = false;
+                CanEditOrders = false;
+                CanPayOrders = false;
+                CanPackOrders = false;
+                CanDeleteOrders = false;
+                CanSeeDelivery = false;
+                CanSeeFinances = false;
+                CanEditExpeditors = false;
+                break;
+        }
+
+        if (!CanSeeConst) {
+            jTabbedPane1.remove(jPanel45);
+        }
+        if (!CanSeeUsers) {
+            jTabbedPane1.remove(jPanel5);
+        }
+        if (!CanSeeDelivery) {
+            jTabbedPane1.remove(jPanel19);
+        }
+        if (!CanSeeStorage) {
+            jTabbedPane1.remove(jPanel8);
+        }
+        if (!CanSeeOrders) {
+            jTabbedPane1.remove(jPanel9);
+        }
+        if (!CanSeeClients) {
+            jTabbedPane1.remove(jPanel7);
+        }
+        if (!CanSeeGifts) {
+            jTabbedPane1.remove(jPanel37);
+        }
+        if (!CanSeePackings) {
+            jTabbedPane1.remove(jPanel41);
+        }
+        if (!CanSeeCandies) {
+            try {
+                jTabbedPane1.remove(jPanel4);
+            } catch (Exception ex) {
+            }
+        }
+        if (!CanSeeFinances) {
+            try {
+                jTabbedPane1.remove(jPanel174);
+            } catch (Exception ex) {
+            }
+        }
+
+        jButton30.setVisible(CanEditCandies);
+        jButton31.setVisible(CanEditCandies);
+        jButton34.setVisible(CanEditPackings);
+        jButton38.setVisible(CanEditGifts);
+        jButton63.setVisible(CanEditGifts);
+        jButton36.setVisible(CanEditClients);
+        jPanel192.setVisible(CanEditStorage);
+        jPanel193.setVisible(CanEditStorage);
+        jButton42.setVisible(CanEditUsers);
+        jPanel101.setVisible(CanEditConst);
+        jButton22.setVisible(CanMakeOrders);
+        jButton23.setVisible(CanDeleteOrders);
+        jLabel144.setVisible(false);
+        jLabel145.setVisible(false);
+        jLabel146.setVisible(false);
+        jTextField57.setVisible(false);
+        jTextField58.setVisible(false);
+
+        jLabel4.setText((String) CurrentUser.get("NAME"));
+
+        changeView_Table_Tree_CandiesForPackage();
+
+        Candies.setColumnNames(new String[]{"ID", "CANDY_NAME", "ID_FACTORY", "BOX_WEIGHT", "AMOUNT_IN_BOX", "COST_KG", "FACTORY_NAME", "CANDY_COST", "STORAGE", "RESERVED", "COMM", "LAST_CHANGE_COST", "ISUSED", "DISCOUNT"});
+        Users.setColumnNames(new String[]{"ID", "NAME", "LOGIN", "PASS", "LEVEL", "CAN_ENTER", "FINANCE_PASS", "PHONE", "COMMENT", "ID_POSITION", "ID_USER_BOSS"});
+        Clients.setColumnNames(new String[]{"ID", "OFFICIAL_NAME", "ISUSED", "STATE"});
+        ClientsToCheck.setColumnNames(new String[]{"PHONE1", "PHONE2", "PHONE3", "EMAIL1", "EMAIL2", "EMAIL3", "EDRPOU"});
+        Folders.setColumnNames(new String[]{"ID", "NAME"});
+        Clients_Folders.setColumnNames(new String[]{"ID_CLIENT", "ID_FOLDER"});
+        ExtendedClient.setColumnNames(new String[]{"NAME", "DATE_TIME", "CONTACT1", "CONTACT2", "CONTACT3", "PHONE1", "ADDITIONAL_PHONE1", "FAX", "PHONE2", "ADDITIONAL_PHONE2", "PHONE3", "ADDITIONAL_PHONE3", "EMAIL1", "EMAIL2", "EMAIL3", "SITE", "ADDRESS", "COMM", "USER_CREATOR_NAME", "EDRPOU"});
+        Gifts.setColumnNames(new String[]{"ID", "NAME", "COST_PACKING"});
 //       GiftFolders.setColumnNames(new String[]{"FOLDER_NAME"});
-       Gift_Candy.setColumnNames(new String[]{"ID","ID_CANDY","AMOUNT","CANDY_NAME","BOX_WEIGHT","AMOUNT_IN_BOX","COST_KG","FACTORY_NAME"});
-       Packings.setColumnNames(new String[]{"ID","NAME","TYPE","NUMBER","CAPACITY","STORAGE","RESERVED","FILENAME","COST","MARKED"});
-       FilteredPackings.setColumnNames(new String[]{"ID","NAME","TYPE","NUMBER","CAPACITY","STORAGE","RESERVED","FILENAME","COST","MARKED"});
-       Orders.setColumnNames(new String[]{"ID","DATE_TIME","ID_CLIENT","CLIENT_NAME","STATE","MIN_DATE_DELIVERY","NUMBER"});
-       ExtendedOrder.setColumnNames(new String[]{"TYPE_PAY","DATE_PAY","DATE_PACK","PREPAY","DISCOUNT","COMM_PACKING","COMM","DELIVERY_COST","USER_CREATOR_NAME"});    
-       SubOrders.setColumnNames(new String[]{"ID","ID_GIFT","GIFT_NAME","GIFT_COST_PACKING","ID_PACKING","PACKING_NAME","PACKING_NUMBER","AMOUNT","COST","SELF_COST","PACKED","PACKING_WEIGHT"});
-       OrdersCount.setColumnNames(new String[]{"AMOUNT","COST"});
-       Storage.setColumnNames(new String[]{"DATE_TIME","AMOUNT","USER","CLIENT","FACTURA"});
-       Delivery.setColumnNames(new String[]{"ID","DATE_TIME","DATE_SEND","DATE_CLOSE","TTN","CONTACT","WHO_PAYS","DELIVERY_TYPE","ADDRESS","CONTENT","PRESENT","COMM","STATE","CLIENT","ID_ORDERS","DEBT","USER_CREATOR_NAME","TYPE_PAY_ORDER","EXPEDITORS_NAME"});
-       DeliveryOrder.setColumnNames(new String[]{"ID","DATE_TIME","DATE_DELIVERY_COUNTRY","DATE_SEND","DATE_CLOSE","CONTACT","WHO_PAYS","DELIVERY_TYPE","ADDRESS","CONTENT","PRESENT","COMM","DEBT","STATE","TYPE_PAY_ORDER"});
-       Finances.setColumnNames(new String[]{"DATE_TIME","DELIVERY_COST","CLIENT_NAME","SELF_COST","COST","DELIVERY_TRANSPORT_COST","DELIVERY_PAYMENT","DELIVERY_COURIER_COST"});
-       Expenses.setColumnNames(new String[]{"ID","DATE_TIME","NAME","COST"});
-       Expeditors.setColumnNames(new String[]{"ID", "NAME","DRIVER"});
-       //////////////////////////
-       Timer t = new Timer();
-       TimerTask tt = new TimerTask() {
+        Gift_Candy.setColumnNames(new String[]{"ID", "ID_CANDY", "AMOUNT", "CANDY_NAME", "BOX_WEIGHT", "AMOUNT_IN_BOX", "COST_KG", "FACTORY_NAME"});
+        Packings.setColumnNames(new String[]{"ID", "NAME", "TYPE", "NUMBER", "CAPACITY", "STORAGE", "RESERVED", "FILENAME", "COST", "MARKED"});
+        FilteredPackings.setColumnNames(new String[]{"ID", "NAME", "TYPE", "NUMBER", "CAPACITY", "STORAGE", "RESERVED", "FILENAME", "COST", "MARKED"});
+        Orders.setColumnNames(new String[]{"ID", "DATE_TIME", "ID_CLIENT", "CLIENT_NAME", "STATE", "MIN_DATE_DELIVERY", "NUMBER"});
+        ExtendedOrder.setColumnNames(new String[]{"TYPE_PAY", "DATE_PAY", "DATE_PACK", "PREPAY", "DISCOUNT", "COMM_PACKING", "COMM", "DELIVERY_COST", "USER_CREATOR_NAME"});
+        SubOrders.setColumnNames(new String[]{"ID", "ID_GIFT", "GIFT_NAME", "GIFT_COST_PACKING", "ID_PACKING", "PACKING_NAME", "PACKING_NUMBER", "AMOUNT", "COST", "SELF_COST", "PACKED", "PACKING_WEIGHT"});
+        OrdersCount.setColumnNames(new String[]{"AMOUNT", "COST"});
+        Storage.setColumnNames(new String[]{"DATE_TIME", "AMOUNT", "USER", "CLIENT", "FACTURA"});
+        Delivery.setColumnNames(new String[]{"ID", "DATE_TIME", "DATE_SEND", "DATE_CLOSE", "TTN", "CONTACT", "WHO_PAYS", "DELIVERY_TYPE", "ADDRESS", "CONTENT", "PRESENT", "COMM", "STATE", "CLIENT", "ID_ORDERS", "DEBT", "USER_CREATOR_NAME", "TYPE_PAY_ORDER", "EXPEDITORS_NAME"});
+        DeliveryOrder.setColumnNames(new String[]{"ID", "DATE_TIME", "DATE_DELIVERY_COUNTRY", "DATE_SEND", "DATE_CLOSE", "CONTACT", "WHO_PAYS", "DELIVERY_TYPE", "ADDRESS", "CONTENT", "PRESENT", "COMM", "DEBT", "STATE", "TYPE_PAY_ORDER"});
+        Finances.setColumnNames(new String[]{"DATE_TIME", "DELIVERY_COST", "CLIENT_NAME", "SELF_COST", "COST", "DELIVERY_TRANSPORT_COST", "DELIVERY_PAYMENT", "DELIVERY_COURIER_COST"});
+        Expenses.setColumnNames(new String[]{"ID", "DATE_TIME", "NAME", "COST"});
+        Expeditors.setColumnNames(new String[]{"ID", "NAME", "DRIVER"});
+        //////////////////////////
+        Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
 
-           private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
-           int Counter = 600;
-           Long value = 0L;
+            private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+            int Counter = 600;
+            Long value = 0L;
 
-           @Override
-           public void run() {
-               if (Counter >= 600) {
-                   value = Calendar.getInstance().getTimeInMillis();
-                   Counter = 0;
-               }
-               jLabel3.setText(sdf.format(new Date(value)));
-               value += 1000;
-               Counter++;
-           }
-       };
-       t.schedule(tt, 1000, 1000);
+            @Override
+            public void run() {
+                if (Counter >= 600) {
+                    value = Calendar.getInstance().getTimeInMillis();
+                    Counter = 0;
+                }
+                jLabel3.setText(sdf.format(new Date(value)));
+                value += 1000;
+                Counter++;
+            }
+        };
+        t.schedule(tt, 1000, 1000);
 
-       /////////////////////////
-       Timer waitingForIncomingCall = new Timer();
-       TimerTask waitingForIncomingCallTask = new TimerTask() {
+        /////////////////////////
+        Timer waitingForIncomingCall = new Timer();
+        TimerTask waitingForIncomingCallTask = new TimerTask() {
 
-           private boolean gotCall = false;
-           
-           @Override
-           public void run() {
-               try {
-                   Object[][] obj = db.SelectSQL("SELECT generalCallID,income_call_number FROM user WHERE id=?", new Object[]{CurrentUser.get("ID")});
-                   int generalCallID = (Integer)obj[0][0];
-                   //System.out.println(generalCallID);
-                   if (generalCallID==-1 && gotCall) { //значит звонок был и уже окончен
-                       gotCall = false;
-                       incomeCallDialog.setVisible(false);
-                   } else if (generalCallID>-1 && !gotCall) { //значит звонка не было и он только появился
-                       gotCall = true;
-                       incomeCallDialog.initDialog((String)obj[0][1]);
-                   }
-               } catch (Exception ex) {
-                   System.out.println(ex.getMessage() + " 763");
-               }
-           }
-       };
-       waitingForIncomingCall.schedule(waitingForIncomingCallTask, 5000, 2000);
-       //////////////////////////
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/empty.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/coins-icon.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/upakovka_146_2.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/lock-icon2.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
+            private boolean gotCall = false;
+
+            @Override
+            public void run() {
+                try {
+                    Object[][] obj = db.SelectSQL("SELECT generalCallID,income_call_number FROM user WHERE id=?", new Object[]{CurrentUser.get("ID")});
+                    int generalCallID = (Integer) obj[0][0];
+                    //System.out.println(generalCallID);
+                    if (generalCallID == -1 && gotCall) { //значит звонок был и уже окончен
+                        gotCall = false;
+                        incomeCallDialog.setVisible(false);
+                    } else if (generalCallID > -1 && !gotCall) { //значит звонка не было и он только появился
+                        gotCall = true;
+                        incomeCallDialog.initDialog((String) obj[0][1]);
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage() + " 763");
+                }
+            }
+        };
+        waitingForIncomingCall.schedule(waitingForIncomingCallTask, 5000, 2000);
+        //////////////////////////
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/empty.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/coins-icon.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/upakovka_146_2.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/lock-icon2.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
 //       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/gift-icon2.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
-       jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Delete.png")));
-       
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/empty.png")));
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/coins-icon.png")));
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/upakovka_146_2.png")));
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/lock-icon2.png")));
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
+        jComboBox1.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Delete.png")));
+
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/empty.png")));
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/coins-icon.png")));
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/upakovka_146_2.png")));
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/lock-icon2.png")));
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
 //       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/gift-icon2.png")));
-       jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
-       
-       switch (userLevel) {
-           case DIRECTOR:
-           case MANAGER:
-               jComboBox1.setSelectedIndex(0);
-               break;
-           case STORAGE_HEAD:
-               //jLabel93.setVisible(false);
-               //jPanel107.setVisible(false);
-               jComboBox1.setSelectedIndex(0);
-               break;
-           case LOGIST:
-           case STORAGE_WORKER:
-               jLabel93.setVisible(false);
-               jPanel107.setVisible(false);
-               break;
-       }
-       
-       MakePanelOfConstants();
-       
-       jTabbedPane1StateChanged(null);
-       
-       GetUsers();
-       jComboBox6.removeAllItems();
-       jComboBox7.removeAllItems();
-       jComboBox10.removeAllItems(); 
-       jComboBox11.removeAllItems(); 
-       jComboBox6.addItem(" ");
-       jComboBox7.addItem(" ");
-       jComboBox10.addItem(" ");
-       jComboBox11.addItem(" ");
-       for (int i = 0; i < Users.getLength(); i++) {
-           if (Users.getInt(i, "LEVEL") == MANAGER || Users.getInt(i, "LEVEL") == DIRECTOR) {
-               jComboBox6.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
-               jComboBox7.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
-               jComboBox10.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
-               jComboBox11.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
-           }
-       }
-       getExpeditors();
-       fillComboboxExpeditorsInDeliveryFilter();
-       fillComboboxDeliveryTypesInDeliveryFilter();
- 
-       CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
-       cl.show(jPanel1.getParent(), "card3");
-        
-       
+        jComboBox3.addItem(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
+
+        switch (userLevel) {
+            case DIRECTOR:
+            case MANAGER:
+                jComboBox1.setSelectedIndex(0);
+                break;
+            case STORAGE_HEAD:
+                //jLabel93.setVisible(false);
+                //jPanel107.setVisible(false);
+                jComboBox1.setSelectedIndex(0);
+                break;
+            case LOGIST:
+            case STORAGE_WORKER:
+                jLabel93.setVisible(false);
+                jPanel107.setVisible(false);
+                break;
+        }
+
+        MakePanelOfConstants();
+
+        jTabbedPane1StateChanged(null);
+
+        GetUsers();
+        jComboBox6.removeAllItems();
+        jComboBox7.removeAllItems();
+        jComboBox10.removeAllItems();
+        jComboBox11.removeAllItems();
+        jComboBox6.addItem(" ");
+        jComboBox7.addItem(" ");
+        jComboBox10.addItem(" ");
+        jComboBox11.addItem(" ");
+        for (int i = 0; i < Users.getLength(); i++) {
+            if (Users.getInt(i, "LEVEL") == MANAGER || Users.getInt(i, "LEVEL") == DIRECTOR) {
+                jComboBox6.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
+                jComboBox7.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
+                jComboBox10.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
+                jComboBox11.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
+            }
+        }
+        getExpeditors();
+        fillComboboxExpeditorsInDeliveryFilter();
+        fillComboboxDeliveryTypesInDeliveryFilter();
+
+        CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
+        cl.show(jPanel1.getParent(), "card3");
+
     }
 
     private boolean GetCandies(CandiesOrder order) {
         Object[][] obj = null;
-        
-        if (order==CandiesOrder.ALPHABET) {
+
+        if (order == CandiesOrder.ALPHABET) {
             obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, "
                     + "candy.id_factory AS id_factory, candy.box_weight, candy.amount_in_box, "
                     + "candy.cost_kg, factory.name as factory_name,candy.cost_kg*candy.box_weight/candy.amount_in_box "
                     + "as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,"
                     + "(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),factory.discount FROM candy, "
-                    + "factory WHERE candy.id_factory = factory.id" + filterName + " GROUP BY id_factory, candy_id "+
-                             "UNION SELECT null,null,factory.id as id_factory,null,null,null,factory.name as "
+                    + "factory WHERE candy.id_factory = factory.id" + filterName + " GROUP BY id_factory, candy_id "
+                    + "UNION SELECT null,null,factory.id as id_factory,null,null,null,factory.name as "
                     + "factory_name,null,null,null,null,null,null,factory.discount FROM factory WHERE factory.id NOT IN "
-                    + "(SELECT candy.id_factory FROM candy) "+
-                             "ORDER BY factory_name, candy_name",null);
-        } else if (order==CandiesOrder.COST) {
-            obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight,candy.amount_in_box, candy.cost_kg, factory.name as factory_name,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id" + filterName + " LIMIT 1),factory.discount FROM candy, factory WHERE candy.id_factory = factory.id GROUP BY id_factory, candy_id "+
-                             "UNION SELECT null,null,factory.id as id_factory,null,null,null,factory.name as factory_name,null,null,null,null,null,null,factory.discount FROM factory WHERE factory.id NOT IN (SELECT candy.id_factory FROM candy) "+
-                             "ORDER BY factory_name, candy_cost",null);
-        } else if (order==CandiesOrder.RELATIVE_COST) {
-            obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight as box_weight,candy.amount_in_box as amount_in_box, candy.cost_kg as cost_kg, factory.name as factory_name,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),factory.discount FROM candy, factory WHERE candy.id_factory = factory.id" + filterName + " GROUP BY id_factory, candy_id "+
-                             "UNION SELECT null,null,factory.id as id_factory,null,null,null,factory.name as factory_name,null,null,null,null,null,null,factory.discount FROM factory WHERE factory.id NOT IN (SELECT candy.id_factory FROM candy) "+
-                             "ORDER BY factory_name, cost_kg",null);
+                    + "(SELECT candy.id_factory FROM candy) "
+                    + "ORDER BY factory_name, candy_name", null);
+        } else if (order == CandiesOrder.COST) {
+            obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight,candy.amount_in_box, candy.cost_kg, factory.name as factory_name,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id" + filterName + " LIMIT 1),factory.discount FROM candy, factory WHERE candy.id_factory = factory.id GROUP BY id_factory, candy_id "
+                    + "UNION SELECT null,null,factory.id as id_factory,null,null,null,factory.name as factory_name,null,null,null,null,null,null,factory.discount FROM factory WHERE factory.id NOT IN (SELECT candy.id_factory FROM candy) "
+                    + "ORDER BY factory_name, candy_cost", null);
+        } else if (order == CandiesOrder.RELATIVE_COST) {
+            obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight as box_weight,candy.amount_in_box as amount_in_box, candy.cost_kg as cost_kg, factory.name as factory_name,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),factory.discount FROM candy, factory WHERE candy.id_factory = factory.id" + filterName + " GROUP BY id_factory, candy_id "
+                    + "UNION SELECT null,null,factory.id as id_factory,null,null,null,factory.name as factory_name,null,null,null,null,null,null,factory.discount FROM factory WHERE factory.id NOT IN (SELECT candy.id_factory FROM candy) "
+                    + "ORDER BY factory_name, cost_kg", null);
         }
         if (obj == null) {
             JOptionPane.showMessageDialog(null, "Нет совпадений названия");
@@ -875,11 +871,11 @@ public class MainForm extends javax.swing.JApplet {
         } else {
             Candies.set(obj);
         }
-        return obj!=null;
+        return obj != null;
     }
 
     private void MakeTreeOfCandiesForGift() {
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"", 0});
         DefaultMutableTreeNode child1 = null;
         DefaultMutableTreeNode child2;
         int last_factory = 0;
@@ -894,11 +890,11 @@ public class MainForm extends javax.swing.JApplet {
                 last_factory = id_factory;
             }
             if (Candies.getInt(i, "ID") != 0) {
-                double weight_one = Candies.getDouble(i, "BOX_WEIGHT")/Candies.getInt(i, "AMOUNT_IN_BOX");
+                double weight_one = Candies.getDouble(i, "BOX_WEIGHT") / Candies.getInt(i, "AMOUNT_IN_BOX");
                 String name = Candies.getString(i, "CANDY_NAME");
                 String cost = FormatUAH.format(Candies.getDouble(i, "CANDY_COST"));
                 String weight = FormatKG.format(weight_one);
-                boolean IsUsed = Candies.getInt(i,"ISUSED")!=0;
+                boolean IsUsed = Candies.getInt(i, "ISUSED") != 0;
                 Object obj[] = new Object[]{name, i, cost, weight, IsUsed};
                 child2 = new DefaultMutableTreeNode(obj);
                 child1.add(child2);
@@ -911,31 +907,35 @@ public class MainForm extends javax.swing.JApplet {
             jTree5.expandRow(i);
         }
     }
-    
+
     private void MakeTableOfCandiesForGift() {
         Object[][] candies = new Object[Candies.getLength()][6];
-        
-        for (int i=0;i<Candies.getLength();i++) {
-                candies[i][0] = Candies.getString(i, "CANDY_NAME");
-                candies[i][1] = Candies.getString(i, "FACTORY_NAME");
-                candies[i][2] = Candies.getDouble(i, "BOX_WEIGHT")/Candies.getInt(i, "AMOUNT_IN_BOX");
-                candies[i][3] = Candies.getDouble(i, "CANDY_COST");
-                candies[i][4] = Candies.getInt(i,"ISUSED")!=0;
-                candies[i][5] = Candies.getInt(i, "ID");            
+
+        for (int i = 0; i < Candies.getLength(); i++) {
+            candies[i][0] = Candies.getString(i, "CANDY_NAME");
+            candies[i][1] = Candies.getString(i, "FACTORY_NAME");
+            candies[i][2] = Candies.getDouble(i, "BOX_WEIGHT") / Candies.getInt(i, "AMOUNT_IN_BOX");
+            candies[i][3] = Candies.getDouble(i, "CANDY_COST");
+            candies[i][4] = Candies.getInt(i, "ISUSED") != 0;
+            candies[i][5] = Candies.getInt(i, "ID");
         }
-        
+
         if (jToggleButton3.isSelected()) { //sort by alphabet
             Arrays.sort(candies, new Comparator() {
 
                 private String s1;
                 private String s2;
-                
+
                 @Override
                 public int compare(Object o1, Object o2) {
-                    s1 = (String)((Object[])o1)[0];
-                    s2 = (String)((Object[])o2)[0];
-                    if (s1==null) return 1;
-                    if (s2==null) return -1;
+                    s1 = (String) ((Object[]) o1)[0];
+                    s2 = (String) ((Object[]) o2)[0];
+                    if (s1 == null) {
+                        return 1;
+                    }
+                    if (s2 == null) {
+                        return -1;
+                    }
                     return s1.compareTo(s2);
                 }
             });
@@ -944,46 +944,46 @@ public class MainForm extends javax.swing.JApplet {
 
                 private Double d1;
                 private Double d2;
-                
+
                 @Override
                 public int compare(Object o1, Object o2) {
-                    d1 = (Double)((Object[])o1)[3];
-                    d2 = (Double)((Object[])o2)[3];
+                    d1 = (Double) ((Object[]) o1)[3];
+                    d2 = (Double) ((Object[]) o2)[3];
                     return d1.compareTo(d2);
                 }
             });
         } else { // sort by cost/weight
             Arrays.sort(candies, new Comparator() {
-                
+
                 private Double cost1;
                 private Double cost2;
                 private Double weight1;
                 private Double weight2;
-                
+
                 @Override
                 public int compare(Object o1, Object o2) {
-                    cost1 = (Double)((Object[])o1)[3];
-                    weight1 = (Double)((Object[])o1)[2];
-                    cost2 = (Double)((Object[])o2)[3];
-                    weight2 = (Double)((Object[])o2)[2];
-                    return ((Double)(cost1/weight1)).compareTo((Double)(cost2/weight2));
+                    cost1 = (Double) ((Object[]) o1)[3];
+                    weight1 = (Double) ((Object[]) o1)[2];
+                    cost2 = (Double) ((Object[]) o2)[3];
+                    weight2 = (Double) ((Object[]) o2)[2];
+                    return ((Double) (cost1 / weight1)).compareTo((Double) (cost2 / weight2));
                 }
             });
         }
-        
+
         //cast Double cost to String cost and Double weight to String weight
-        for (int i=0;i<candies.length;i++) {
-            candies[i][2] = FormatKG.format(candies[i][3]);            
+        for (int i = 0; i < candies.length; i++) {
+            candies[i][2] = FormatKG.format(candies[i][3]);
             candies[i][3] = FormatUAH.format(candies[i][3]);
         }
-        
+
         jTable18.makeTable(candies);
-    }    
+    }
 
     private void MakeTreeOfCandies() {
         int[] SaveCurrentRow = jTree1.getSelectionRows();
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"ВСЕ ФАБРИКИ",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"ВСЕ ФАБРИКИ", 0});
         DefaultMutableTreeNode child1 = null;
         DefaultMutableTreeNode child2;
         int last_factory = 0;
@@ -999,7 +999,7 @@ public class MainForm extends javax.swing.JApplet {
             }
             if (Candies.getInt(i, "ID") != 0) {
                 String name = Candies.getString(i, "CANDY_NAME");
-                boolean IsUsed = Candies.getInt(i, "ISUSED")!=0;
+                boolean IsUsed = Candies.getInt(i, "ISUSED") != 0;
                 Object obj[] = new Object[]{name, i, IsUsed};
                 child2 = new DefaultMutableTreeNode(obj);
                 child1.add(child2);
@@ -1020,46 +1020,46 @@ public class MainForm extends javax.swing.JApplet {
     }
 
     private void MakeTableOfCandiesOfFactory(DefaultMutableTreeNode SelectedNode) {
-        if (SelectedNode.getLevel()==0) {
-            Object data[][] = new Object[jTree1.getRowCount()-1][8];
+        if (SelectedNode.getLevel() == 0) {
+            Object data[][] = new Object[jTree1.getRowCount() - 1][8];
             DefaultMutableTreeNode child1;
             DefaultMutableTreeNode child2;
             int count = 0;
-            for (int j=0;j<SelectedNode.getChildCount();j++,count++) {
-                child1 = (DefaultMutableTreeNode)SelectedNode.getChildAt(j);
-                for (int i=0;i<child1.getChildCount();i++,count++) {
-                    child2 = (DefaultMutableTreeNode)child1.getChildAt(i);
-                    Object[] obj = (Object[])child2.getUserObject();
-                    int id = (Integer)obj[1];
+            for (int j = 0; j < SelectedNode.getChildCount(); j++, count++) {
+                child1 = (DefaultMutableTreeNode) SelectedNode.getChildAt(j);
+                for (int i = 0; i < child1.getChildCount(); i++, count++) {
+                    child2 = (DefaultMutableTreeNode) child1.getChildAt(i);
+                    Object[] obj = (Object[]) child2.getUserObject();
+                    int id = (Integer) obj[1];
                     data[count][0] = Candies.getString(id, "FACTORY_NAME");
-                    String color= Candies.getInt(id, "ISUSED")==0 ? "gray" : "blue";
-                    data[count][1] = "<html><font color='"+color+"'>"+Candies.getString(id, "CANDY_NAME")+"</font></html>";
+                    String color = Candies.getInt(id, "ISUSED") == 0 ? "gray" : "blue";
+                    data[count][1] = "<html><font color='" + color + "'>" + Candies.getString(id, "CANDY_NAME") + "</font></html>";
                     data[count][2] = FormatKG.format(Candies.getDouble(id, "BOX_WEIGHT"));
                     data[count][3] = Candies.getInt(id, "AMOUNT_IN_BOX");
-                    data[count][4] = FormatKG.format(Candies.getDouble(id, "BOX_WEIGHT")/Candies.getInt(id, "AMOUNT_IN_BOX"));
+                    data[count][4] = FormatKG.format(Candies.getDouble(id, "BOX_WEIGHT") / Candies.getInt(id, "AMOUNT_IN_BOX"));
                     data[count][5] = FormatUAH.format(Candies.getDouble(id, "COST_KG"));
-                    data[count][6] = FormatUAH.format(Candies.get(id,"CANDY_COST"));
-                    data[count][7] = FormatUAH.format(Candies.getDouble(id, "BOX_WEIGHT")*Candies.getDouble(id, "COST_KG"));
+                    data[count][6] = FormatUAH.format(Candies.get(id, "CANDY_COST"));
+                    data[count][7] = FormatUAH.format(Candies.getDouble(id, "BOX_WEIGHT") * Candies.getDouble(id, "COST_KG"));
                 }
             }
             jTable2.makeTableAllFactories(data);
         } else {
             Object data[][] = new Object[SelectedNode.getChildCount()][7];
             DefaultMutableTreeNode child;
-            for (int i=0;i<SelectedNode.getChildCount();i++) {
-                child = (DefaultMutableTreeNode)SelectedNode.getChildAt(i);
-                Object[] obj = (Object[])child.getUserObject();
-                int id = (Integer)obj[1];
-                String color= Candies.getInt(id, "ISUSED")==0 ? "gray" : "blue";
-                data[i][0] = "<html><font color='"+color+"'>"+Candies.getString(id, "CANDY_NAME")+"</font></html>";
+            for (int i = 0; i < SelectedNode.getChildCount(); i++) {
+                child = (DefaultMutableTreeNode) SelectedNode.getChildAt(i);
+                Object[] obj = (Object[]) child.getUserObject();
+                int id = (Integer) obj[1];
+                String color = Candies.getInt(id, "ISUSED") == 0 ? "gray" : "blue";
+                data[i][0] = "<html><font color='" + color + "'>" + Candies.getString(id, "CANDY_NAME") + "</font></html>";
                 data[i][1] = FormatKG.format(Candies.getDouble(id, "BOX_WEIGHT"));
                 data[i][2] = Candies.getInt(id, "AMOUNT_IN_BOX");
-                data[i][3] = FormatKG.format(Candies.getDouble(id, "BOX_WEIGHT")/Candies.getInt(id, "AMOUNT_IN_BOX"));
+                data[i][3] = FormatKG.format(Candies.getDouble(id, "BOX_WEIGHT") / Candies.getInt(id, "AMOUNT_IN_BOX"));
                 data[i][4] = FormatUAH.format(Candies.getDouble(id, "COST_KG"));
-                data[i][5] = FormatUAH.format(Candies.get(id,"CANDY_COST"));
-                data[i][6] = FormatUAH.format(Candies.getDouble(id, "BOX_WEIGHT")*Candies.getDouble(id, "COST_KG"));
+                data[i][5] = FormatUAH.format(Candies.get(id, "CANDY_COST"));
+                data[i][6] = FormatUAH.format(Candies.getDouble(id, "BOX_WEIGHT") * Candies.getDouble(id, "COST_KG"));
             }
-            jTable2.makeTable( data);
+            jTable2.makeTable(data);
         }
     }
 
@@ -1088,15 +1088,15 @@ public class MainForm extends javax.swing.JApplet {
                 case 0:
                     jButton31.setVisible(true);
                     jButton32.setVisible(false);
-                    
+
                     jPanel12.setVisible(false);
-                    
+
                     jPanel17.setVisible(true);
                     jButton1.setVisible(false);
                     jButton2.setVisible(false);
                     jButton3.setVisible(false);
                     jButton59.setVisible(true);
-                    
+
                     jPanel14.setVisible(false);
                     jPanel15.setVisible(false);
                     jPanel16.setVisible(false);
@@ -1113,7 +1113,7 @@ public class MainForm extends javax.swing.JApplet {
                 case 1:
                     obj = (Object[]) SelectedNode.getUserObject();
                     Candies.setPosition((Integer) obj[1]);
-                    
+
                     jButton30.setVisible(CanEditCandies);
                     jButton31.setVisible(CanEditCandies);
                     jButton32.setVisible(CanDeleteCandies);
@@ -1122,22 +1122,22 @@ public class MainForm extends javax.swing.JApplet {
                     jTextField1.setEditable(false);
                     jTextField1.setBorder(null);
                     jTextField1.setBackground(jTextField1.getParent().getBackground());
-                    jTextField1.setForeground(new Color(200,0,0));
+                    jTextField1.setForeground(new Color(200, 0, 0));
                     jTextField1.setText(Candies.getString("FACTORY_NAME"));
                     jTextField31.setEditable(false);
                     jTextField31.setBorder(null);
                     jTextField31.setBackground(jTextField31.getParent().getBackground());
-                    jTextField31.setForeground(new Color(200,0,0));
+                    jTextField31.setForeground(new Color(200, 0, 0));
                     jTextField31.setText(FormatKG.format(Candies.getDouble("DISCOUNT")));
 
                     jPanel17.setVisible(true);
-                    
+
                     jButton1.setVisible(CanEditCandies);
-                    
+
                     jButton2.setVisible(false);
                     jButton3.setVisible(false);
                     jButton59.setVisible(true);
-                    
+
                     jPanel14.setVisible(false);
                     jPanel15.setVisible(false);
                     jPanel16.setVisible(false);
@@ -1154,7 +1154,7 @@ public class MainForm extends javax.swing.JApplet {
                 case 2:
                     obj = (Object[]) SelectedNode.getUserObject();
                     Candies.setPosition((Integer) obj[1]);
-                    
+
                     jButton30.setVisible(CanEditCandies);
                     jButton31.setVisible(CanEditCandies);
                     jButton32.setVisible(CanDeleteCandies);
@@ -1162,7 +1162,7 @@ public class MainForm extends javax.swing.JApplet {
                     jScrollPane7.setVisible(false);
 
                     jPanel12.setVisible(true);
-                    JTextField[] mas = new JTextField[]{jTextField1,jTextField2,jTextField3,jTextField4};
+                    JTextField[] mas = new JTextField[]{jTextField1, jTextField2, jTextField3, jTextField4};
                     for (JTextField ma : mas) {
                         ma.setEditable(false);
                         ma.setBorder(null);
@@ -1181,7 +1181,7 @@ public class MainForm extends javax.swing.JApplet {
                     double cost_box = cost_kg * box_weight;
                     jLabel18.setText(FormatUAH.format(cost_box));
                     jLabel16.setText(FormatUAH.format(cost_box / amount_in_box));
-                    
+
                     jPanel17.setVisible(true);
                     jPanel14.setVisible(true);
                     jPanel15.setVisible(true);
@@ -1208,7 +1208,7 @@ public class MainForm extends javax.swing.JApplet {
 
                     jButton1.setVisible(CanEditCandies);
                     jButton2.setVisible(false);
-                    jButton3.setVisible(false); 
+                    jButton3.setVisible(false);
                     jButton59.setVisible(false);
                     break;
             }
@@ -1218,26 +1218,26 @@ public class MainForm extends javax.swing.JApplet {
 
     private boolean GetUsers() {
         Object[][] obj;
-        if (CurrentUser.getInt("LEVEL")==STORAGE_HEAD) {
-            obj = db.SelectSQL("SELECT * FROM user WHERE level="+STORAGE_WORKER+" ORDER BY name",null);
+        if (CurrentUser.getInt("LEVEL") == STORAGE_HEAD) {
+            obj = db.SelectSQL("SELECT * FROM user WHERE level=" + STORAGE_WORKER + " ORDER BY name", null);
         } else {
-            obj = db.SelectSQL("SELECT * FROM user GROUP BY level,name,id",null);            
+            obj = db.SelectSQL("SELECT * FROM user GROUP BY level,name,id", null);
         }
         Users.set(obj);
-        return obj!=null;
+        return obj != null;
     }
 
     private void MakeTreeOfUsers() {
         int[] SaveCurrentRow = jTree2.getSelectionRows();
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"", 0});
         DefaultMutableTreeNode child_0 = new DefaultMutableTreeNode(new Object[]{"Директор", 0});
         DefaultMutableTreeNode child_1 = new DefaultMutableTreeNode(new Object[]{"Менеджер по продажам", 1});
         DefaultMutableTreeNode child_2 = new DefaultMutableTreeNode(new Object[]{"Начальник склада", 2});
         DefaultMutableTreeNode child_3 = new DefaultMutableTreeNode(new Object[]{"Логист", 3});
         DefaultMutableTreeNode child_4 = new DefaultMutableTreeNode(new Object[]{"Работник склада", 4});
-        
-        if (CurrentUser.getInt("level")!=STORAGE_HEAD) { //для начальника склада будет виден лишь раздел "работники склада"
+
+        if (CurrentUser.getInt("level") != STORAGE_HEAD) { //для начальника склада будет виден лишь раздел "работники склада"
             top.add(child_0);
             top.add(child_1);
             top.add(child_2);
@@ -1249,8 +1249,8 @@ public class MainForm extends javax.swing.JApplet {
         if (jCheckBox2.isSelected()) { //группировать по подчинению
             //вначале вносим в хеш-таблицу всех подчиненных
             for (int i = 0; i < Users.getLength(); i++) {
-                if (Users.getInt(i,"LEVEL")==STORAGE_WORKER && Users.getInt(i,"ID_USER_BOSS")!=-1) { //работник склада и имеет босса
-                    int idBoss = Users.getInt(i,"ID_USER_BOSS");
+                if (Users.getInt(i, "LEVEL") == STORAGE_WORKER && Users.getInt(i, "ID_USER_BOSS") != -1) { //работник склада и имеет босса
+                    int idBoss = Users.getInt(i, "ID_USER_BOSS");
                     DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, true});
                     listSuborderedWorkers.add(new Object[]{idBoss, userNode});
                 }
@@ -1258,33 +1258,33 @@ public class MainForm extends javax.swing.JApplet {
             //
             //далее заполняем дерево, и для каждого сотрудника добавляем его подчиненных из хеш-таблицы
         }
-        
+
         for (int i = 0; i < Users.getLength(); i++) {
             switch (Users.getInt(i, "LEVEL")) {
                 case DIRECTOR:
-                    if (userLevel!=STORAGE_HEAD) {
+                    if (userLevel != STORAGE_HEAD) {
                         child_0.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false})); //имя, индекс, true если subordered - имеет босса
                     }
                     break;
                 case MANAGER:
-                    if (userLevel!=STORAGE_HEAD) {                    
+                    if (userLevel != STORAGE_HEAD) {
                         child_1.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));
                     }
                     break;
                 case STORAGE_HEAD:
-                    if (userLevel!=STORAGE_HEAD) {
+                    if (userLevel != STORAGE_HEAD) {
                         child_2.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));
                     }
                     break;
                 case LOGIST:
-                    if (userLevel!=STORAGE_HEAD) {
+                    if (userLevel != STORAGE_HEAD) {
                         child_3.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));
                     }
                     break;
                 case STORAGE_WORKER:
                     if (jCheckBox2.isSelected()) { //группировать по подчинению
-                        if (Users.getInt(i,"ID_POSITION")==STORAGE_WORKER_BRIGADIER) { //работник - бригадир, добавляем в дерево, иначе не добавляем, поскольку подчиненных Фасовщиков добавим для каждого бригадира отдельно
-                            child_4.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));                                            
+                        if (Users.getInt(i, "ID_POSITION") == STORAGE_WORKER_BRIGADIER) { //работник - бригадир, добавляем в дерево, иначе не добавляем, поскольку подчиненных Фасовщиков добавим для каждого бригадира отдельно
+                            child_4.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));
                             int thisWorkerID = Users.getInt(i, "ID");
                             //находим всех сотрудников, принадлежащих этому боссу и когда находим - помечаем на удаление из списка
                             List<Object[]> toRemove = new LinkedList<>();
@@ -1297,11 +1297,11 @@ public class MainForm extends javax.swing.JApplet {
                                 }
                             }
                             listSuborderedWorkers.removeAll(toRemove);
-                        } else if (Users.getInt(i,"ID_USER_BOSS")==-1) { //если это не бригадир, но и начальник ему не назначен - добавляем в дерево
-                            child_4.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));                                            
+                        } else if (Users.getInt(i, "ID_USER_BOSS") == -1) { //если это не бригадир, но и начальник ему не назначен - добавляем в дерево
+                            child_4.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));
                         }
                     } else {
-                        child_4.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));                                            
+                        child_4.add(new DefaultMutableTreeNode(new Object[]{Users.getString(i, "NAME"), i, false}));
                     }
                     break;
             }
@@ -1316,83 +1316,83 @@ public class MainForm extends javax.swing.JApplet {
     }
 
     private void MakeTableOfUsersStorage() {
-        Calendar cal = (Calendar)jDateChooser1.getCalendar().clone();
+        Calendar cal = (Calendar) jDateChooser1.getCalendar().clone();
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
-        int Start = ((Long)(cal.getTimeInMillis()/1000)).intValue();
-        cal = (Calendar)jDateChooser2.getCalendar().clone();
+        int Start = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
+        cal = (Calendar) jDateChooser2.getCalendar().clone();
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.add(Calendar.DAY_OF_MONTH, 1);
-        int End = ((Long)(cal.getTimeInMillis()/1000)).intValue();
-        
+        int End = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
+
         ObjectResultSet UsersStorage = new ObjectResultSet();
-        UsersStorage.setColumnNames(new String[]{"DATE_TIME","CLIENT","COST"});
-        UsersStorage.set(db.SelectSQL("SELECT user_pack_orders.date_time,client.official_name,user_pack_orders.cost FROM user_pack_orders,client,orders WHERE user_pack_orders.id_orders=orders.id AND orders.id_client=client.id AND user_pack_orders.id_user=? AND user_pack_orders.date_time BETWEEN ? AND ? ORDER BY user_pack_orders.date_time DESC", new Object[]{Users.getInt("ID"),Start,End}));
+        UsersStorage.setColumnNames(new String[]{"DATE_TIME", "CLIENT", "COST"});
+        UsersStorage.set(db.SelectSQL("SELECT user_pack_orders.date_time,client.official_name,user_pack_orders.cost FROM user_pack_orders,client,orders WHERE user_pack_orders.id_orders=orders.id AND orders.id_client=client.id AND user_pack_orders.id_user=? AND user_pack_orders.date_time BETWEEN ? AND ? ORDER BY user_pack_orders.date_time DESC", new Object[]{Users.getInt("ID"), Start, End}));
         Object data[][] = new Object[0][3];
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         if (!UsersStorage.IsNull()) {
             data = new Object[UsersStorage.getLength() + 1][3];
             double Summ_cost = 0;
             for (int i = 0; i < UsersStorage.getLength(); i++) {
-                data[i][0] = sdf.format(new Date(UsersStorage.getInt(i, "DATE_TIME")*1000L));
-                data[i][1] = UsersStorage.getString(i,"CLIENT");
+                data[i][0] = sdf.format(new Date(UsersStorage.getInt(i, "DATE_TIME") * 1000L));
+                data[i][1] = UsersStorage.getString(i, "CLIENT");
                 double cost = UsersStorage.getDouble(i, "COST");
                 data[i][2] = FormatUAH.format(cost);
-                Summ_cost+=cost;
+                Summ_cost += cost;
             }
             data[UsersStorage.getLength()][1] = "ИТОГО, грн.:";
             data[UsersStorage.getLength()][2] = FormatUAH.format(Summ_cost);
         }
-        jTable7.makeTable(data);        
+        jTable7.makeTable(data);
     }
-    
+
     private void MakeTableOfUsersDelivery() {
-        Calendar cal = (Calendar)jDateChooser1.getCalendar().clone();
+        Calendar cal = (Calendar) jDateChooser1.getCalendar().clone();
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
-        int Start = ((Long)(cal.getTimeInMillis()/1000)).intValue();
-        cal = (Calendar)jDateChooser2.getCalendar().clone();
+        int Start = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
+        cal = (Calendar) jDateChooser2.getCalendar().clone();
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.add(Calendar.DAY_OF_MONTH, 1);
-        int End = ((Long)(cal.getTimeInMillis()/1000)).intValue();
-        
+        int End = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
+
         ObjectResultSet UsersDelivery = new ObjectResultSet();
-        UsersDelivery.setColumnNames(new String[]{"DATE_TIME","CLIENT","COST"});
-        UsersDelivery.set(db.SelectSQL("SELECT user_delivery_orders.date_time,client.official_name,user_delivery_orders.cost FROM user_delivery_orders,orders,client WHERE user_delivery_orders.id_orders=orders.id AND orders.id_client=client.id AND user_delivery_orders.id_user=? AND user_delivery_orders.date_time BETWEEN ? AND ? ORDER BY user_delivery_orders.date_time DESC", new Object[]{Users.getInt("ID"),Start,End}));
+        UsersDelivery.setColumnNames(new String[]{"DATE_TIME", "CLIENT", "COST"});
+        UsersDelivery.set(db.SelectSQL("SELECT user_delivery_orders.date_time,client.official_name,user_delivery_orders.cost FROM user_delivery_orders,orders,client WHERE user_delivery_orders.id_orders=orders.id AND orders.id_client=client.id AND user_delivery_orders.id_user=? AND user_delivery_orders.date_time BETWEEN ? AND ? ORDER BY user_delivery_orders.date_time DESC", new Object[]{Users.getInt("ID"), Start, End}));
         Object data[][] = new Object[0][3];
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         if (!UsersDelivery.IsNull()) {
             data = new Object[UsersDelivery.getLength() + 1][3];
             double Summ_cost = 0;
             for (int i = 0; i < UsersDelivery.getLength(); i++) {
-                data[i][0] = sdf.format(new Date(UsersDelivery.getInt(i, "DATE_TIME")*1000L));
-                data[i][1] = UsersDelivery.getString(i,"CLIENT");
+                data[i][0] = sdf.format(new Date(UsersDelivery.getInt(i, "DATE_TIME") * 1000L));
+                data[i][1] = UsersDelivery.getString(i, "CLIENT");
                 double cost = UsersDelivery.getDouble(i, "COST");
                 data[i][2] = FormatUAH.format(cost);
-                Summ_cost+=cost;
+                Summ_cost += cost;
             }
             data[UsersDelivery.getLength()][1] = "ИТОГО, грн.:";
             data[UsersDelivery.getLength()][2] = FormatUAH.format(Summ_cost);
         }
-        jTable13.makeTable(data);        
-    }    
-    
+        jTable13.makeTable(data);
+    }
+
     private void fillListBrigadiers() {
         jComboBox13.removeAllItems();
         jComboBox13.addItem("");
-        for(int i=0;i<Users.getLength();i++) {
-            if (Users.getInt(i,"ID_POSITION")==STORAGE_WORKER_BRIGADIER) {
+        for (int i = 0; i < Users.getLength(); i++) {
+            if (Users.getInt(i, "ID_POSITION") == STORAGE_WORKER_BRIGADIER) {
                 jComboBox13.addItem(new Object[]{Users.getInt(i, "ID"), Users.getString(i, "NAME")});
             }
         }
     }
-    
+
     private void SelectNodeOfTreeUsers() {
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree2.getLastSelectedPathComponent();
         if (SelectedNode == null) {
@@ -1401,7 +1401,7 @@ public class MainForm extends javax.swing.JApplet {
             jButton42.setVisible(CanEditUsers);
             jButton43.setVisible(false);
         } else {
-            if (SelectedNode.getLevel()==1) {
+            if (SelectedNode.getLevel() == 1) {
                 Object[] obj = (Object[]) SelectedNode.getUserObject();
                 Users.setPosition((Integer) obj[1]);
                 jButton43.setVisible(false);
@@ -1412,15 +1412,15 @@ public class MainForm extends javax.swing.JApplet {
                 Users.setPosition((Integer) obj[1]);
                 jButton43.setVisible(CanDeleteUsers);
                 jButton42.setVisible(CanEditUsers);
-                
+
                 jPanel11.setVisible(true);
 
-                JTextField[] mas = new JTextField[]{jTextField9,jTextField10,jTextField12,jTextField24};
+                JTextField[] mas = new JTextField[]{jTextField9, jTextField10, jTextField12, jTextField24};
                 for (JTextField ma : mas) {
                     ma.setEditable(false);
                     ma.setBorder(null);
                     ma.setBackground(ma.getParent().getBackground());
-                    ma.setForeground(new Color(200,0,0));
+                    ma.setForeground(new Color(200, 0, 0));
                 }
                 jCheckBox1.setEnabled(false);
                 jComboBox12.setEnabled(false);
@@ -1431,14 +1431,14 @@ public class MainForm extends javax.swing.JApplet {
                 jTextField9.setText(Users.getString("NAME"));
                 jTextField10.setText(Users.getString("LOGIN"));
                 jTextField12.setText(Users.getString("PASS"));
-                jCheckBox1.setSelected((Boolean)Users.get("CAN_ENTER"));
+                jCheckBox1.setSelected((Boolean) Users.get("CAN_ENTER"));
                 jTextField24.setText(Users.getString("PHONE"));
                 jLabel129.setEnabled(false);
                 jLabel129.setText("зашифрован");
                 jTextArea10.setText(Users.getString("COMMENT"));
                 jComboBox12.setSelectedIndex(Users.getInt("ID_POSITION"));
-                
-                if (Users.getInt("LEVEL")==STORAGE_WORKER && Users.getInt("ID_POSITION")==STORAGE_WORKER_PACKER) {
+
+                if (Users.getInt("LEVEL") == STORAGE_WORKER && Users.getInt("ID_POSITION") == STORAGE_WORKER_PACKER) {
                     jLabel89.setVisible(true);
                     jComboBox13.setVisible(true);
                     jComboBox13.setEnabled(false);
@@ -1453,8 +1453,8 @@ public class MainForm extends javax.swing.JApplet {
                 jButton17.setVisible(CanEditUsers);
                 jButton24.setVisible(false);
                 jButton51.setVisible(false);
-                
-                if (Users.getInt("LEVEL")==STORAGE_WORKER) {
+
+                if (Users.getInt("LEVEL") == STORAGE_WORKER) {
                     jScrollPane21.setVisible(true);
                     jScrollPane31.setVisible(true);
                     jPanel22.setVisible(true);
@@ -1467,27 +1467,26 @@ public class MainForm extends javax.swing.JApplet {
                     jScrollPane31.setVisible(false);
                     jPanel69.setVisible(false);
                     jPanel128.setVisible(false);
-                    jPanel22.setVisible(false);                    
+                    jPanel22.setVisible(false);
                 }
 
             }
         }
-        
+
     }
 
     private boolean GetClients(boolean OrderByAlphabet) {
         Object[][] obj;
-        String filterText = "'%"+jTextField38.getText()+"%'";
-        ClientState.STATE state = ((ComboboxClientState)jComboBox9).getSelectedState();
-        String filterState = state==null ? "" : " AND state="+ClientState.getValueForDB(state);
-        String filterUserCreator = jComboBox10.getSelectedID() ==-1 ? "" : " AND user_creator_id="+jComboBox10.getSelectedID();
+        String filterText = "'%" + jTextField38.getText() + "%'";
+        ClientState.STATE state = ((ComboboxClientState) jComboBox9).getSelectedState();
+        String filterState = state == null ? "" : " AND state=" + ClientState.getValueForDB(state);
+        String filterUserCreator = jComboBox10.getSelectedID() == -1 ? "" : " AND user_creator_id=" + jComboBox10.getSelectedID();
         String currentUserId = "";
-        
+
 //        if (CurrentUser.getInt("LEVEL")==1) {
 //            currentUserId = " AND user_creator_id="+CurrentUser.getInt("ID");
 //        }
 //         && CurrentUser.getInt("ID")!=185
-                
         if (OrderByAlphabet) {
             obj = db.SelectSQL(new StringBuilder().append("SELECT id as client_id,official_name,"
                     + "(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1),"
@@ -1501,7 +1500,7 @@ public class MainForm extends javax.swing.JApplet {
                     .append(filterText).append(" OR email3 LIKE ").append(filterText)
                     .append(" OR edrpou LIKE ").append(filterText).append(")").append(currentUserId)
                     .append(filterState).append(filterUserCreator)
-                    .append(" ORDER BY OFFICIAL_NAME").toString(),null);
+                    .append(" ORDER BY OFFICIAL_NAME").toString(), null);
         } else {
             obj = db.SelectSQL(new StringBuilder().append("SELECT id as client_id,official_name,"
                     + "(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1),"
@@ -1514,23 +1513,23 @@ public class MainForm extends javax.swing.JApplet {
                     .append(filterText).append(" OR email2 LIKE ").append(filterText)
                     .append(" OR email3 LIKE ").append(filterText).append(" OR edrpou LIKE ")
                     .append(filterText).append(")").append(filterState).append(currentUserId)
-                    .append(filterUserCreator).append(" ORDER BY date_time DESC").toString(),null);
+                    .append(filterUserCreator).append(" ORDER BY date_time DESC").toString(), null);
         }
         Clients.set(obj);
-        return obj!=null;
+        return obj != null;
     }
-    
+
     public boolean GetFolders() {
-        Folders.set(db.SelectSQL("SELECT id,name FROM folder ORDER BY name",new Object[]{}));
-        Clients_Folders.set(db.SelectSQL("SELECT id_client,id_folder FROM client_folder",new Object[]{}));
+        Folders.set(db.SelectSQL("SELECT id,name FROM folder ORDER BY name", new Object[]{}));
+        Clients_Folders.set(db.SelectSQL("SELECT id_client,id_folder FROM client_folder", new Object[]{}));
         return !Folders.IsNull() && !Clients_Folders.IsNull();
     }
-    
+
     private void MakeTreeOfClients() {
-        
+
         String filterText = jTextField38.getText();
 
-        LinkedList<Integer> expandedFolders = new LinkedList<>();        
+        LinkedList<Integer> expandedFolders = new LinkedList<>();
         if (filterText.isEmpty()) { //если мы делаем фильтр по имени клиента, должны открыться все папки с отфильтрованными данными, а не только те, которые были открыты
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) jTree3.getModel().getRoot();
             for (int i = 0; i < root.getChildCount(); i++) {
@@ -1542,24 +1541,24 @@ public class MainForm extends javax.swing.JApplet {
                 }
             }
         }
-        
+
         int[] SaveCurrentRow = jTree3.getSelectionRows();
-        
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"КЛИЕНТЫ",0});
-        
+
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"КЛИЕНТЫ", 0});
+
         LinkedList<DefaultMutableTreeNode> foldersToExpand = new LinkedList<>();
         LinkedList<Integer> listAlreadyUsedClients = new LinkedList<>();
-        
-        for (int i = 0;i<Folders.getLength();i++) {
-            int folderID = Folders.getInt(i,"ID");
-            DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(new Object[]{folderID,Folders.getString(i,"NAME")});
+
+        for (int i = 0; i < Folders.getLength(); i++) {
+            int folderID = Folders.getInt(i, "ID");
+            DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(new Object[]{folderID, Folders.getString(i, "NAME")});
             top.add(folderNode);
-            for (int k = 0;k<Clients.getLength();k++) {
-                int clientID = Clients.getInt(k,"ID");
-                for (int j = 0;j<Clients_Folders.getLength();j++) {
-                    if (folderID==Clients_Folders.getInt(j,"ID_FOLDER") && clientID==Clients_Folders.getInt(j,"ID_CLIENT")) {
-                        folderNode.add(new DefaultMutableTreeNode(new Object[]{Clients.getString(k, "OFFICIAL_NAME"), k, Clients.getInt(k,"ISUSED")!=0, ClientState.getStateByValueDB(Clients.getInt(k,"STATE"))}));        
-                        listAlreadyUsedClients.add(Clients.getInt(k,"ID"));
+            for (int k = 0; k < Clients.getLength(); k++) {
+                int clientID = Clients.getInt(k, "ID");
+                for (int j = 0; j < Clients_Folders.getLength(); j++) {
+                    if (folderID == Clients_Folders.getInt(j, "ID_FOLDER") && clientID == Clients_Folders.getInt(j, "ID_CLIENT")) {
+                        folderNode.add(new DefaultMutableTreeNode(new Object[]{Clients.getString(k, "OFFICIAL_NAME"), k, Clients.getInt(k, "ISUSED") != 0, ClientState.getStateByValueDB(Clients.getInt(k, "STATE"))}));
+                        listAlreadyUsedClients.add(Clients.getInt(k, "ID"));
                         break;
                     }
                 }
@@ -1568,37 +1567,37 @@ public class MainForm extends javax.swing.JApplet {
                 foldersToExpand.add(folderNode);
             }
         }
-        
-        DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(new Object[]{0,"без папки"});        
+
+        DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(new Object[]{0, "без папки"});
         top.add(folderNode);
-        
-        for (int i = 0;i<Clients.getLength();i++) {
-            if (!listAlreadyUsedClients.contains(Clients.getInt(i,"ID"))) {
-                folderNode.add(new DefaultMutableTreeNode(new Object[]{Clients.getString(i, "OFFICIAL_NAME"), i, Clients.getInt(i,"ISUSED")!=0, ClientState.getStateByValueDB(Clients.getInt(i,"STATE"))}));
+
+        for (int i = 0; i < Clients.getLength(); i++) {
+            if (!listAlreadyUsedClients.contains(Clients.getInt(i, "ID"))) {
+                folderNode.add(new DefaultMutableTreeNode(new Object[]{Clients.getString(i, "OFFICIAL_NAME"), i, Clients.getInt(i, "ISUSED") != 0, ClientState.getStateByValueDB(Clients.getInt(i, "STATE"))}));
             }
         }
-        
+
         if (expandedFolders.contains(0) || !filterText.isEmpty()) {
             foldersToExpand.add(folderNode);
         }
-         
+
         DefaultTreeModel treeModel = new DefaultTreeModel(top);
         jTree3.setModel(treeModel);
-        
+
         jTree3.setSelectionRows(SaveCurrentRow);
-        
+
         for (DefaultMutableTreeNode node : foldersToExpand) {
             jTree3.expandPath(new TreePath(node.getPath()));
         }
-        
-        SelectNodeOfTreeClients();  
+
+        SelectNodeOfTreeClients();
     }
-    
+
     private void SelectNodeOfTreeClients() {
         Object[] obj;
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree3.getLastSelectedPathComponent();
         if (SelectedNode == null) {
-            CardLayout cl = (CardLayout)jPanel122.getLayout();
+            CardLayout cl = (CardLayout) jPanel122.getLayout();
             cl.show(jPanel122, "card2");
             Clients.setPosition(-1);
             jPanel24.setVisible(false);
@@ -1607,7 +1606,7 @@ public class MainForm extends javax.swing.JApplet {
             jPanel25.setVisible(false);
             jPanel26.setVisible(false);
             jPanel55.setVisible(false);
-            
+
             jPanel60.setVisible(false);
             jPanel32.setVisible(false);
             jPanel28.setVisible(false);
@@ -1629,24 +1628,23 @@ public class MainForm extends javax.swing.JApplet {
             jButton129.setVisible(false);
             jButton65.setVisible(false);
             jButton115.setVisible(false);
-            
+
         } else {
-           Calendar c = (Calendar) jDateChooser13.getCalendar().clone();
-           c.set(Calendar.SECOND, 0);
-           c.set(Calendar.MINUTE, 0);
-           c.set(Calendar.HOUR_OF_DAY, 0);
-           long startDate = c.getTimeInMillis();
-           c = (Calendar) jDateChooser14.getCalendar().clone();
-           c.set(Calendar.SECOND, 59);
-           c.set(Calendar.MINUTE, 59);
-           c.set(Calendar.HOUR_OF_DAY, 23);
-           long endDate = c.getTimeInMillis();
-            
-            
+            Calendar c = (Calendar) jDateChooser13.getCalendar().clone();
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            long startDate = c.getTimeInMillis();
+            c = (Calendar) jDateChooser14.getCalendar().clone();
+            c.set(Calendar.SECOND, 59);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.HOUR_OF_DAY, 23);
+            long endDate = c.getTimeInMillis();
+
             CardLayout cl;
             switch (SelectedNode.getLevel()) {
                 case 0: //корень дерева
-                    cl = (CardLayout)jPanel122.getLayout();
+                    cl = (CardLayout) jPanel122.getLayout();
                     cl.show(jPanel122, "card3");
                     jButton36.setVisible(false);
                     jButton37.setVisible(false);
@@ -1662,33 +1660,33 @@ public class MainForm extends javax.swing.JApplet {
                     SimpleDateFormat sdff = new SimpleDateFormat("dd MMM yyyy");
                     if (!Clients.IsNull()) {
                         dataa = new Object[Clients.getLength()][6];
-                        
+
                         ObjectResultSet AllExtendedClients = new ObjectResultSet();
-                        AllExtendedClients.setColumnNames(new String[]{"ID","DATE_TIME","OFFICIAL_NAME","CONTACT1","PHONE1","EMAIL1","ORDERED_AMOUNT","ISUSED"});                        
-                        String filterText = "'%"+jTextField38.getText()+"%'";
-                        ClientState.STATE state = ((ComboboxClientState)jComboBox9).getSelectedState();
-                        String filterState = state==null ? "" : " AND state="+ClientState.getValueForDB(state);
-                        String filterUserCreator = jComboBox10.getSelectedID() ==-1 ? "" : " AND user_creator_id="+jComboBox10.getSelectedID();
+                        AllExtendedClients.setColumnNames(new String[]{"ID", "DATE_TIME", "OFFICIAL_NAME", "CONTACT1", "PHONE1", "EMAIL1", "ORDERED_AMOUNT", "ISUSED"});
+                        String filterText = "'%" + jTextField38.getText() + "%'";
+                        ClientState.STATE state = ((ComboboxClientState) jComboBox9).getSelectedState();
+                        String filterState = state == null ? "" : " AND state=" + ClientState.getValueForDB(state);
+                        String filterUserCreator = jComboBox10.getSelectedID() == -1 ? "" : " AND user_creator_id=" + jComboBox10.getSelectedID();
 
                         if (jToggleButton5.isSelected()) {
-                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE "+filterText+" OR phone1 LIKE "+filterText+" OR phone2 LIKE "+filterText+" OR phone3 LIKE "+filterText+" ) "+filterState+filterUserCreator+" ORDER BY NAME",new Object[]{startDate,endDate}));
+                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE " + filterText + " OR phone1 LIKE " + filterText + " OR phone2 LIKE " + filterText + " OR phone3 LIKE " + filterText + " ) " + filterState + filterUserCreator + " ORDER BY NAME", new Object[]{startDate, endDate}));
                         } else {
-                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE "+filterText+" OR phone1 LIKE "+filterText+" OR phone2 LIKE "+filterText+" OR phone3 LIKE "+filterText+" ) "+filterState+filterUserCreator+" ORDER BY date_time DESC",new Object[]{startDate,endDate}));
+                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE " + filterText + " OR phone1 LIKE " + filterText + " OR phone2 LIKE " + filterText + " OR phone3 LIKE " + filterText + " ) " + filterState + filterUserCreator + " ORDER BY date_time DESC", new Object[]{startDate, endDate}));
                         }
                         for (int i = 0; i < AllExtendedClients.getLength(); i++) {
-                            String color = AllExtendedClients.getInt(i,"ISUSED")!=0 ? "blue" : "gray";
-                            dataa[i][0] = "<html><font color='"+color+"'>"+AllExtendedClients.getString(i, "OFFICIAL_NAME")+"</font></html>";
-                            dataa[i][1] = sdff.format(new Date(AllExtendedClients.getInt(i,"DATE_TIME")*1000L));
-                            dataa[i][2] = AllExtendedClients.getBigDecimalAsInt(i,"ORDERED_AMOUNT");
-                            dataa[i][3] = AllExtendedClients.getString(i,"CONTACT1");
-                            dataa[i][4] = AllExtendedClients.getString(i,"PHONE1");
-                            dataa[i][5] = AllExtendedClients.getString(i,"EMAIL1");
+                            String color = AllExtendedClients.getInt(i, "ISUSED") != 0 ? "blue" : "gray";
+                            dataa[i][0] = "<html><font color='" + color + "'>" + AllExtendedClients.getString(i, "OFFICIAL_NAME") + "</font></html>";
+                            dataa[i][1] = sdff.format(new Date(AllExtendedClients.getInt(i, "DATE_TIME") * 1000L));
+                            dataa[i][2] = AllExtendedClients.getBigDecimalAsInt(i, "ORDERED_AMOUNT");
+                            dataa[i][3] = AllExtendedClients.getString(i, "CONTACT1");
+                            dataa[i][4] = AllExtendedClients.getString(i, "PHONE1");
+                            dataa[i][5] = AllExtendedClients.getString(i, "EMAIL1");
                         }
                     }
                     jTable10.makeTable(dataa);
                     break;
                 case 1: //папка
-                    cl = (CardLayout)jPanel122.getLayout();
+                    cl = (CardLayout) jPanel122.getLayout();
                     cl.show(jPanel122, "card3");
                     jButton36.setVisible(CanEditClients);
                     jButton37.setVisible(CanEditClients);
@@ -1704,27 +1702,27 @@ public class MainForm extends javax.swing.JApplet {
                     SimpleDateFormat sdfff = new SimpleDateFormat("dd MMM yyyy");
                     if (!Clients.IsNull()) {
                         LinkedList<Object[]> list = new LinkedList<>();
-                        
+
                         ObjectResultSet AllExtendedClients = new ObjectResultSet();
-                        AllExtendedClients.setColumnNames(new String[]{"ID","DATE_TIME","OFFICIAL_NAME","CONTACT1","PHONE1","EMAIL1","ORDERED_AMOUNT","ISUSED"});                        
-                        String filterText = "'%"+jTextField38.getText()+"%'";
-                        ClientState.STATE state = ((ComboboxClientState)jComboBox9).getSelectedState();
-                        String filterState = state==null ? "" : " AND state="+ClientState.getValueForDB(state);
-                        String filterUserCreator = jComboBox10.getSelectedID() ==-1 ? "" : " AND user_creator_id="+jComboBox10.getSelectedID();
+                        AllExtendedClients.setColumnNames(new String[]{"ID", "DATE_TIME", "OFFICIAL_NAME", "CONTACT1", "PHONE1", "EMAIL1", "ORDERED_AMOUNT", "ISUSED"});
+                        String filterText = "'%" + jTextField38.getText() + "%'";
+                        ClientState.STATE state = ((ComboboxClientState) jComboBox9).getSelectedState();
+                        String filterState = state == null ? "" : " AND state=" + ClientState.getValueForDB(state);
+                        String filterUserCreator = jComboBox10.getSelectedID() == -1 ? "" : " AND user_creator_id=" + jComboBox10.getSelectedID();
 
                         if (jToggleButton5.isSelected()) {
-                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE "+filterText+" OR phone1 LIKE "+filterText+" OR phone2 LIKE "+filterText+" OR phone3 LIKE "+filterText+" ) "+filterState+filterUserCreator+" ORDER BY NAME",new Object[]{startDate,endDate}));
+                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE " + filterText + " OR phone1 LIKE " + filterText + " OR phone2 LIKE " + filterText + " OR phone3 LIKE " + filterText + " ) " + filterState + filterUserCreator + " ORDER BY NAME", new Object[]{startDate, endDate}));
                         } else {
-                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE "+filterText+" OR phone1 LIKE "+filterText+" OR phone2 LIKE "+filterText+" OR phone3 LIKE "+filterText+" ) "+filterState+filterUserCreator+" ORDER BY date_time DESC",new Object[]{startDate,endDate}));
+                            AllExtendedClients.set(db.SelectSQL("SELECT id as client_id,date_time,official_name,contact1,phone1,email1,(select sum(suborder.AMOUNT) from orders,suborder WHERE suborder.ID_ORDERS=orders.ID AND orders.ID_CLIENT=client_id AND orders.date_time BETWEEN ? AND ?),(SELECT id_client FROM orders WHERE id_client=client_id LIMIT 1) FROM client WHERE (name LIKE " + filterText + " OR phone1 LIKE " + filterText + " OR phone2 LIKE " + filterText + " OR phone3 LIKE " + filterText + " ) " + filterState + filterUserCreator + " ORDER BY date_time DESC", new Object[]{startDate, endDate}));
                         }
-                        
+
                         //костыль! сначала выбрали всех клиентов, а потом выбираем из них тех которые принадлежат выбранной папке
                         for (int i = 0; i < AllExtendedClients.getLength(); i++) {
-                            int idClient = AllExtendedClients.getInt(i,"ID");
-                            int idFolder = (int)(((Object[])SelectedNode.getUserObject())[0]);
+                            int idClient = AllExtendedClients.getInt(i, "ID");
+                            int idFolder = (int) (((Object[]) SelectedNode.getUserObject())[0]);
                             boolean clientInThisFolder = false;
-                            for (int j = 0;j<Clients_Folders.getLength();j++) {
-                                if (idFolder==Clients_Folders.getInt(j,"ID_FOLDER") && idClient==Clients_Folders.getInt(j,"ID_CLIENT")) {
+                            for (int j = 0; j < Clients_Folders.getLength(); j++) {
+                                if (idFolder == Clients_Folders.getInt(j, "ID_FOLDER") && idClient == Clients_Folders.getInt(j, "ID_CLIENT")) {
                                     clientInThisFolder = true;
                                     break;
                                 }
@@ -1741,68 +1739,25 @@ public class MainForm extends javax.swing.JApplet {
                                 list.add(ob);
                             }
                         }
-                        
+
                         dataaa = list.toArray(new Object[][]{});
                     }
                     if (userLevel != 1) {
                         jTable10.makeTable(dataaa);
-                    }   
+                    }
                     break;
                 case 2: //лист дерева - клиент                                        
                     obj = (Object[]) SelectedNode.getUserObject();
                     Clients.setPosition((Integer) obj[1]);
-                    ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?",new Object[]{Clients.getInt("ID")}));                    
+                    ExtendedClient.set(db.SelectSQL("SELECT name,date_time,contact1,contact2,contact3,phone1,additional_phone1,fax,phone2,additional_phone2,phone3,additional_phone3,email1,email2,email3,site,address,comm,(SELECT name FROM user WHERE id=C.user_creator_id),edrpou FROM client C WHERE id=?", new Object[]{Clients.getInt("ID")}));
+
                     
-                    cl = (CardLayout)jPanel122.getLayout();
-                    //если директор, то разрешаем смотреть карточку клиента
-                    if (CurrentUser.getInt("LEVEL")== DIRECTOR){
-                        //ничего не делаем, идём дальше
-                    }
-                    //Сокрытие карточки клиента, если клиент не является клиентом авторизовавшегося сотрудника
-                    else if(ExtendedClient.get("USER_CREATOR_NAME") == null 
-                            || !(ExtendedClient.get("USER_CREATOR_NAME") instanceof String)
-                            || !CurrentUser.getString("NAME").equals(ExtendedClient.get("USER_CREATOR_NAME"))){
-                        System.out.println("accessDenied");
-                        cl.show(jPanel122, "accessDenied");
-                        break;
-                    }
-                    System.out.println("доступ есть");
-                    cl.show(jPanel122, "card2");
-                    
-                    jButton36.setVisible(CanEditClients);
-                    jButton37.setVisible(CanDeleteClients);
-                    jButton129.setVisible(false);
-                    jButton65.setVisible(false);
-                    jButton115.setVisible(false);
-                    jPanel24.setVisible(true);
-                    jPanel172.setVisible(true);
-                    jPanel105.setVisible(true);
-                    jPanel25.setVisible(true);
-                    jPanel26.setVisible(true);
-                    jPanel55.setVisible(true);
-                    jPanel60.setVisible(true);
-                    jPanel32.setVisible(true);
-                    jPanel28.setVisible(true);
-                    jPanel31.setVisible(true);
-                    jPanel56.setVisible(true);
-                    jPanel58.setVisible(true);
-                    jPanel108.setVisible(true);
-                    jPanel109.setVisible(true);
-                    jPanel110.setVisible(true);
-                    jPanel111.setVisible(true);
-                    jPanel35.setVisible(true);
-                    jPanel33.setVisible(true);
-                    jPanel34.setVisible(true);
-                    jPanel36.setVisible(true);
-                    jPanel29.setVisible(true);
-                    jScrollPane11.setVisible(true);
                     
                     jButton4.setVisible(CanEditClients);
                     jButton5.setVisible(false);
                     jButton6.setVisible(false);
-
-                    JTextField[] mas = new JTextField[]{jTextField47, jTextField6, 
-                        jTextField7, jTextField25,jTextField52, jTextField13, jTextField8, 
+                    JTextField[] mas = new JTextField[]{jTextField47, jTextField6,
+                        jTextField7, jTextField25, jTextField52, jTextField13, jTextField8,
                         jTextField11, jTextField34, jTextField26, jTextField35,
                         jTextField27, jTextField28, jTextField29, jTextField15, jTextField14, jTextField22};
                     String[] values = new String[mas.length];
@@ -1842,39 +1797,39 @@ public class MainForm extends javax.swing.JApplet {
 
                     jTextArea7.setEditable(false);
                     jTextArea7.setBorder(null);
-                    jTextArea7.setBackground(new Color(204,255,255));
+                    jTextArea7.setBackground(new Color(204, 255, 255));
                     jTextArea7.setForeground(new Color(200, 0, 0));
                     jTextArea7.setText(ExtendedClient.getString("COMM"));
-                    
+
                     jComboBox8.setEnabled(false);
                     jComboBox8.setSelectedItem(ClientState.getStateByValueDB(Clients.getInt("STATE")));
-                    
+
                     jComboBox11.setEnabled(false);
-                    jComboBox11.setSelected(ExtendedClient.get("USER_CREATOR_NAME")==null ? "" : ExtendedClient.getString("USER_CREATOR_NAME"));
+                    jComboBox11.setSelected(ExtendedClient.get("USER_CREATOR_NAME") == null ? "" : ExtendedClient.getString("USER_CREATOR_NAME"));
 
                     try {
                         ObjectResultSet OrdersOfClient = new ObjectResultSet();
-                        OrdersOfClient.setColumnNames(new String[]{"ID", "DATE_TIME", "STATE","AMOUNT_GIFTS","SUMM_COST"});
+                        OrdersOfClient.setColumnNames(new String[]{"ID", "DATE_TIME", "STATE", "AMOUNT_GIFTS", "SUMM_COST"});
                         Object[][] object = db.SelectSQL("SELECT orders.id,orders.date_time,orders.state,SUM(suborder.amount),SUM(suborder.amount*suborder.cost) FROM orders,suborder WHERE id_client=? AND suborder.id_orders=orders.id GROUP BY orders.id ORDER BY date_time DESC", new Object[]{Clients.getInt("ID")});
                         OrdersOfClient.set(object);
                         Object data[][] = new Object[0][4];
-                        
+
                         if (!OrdersOfClient.IsNull()) {
-                            data = new Object[OrdersOfClient.getLength()+1][4];
+                            data = new Object[OrdersOfClient.getLength() + 1][4];
                             SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-                            
+
                             int sumAmount = 0;
                             double sumCost = 0;
-                            
+
                             for (int i = 0; i < OrdersOfClient.getLength(); i++) {
                                 data[i][0] = sdf.format(new Date(OrdersOfClient.getLong(i, "DATE_TIME")));
-                                data[i][1] = OrdersOfClient.getBigDecimalAsLong(i,"AMOUNT_GIFTS");
-                                data[i][2] = FormatUAH.format(OrdersOfClient.getDouble(i,"SUMM_COST"));
+                                data[i][1] = OrdersOfClient.getBigDecimalAsLong(i, "AMOUNT_GIFTS");
+                                data[i][2] = FormatUAH.format(OrdersOfClient.getDouble(i, "SUMM_COST"));
                                 data[i][3] = OrdersOfClient.getInt(i, "STATE");
-                                sumAmount+=OrdersOfClient.getBigDecimalAsLong(i,"AMOUNT_GIFTS");
-                                sumCost+=OrdersOfClient.getDouble(i,"SUMM_COST");
+                                sumAmount += OrdersOfClient.getBigDecimalAsLong(i, "AMOUNT_GIFTS");
+                                sumCost += OrdersOfClient.getDouble(i, "SUMM_COST");
                             }
-                            
+
                             data[OrdersOfClient.getLength()][0] = "ИТОГО:";
                             data[OrdersOfClient.getLength()][1] = sumAmount;
                             data[OrdersOfClient.getLength()][2] = FormatUAH.format(sumCost);
@@ -1883,32 +1838,94 @@ public class MainForm extends javax.swing.JApplet {
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
+                    
+                    
+                    
+                    cl = (CardLayout) jPanel122.getLayout();
+                    cl.show(jPanel122, "card2");
+                    //если директор, то разрешаем смотреть карточку клиента
+                    if (CurrentUser.getInt("LEVEL") == DIRECTOR) {
+                        //ничего не делаем, идём дальше
+                    } //Сокрытие карточки клиента, если клиент не является клиентом авторизовавшегося сотрудника
+                    else if (ExtendedClient.get("USER_CREATOR_NAME") == null
+                            || !(ExtendedClient.get("USER_CREATOR_NAME") instanceof String)
+                            || !CurrentUser.getString("NAME").equals(ExtendedClient.get("USER_CREATOR_NAME"))) {
+                        jPanel24.setVisible(true);
+                        jPanel34.setVisible(true);
+                        jPanel172.setVisible(false);
+                        jPanel105.setVisible(false);
+                        jPanel25.setVisible(false);
+                        jPanel26.setVisible(false);
+                        jPanel55.setVisible(false);
+                        jPanel60.setVisible(false);
+                        jPanel32.setVisible(false);
+                        jPanel28.setVisible(false);
+                        jPanel31.setVisible(false);
+                        jPanel56.setVisible(false);
+                        jPanel58.setVisible(false);
+                        jPanel108.setVisible(false);
+                        jPanel109.setVisible(false);
+                        jPanel110.setVisible(false);
+                        jPanel111.setVisible(false);
+                        jPanel35.setVisible(false);
+                        jPanel33.setVisible(false);
+                        jPanel36.setVisible(false);
+                        jPanel29.setVisible(false);
+                        jScrollPane11.setVisible(false);                        
+                        break;
+                    }
+
+                    jButton36.setVisible(CanEditClients);
+                    jButton37.setVisible(CanDeleteClients);
+                    jButton129.setVisible(false);
+                    jButton65.setVisible(false);
+                    jButton115.setVisible(false);
+                    jPanel24.setVisible(true);
+                    jPanel172.setVisible(true);
+                    jPanel105.setVisible(true);
+                    jPanel25.setVisible(true);
+                    jPanel26.setVisible(true);
+                    jPanel55.setVisible(true);
+                    jPanel60.setVisible(true);
+                    jPanel32.setVisible(true);
+                    jPanel28.setVisible(true);
+                    jPanel31.setVisible(true);
+                    jPanel56.setVisible(true);
+                    jPanel58.setVisible(true);
+                    jPanel108.setVisible(true);
+                    jPanel109.setVisible(true);
+                    jPanel110.setVisible(true);
+                    jPanel111.setVisible(true);
+                    jPanel35.setVisible(true);
+                    jPanel33.setVisible(true);
+                    jPanel34.setVisible(true);
+                    jPanel36.setVisible(true);
+                    jPanel29.setVisible(true);
+                    jScrollPane11.setVisible(true);
                     break;
             }
         }
     }
-    
 
     private boolean GetGifts() {
-        Object[][] obj = db.SelectSQL("SELECT * FROM gift ORDER BY name",null);
+        Object[][] obj = db.SelectSQL("SELECT * FROM gift ORDER BY name", null);
         Gifts.set(obj);
 //        GetGiftFolders();
-        return obj!=null;
+        return obj != null;
     }
-    
+
 //    private boolean GetGiftFolders() {
 //        Object[][] obj = db.SelectSQL("SELECT DISTINCT folder_name FROM gift ORDER BY name",null);
 //        GiftFolders.set(obj);
 //        return obj!=null;
 //    }
-
     private void MakeTreeOfGifts() {
 //
 //        
 //        System.out.println("Make Tree of Gifts - 1883");
         int[] SaveCurrentRow = jTree4.getSelectionRows();
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"", 0});
 //        for (int i=0; i<GiftFolders.getLength(); i++) {
 //            DefaultMutableTreeNode child_0 = new DefaultMutableTreeNode(new Object[]{"Картон", 0}); // -------HOW?!
 //        }
@@ -1932,7 +1949,7 @@ public class MainForm extends javax.swing.JApplet {
     }
 
     private void SelectNodeOfTreeGifts() {
-        if (jTree4.getSelectionCount()==0) {
+        if (jTree4.getSelectionCount() == 0) {
             jPanel81.setVisible(false);
             Gifts.setPosition(-1);
             jButton39.setVisible(false);
@@ -1945,26 +1962,25 @@ public class MainForm extends javax.swing.JApplet {
             jButton39.setVisible(CanDeleteGifts);
             jButton63.setVisible(CanEditGifts);
             jPanel81.setVisible(true);
-            
+
             DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree4.getLastSelectedPathComponent();
-            Object[] obj = (Object[])SelectedNode.getUserObject();
-            Gifts.setPosition((Integer)obj[1]);
+            Object[] obj = (Object[]) SelectedNode.getUserObject();
+            Gifts.setPosition((Integer) obj[1]);
             GetGiftsCandy();
             MakeTableOfGiftsCandy();
-            
-            
+
             jTextField21.setText(Gifts.getString("NAME"));
             jTextField21.setBorder(null);
             jTextField21.setEditable(false);
             jTextField21.setBackground(jTextField21.getParent().getBackground());
-            jTextField21.setForeground(new Color(200,0,0));
-            
+            jTextField21.setForeground(new Color(200, 0, 0));
+
             jTextField32.setText(FormatUAH.format(Gifts.getDouble("COST_PACKING")));
             jTextField32.setBorder(null);
             jTextField32.setEditable(false);
             jTextField32.setBackground(jTextField32.getParent().getBackground());
-            jTextField32.setForeground(new Color(200,0,0));            
-            
+            jTextField32.setForeground(new Color(200, 0, 0));
+
             jButton33.setVisible(CanEditGifts);
             jButton40.setVisible(false);
             jButton41.setVisible(false);
@@ -1976,7 +1992,7 @@ public class MainForm extends javax.swing.JApplet {
     private boolean GetGiftsCandy() {
         Object[][] obj = db.SelectSQL("SELECT gift_candy.id,gift_candy.id_candy,gift_candy.amount,candy.name,candy.box_weight,candy.amount_in_box,candy.cost_kg,factory.name FROM gift_candy,candy,factory WHERE gift_candy.id_candy=candy.id AND candy.id_factory=factory.id AND gift_candy.id_gift=? ORDER BY gift_candy.id", new Object[]{Gifts.getInt("ID")});
         Gift_Candy.set(obj);
-        return obj!=null;
+        return obj != null;
     }
 
     private void MakeTableOfGiftsCandy() {
@@ -1993,41 +2009,41 @@ public class MainForm extends javax.swing.JApplet {
                 data[i][1] = Gift_Candy.getString(i, "CANDY_NAME");
                 int amount = Gift_Candy.getInt(i, "AMOUNT");
                 data[i][2] = amount;
-                SummAmount+=amount;
+                SummAmount += amount;
                 weight = Gift_Candy.getDouble(i, "BOX_WEIGHT") / Gift_Candy.getInt(i, "AMOUNT_IN_BOX");
-                SummWeight+=amount*weight;
-                cost = Gift_Candy.getDouble(i, "COST_KG")*weight;
-                SummCost+=amount*cost;
-                data[i][3] = FormatUAH.format(amount * cost);                
+                SummWeight += amount * weight;
+                cost = Gift_Candy.getDouble(i, "COST_KG") * weight;
+                SummCost += amount * cost;
+                data[i][3] = FormatUAH.format(amount * cost);
                 data[i][4] = FormatKG.format(amount * weight);
             }
-            data[data.length-1][1] = "ИТОГО:";
-            data[data.length-1][2] = SummAmount;
-            data[data.length-1][3] = FormatUAH.format(SummCost);
-            data[data.length-1][4] = FormatKG.format(SummWeight);
+            data[data.length - 1][1] = "ИТОГО:";
+            data[data.length - 1][2] = SummAmount;
+            data[data.length - 1][3] = FormatUAH.format(SummCost);
+            data[data.length - 1][4] = FormatKG.format(SummWeight);
         }
-        jTable1.makeTable(data, this,CanEditGifts);
+        jTable1.makeTable(data, this, CanEditGifts);
     }
 
     public void SaveChangesInTableGiftsCandy(int col, int row, Object value) {
-        if (db.UpdateSQL("UPDATE gift_candy SET amount=? WHERE id=?",new Object[]{value,Gift_Candy.getInt(row, "ID")})) {
+        if (db.UpdateSQL("UPDATE gift_candy SET amount=? WHERE id=?", new Object[]{value, Gift_Candy.getInt(row, "ID")})) {
             SelectNodeOfTreeGifts();
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
     }
-    
+
     public void SaveChangesInTableSubOrders(int col, int row, Object value) {
         boolean result = false;
-        if (col==4) {
-            if (db.UpdateSQL("UPDATE suborder SET amount=? WHERE id=? LIMIT 1",new Object[]{value,SubOrders.getInt(row, "ID")})) {
+        if (col == 4) {
+            if (db.UpdateSQL("UPDATE suborder SET amount=? WHERE id=? LIMIT 1", new Object[]{value, SubOrders.getInt(row, "ID")})) {
                 SelectNodeOfTableOrders();
-                result=true;
+                result = true;
             }
-        } else if (col==3) {
+        } else if (col == 3) {
             try {
-                double d = Double.parseDouble(((String)value).replaceAll(" ", "").replace(',', '.'));
-                if (db.UpdateSQL("UPDATE suborder SET cost=? WHERE id=? LIMIT 1",new Object[]{d,SubOrders.getInt(row,"ID")})) {
+                double d = Double.parseDouble(((String) value).replaceAll(" ", "").replace(',', '.'));
+                if (db.UpdateSQL("UPDATE suborder SET cost=? WHERE id=? LIMIT 1", new Object[]{d, SubOrders.getInt(row, "ID")})) {
                     SelectNodeOfTableOrders();
                     result = true;
                 }
@@ -2047,26 +2063,26 @@ public class MainForm extends javax.swing.JApplet {
             value = Integer.parseInt(jTextField50.getText());
         } catch (Exception ex) {
         }
-        String filterText = value!=null ? " WHERE number="+value : (jTextField50.getText().isEmpty() ? "" : " WHERE name LIKE '%"+jTextField50.getText()+"%'");
-        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing "+filterText+" ORDER BY number,name",null);
+        String filterText = value != null ? " WHERE number=" + value : (jTextField50.getText().isEmpty() ? "" : " WHERE name LIKE '%" + jTextField50.getText() + "%'");
+        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing " + filterText + " ORDER BY number,name", null);
         FilteredPackings.set(obj);
-    }    
-    
+    }
+
     private void GetPackings() {
         String filterNumberPack = "";
         try {
-            filterNumberPack = jTextField56.getText().isEmpty() ? "" : " WHERE number LIKE '"+Integer.parseInt(jTextField56.getText())+"%'";
+            filterNumberPack = jTextField56.getText().isEmpty() ? "" : " WHERE number LIKE '" + Integer.parseInt(jTextField56.getText()) + "%'";
         } catch (NumberFormatException nfe) {
             System.out.println("Only number of package is allowed! " + nfe.getMessage());
         }
-        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing" +filterNumberPack+ " ORDER BY number,name",null);
+        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing" + filterNumberPack + " ORDER BY number,name", null);
         Packings.set(obj);
     }
-    
+
     private void MakeTreeOfPackings() {
         int[] SaveCurrentRow = jTree6.getSelectionRows();
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"", 0});
         DefaultMutableTreeNode child_0 = new DefaultMutableTreeNode(new Object[]{"Картон", 0});
         DefaultMutableTreeNode child_1 = new DefaultMutableTreeNode(new Object[]{"Пакет", 1});
         DefaultMutableTreeNode child_2 = new DefaultMutableTreeNode(new Object[]{"Туба", 2});
@@ -2079,7 +2095,7 @@ public class MainForm extends javax.swing.JApplet {
         top.add(child_4);
 
         boolean thereWereProblemsWithFTP = false;
-        
+
         for (int i = 0; i < Packings.getLength(); i++) {
             int type = Packings.getInt(i, "TYPE");
             String filename = Packings.getString(i, "FILENAME").trim();
@@ -2088,7 +2104,7 @@ public class MainForm extends javax.swing.JApplet {
                     try {
                         if (!thereWereProblemsWithFTP) {
                             Image image = FTP.readImageFromFileOrDownloadFromFTP(filename);
-                            PackingsImages.addImage(image, filename);                    
+                            PackingsImages.addImage(image, filename);
                         }
                     } catch (Exception ex) {
                         thereWereProblemsWithFTP = true;
@@ -2097,8 +2113,8 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
             }
-            
-            DefaultMutableTreeNode dftn = new DefaultMutableTreeNode(new Object[]{"№"+Integer.toString(Packings.getInt(i, "NUMBER"))+"  "+Packings.getString(i, "NAME"), i,FormatKG.format(Packings.getDouble(i,"CAPACITY"))+" кг",PackingsImages.getImage(filename),Packings.getBoolean(i,"MARKED")});
+
+            DefaultMutableTreeNode dftn = new DefaultMutableTreeNode(new Object[]{"№" + Integer.toString(Packings.getInt(i, "NUMBER")) + "  " + Packings.getString(i, "NAME"), i, FormatKG.format(Packings.getDouble(i, "CAPACITY")) + " кг", PackingsImages.getImage(filename), Packings.getBoolean(i, "MARKED")});
             switch (type) {
                 case 0:
                     child_0.add(dftn);
@@ -2123,16 +2139,16 @@ public class MainForm extends javax.swing.JApplet {
             jTree6.expandRow(i);
         }
         jTree6.setSelectionRows(SaveCurrentRow);
-        SelectNodeOfTreePackings(); 
-        
+        SelectNodeOfTreePackings();
+
         if (thereWereProblemsWithFTP) {
             JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");
         }
     }
-    
+
     private void SelectNodeOfTreePackings() {
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree6.getLastSelectedPathComponent();
-        if (SelectedNode==null) {
+        if (SelectedNode == null) {
             jPanel112.setVisible(false);
             jPanel43.setVisible(false);
             jPanel46.setVisible(false);
@@ -2147,7 +2163,7 @@ public class MainForm extends javax.swing.JApplet {
             Packings.setPosition(-1);
         } else {
             Object[] obj = (Object[]) SelectedNode.getUserObject();
-            Packings.setPosition((Integer) obj[1]);            
+            Packings.setPosition((Integer) obj[1]);
             switch (SelectedNode.getLevel()) {
                 case 1:
                     jPanel112.setVisible(false);
@@ -2164,9 +2180,9 @@ public class MainForm extends javax.swing.JApplet {
                     break;
                 case 2:
                     ObjectResultSet ExtendedPacking = new ObjectResultSet();
-                    ExtendedPacking.setColumnNames(new String[]{"WEIGHT","COST","COMM"});
-                    ExtendedPacking.set(db.SelectSQL("SELECT weight,cost,comm FROM packing WHERE id=?",new Object[]{Packings.getInt("ID")}));
-                    
+                    ExtendedPacking.setColumnNames(new String[]{"WEIGHT", "COST", "COMM"});
+                    ExtendedPacking.set(db.SelectSQL("SELECT weight,cost,comm FROM packing WHERE id=?", new Object[]{Packings.getInt("ID")}));
+
                     jPanel112.setVisible(true);
                     jPanel43.setVisible(true);
                     jPanel46.setVisible(true);
@@ -2177,7 +2193,7 @@ public class MainForm extends javax.swing.JApplet {
                     jPanel185.setVisible(true);
                     jPanel52.setVisible(true);
 
-                    JTextField[] mas = new JTextField[]{jTextField17,jTextField30,jTextField18,jTextField19,jTextField20};
+                    JTextField[] mas = new JTextField[]{jTextField17, jTextField30, jTextField18, jTextField19, jTextField20};
                     for (JTextField ma : mas) {
                         ma.setEditable(false);
                         ma.setBorder(null);
@@ -2191,12 +2207,12 @@ public class MainForm extends javax.swing.JApplet {
                     jTextField20.setText(FormatKG.format(Packings.getDouble("CAPACITY")));
                     jTextArea6.setText(ExtendedPacking.getString("COMM"));
                     jTextArea6.setBackground(jTextArea6.getParent().getParent().getParent().getBackground());
-                    jTextArea6.setForeground(new Color(200,0,0));
+                    jTextArea6.setForeground(new Color(200, 0, 0));
                     jTextArea6.setEditable(false);
                     jTextArea6.setBorder(null);
                     jCheckBox4.setSelected(Packings.getBoolean("MARKED"));
                     jCheckBox4.setEnabled(false);
-                    
+
                     Image image = null;
                     String filename = Packings.getString("FILENAME").trim();
                     if ((filename != null) && (!"".equals(filename))) {
@@ -2206,12 +2222,12 @@ public class MainForm extends javax.swing.JApplet {
                         } catch (Exception ex) {
                         }
                     }
-                    if (image!=null) {
+                    if (image != null) {
                         jLabel60.setIcon(new ImageIcon(image.getScaledInstance(150, 150, Image.SCALE_FAST)));
                     } else {
                         jLabel60.setIcon(null);
                     }
-                    
+
                     jButton9.setVisible(false);
                     jButton45.setVisible(false);
                     jButton13.setVisible(CanEditPackings);
@@ -2223,22 +2239,22 @@ public class MainForm extends javax.swing.JApplet {
             }
         }
     }
-    
-    public boolean GetOrders() {        
+
+    public boolean GetOrders() {
         String filter = "";
-        if (userLevel==STORAGE_HEAD) { //начальник склада
-            int selectedState = jComboBox1.getSelectedIndex()-1;
-            if (selectedState==-1) {
+        if (userLevel == STORAGE_HEAD) { //начальник склада
+            int selectedState = jComboBox1.getSelectedIndex() - 1;
+            if (selectedState == -1) {
                 filter = " AND (orders.state=1 OR orders.state=2 OR orders.state=3) ";
             } else {
-                filter = selectedState==1 || selectedState==2 || selectedState==3 ? (" AND orders.state="+selectedState+" ") : " AND orders.state=-100";
+                filter = selectedState == 1 || selectedState == 2 || selectedState == 3 ? (" AND orders.state=" + selectedState + " ") : " AND orders.state=-100";
             }
-        } else if (userLevel==LOGIST) { //логист
-            int selectedState = jComboBox1.getSelectedIndex()-1;
-            if (selectedState==-1) {
+        } else if (userLevel == LOGIST) { //логист
+            int selectedState = jComboBox1.getSelectedIndex() - 1;
+            if (selectedState == -1) {
                 filter = " AND (orders.state=3 OR orders.state=4) ";
             } else {
-                filter = selectedState==3 || selectedState==4 ? (" AND orders.state="+selectedState+" ") : " AND orders.state=-100";
+                filter = selectedState == 3 || selectedState == 4 ? (" AND orders.state=" + selectedState + " ") : " AND orders.state=-100";
             }
         } else {
             switch (jComboBox1.getSelectedIndex()) {
@@ -2252,53 +2268,52 @@ public class MainForm extends javax.swing.JApplet {
                 case 5:
                 case 6:
                 case 7:
-                    filter = " AND orders.state="+(jComboBox1.getSelectedIndex()-1)+" ";
+                    filter = " AND orders.state=" + (jComboBox1.getSelectedIndex() - 1) + " ";
                     break;
                 case 8:
                     filter = " AND orders.state=-1 ";
                     break;
             }
         }
-        
+
         try {
-            int year = (int)jComboBox4.getSelectedItem();
+            int year = (int) jComboBox4.getSelectedItem();
             Calendar cal = Calendar.getInstance();
             cal.set(year, 0, 1, 0, 0, 0);
             long StartTime = cal.getTimeInMillis();
-            cal.set(year+1, 0, 1, 0, 0, 0);
+            cal.set(year + 1, 0, 1, 0, 0, 0);
             long EndTime = cal.getTimeInMillis();
-            
-            String filterUserCreator="";
+
+            String filterUserCreator = "";
 //            if (userLevel==MANAGER) {
 //                filterUserCreator = " AND orders.user_creator_id="+CurrentUser.getInt("ID");
 //            } else {
-            filterUserCreator = jComboBox6.getSelectedID()==-1 ? "" : " AND orders.user_creator_id="+jComboBox6.getSelectedID();
+            filterUserCreator = jComboBox6.getSelectedID() == -1 ? "" : " AND orders.user_creator_id=" + jComboBox6.getSelectedID();
 //            }
-            String filterEdrpou = jTextField46.getText().isEmpty() ? "" : " AND client.EDRPOU LIKE '%"+jTextField46.getText()+"%'";
-            String filterOrderNumber = jTextField43.getText().isEmpty() ? "" : " AND orders.number LIKE '%"+jTextField43.getText()+"%'";
-            String filterGiftName = " AND suborder.id_orders=orders.id AND suborder.id_gift=gift.id AND gift.name LIKE '%"+jTextField48.getText()+"%'";
+            String filterEdrpou = jTextField46.getText().isEmpty() ? "" : " AND client.EDRPOU LIKE '%" + jTextField46.getText() + "%'";
+            String filterOrderNumber = jTextField43.getText().isEmpty() ? "" : " AND orders.number LIKE '%" + jTextField43.getText() + "%'";
+            String filterGiftName = " AND suborder.id_orders=orders.id AND suborder.id_gift=gift.id AND gift.name LIKE '%" + jTextField48.getText() + "%'";
 //            String filterTypePay = jComboBox15.getSelectedIndex()<=0 ? "" : (jComboBox15.getSelectedIndex()==2 ? " AND orders.type_pay IN (2,3)" : " AND orders.type_pay NOT IN (2,3)");
-            String filterTypePay = jComboBoxPaymentTypesOrderList.getSelectedIndex()<=0 ? "" : " AND orders.type_pay = '" + (jComboBoxPaymentTypesOrderList.getSelectedIndex()-1) + "'";
-            
-            
+            String filterTypePay = jComboBoxPaymentTypesOrderList.getSelectedIndex() <= 0 ? "" : " AND orders.type_pay = '" + (jComboBoxPaymentTypesOrderList.getSelectedIndex() - 1) + "'";
+
             String sql;
             if (jRadioButton6.isSelected()) {
                 if (jTextField48.getText().isEmpty()) {
                     sql = "SELECT DISTINCT orders.id,orders.date_time,orders.id_client,"
                             + "client.official_name,orders.state,0,orders.number FROM orders,"
-                            + "client, suborder WHERE orders.id_client=client.id "+filter+
-                            " AND client.official_name LIKE '%"+jTextField39.getText()
-                            +"%' AND orders.date_time BETWEEN "+StartTime+" AND "
-                            +EndTime+filterUserCreator+filterEdrpou+filterOrderNumber
-                            +filterTypePay+" ORDER BY orders.date_time DESC";
+                            + "client, suborder WHERE orders.id_client=client.id " + filter
+                            + " AND client.official_name LIKE '%" + jTextField39.getText()
+                            + "%' AND orders.date_time BETWEEN " + StartTime + " AND "
+                            + EndTime + filterUserCreator + filterEdrpou + filterOrderNumber
+                            + filterTypePay + " ORDER BY orders.date_time DESC";
                 } else { //запрос с фильтром по номеру подарка
                     sql = "SELECT DISTINCT orders.id,orders.date_time,orders.id_client,"
                             + "client.official_name,orders.state,0,orders.number FROM orders,"
                             + "client,gift,suborder WHERE orders.id_client=client.id "
-                            +filter+" AND client.official_name LIKE '%"+jTextField39.getText()
-                            +"%' AND orders.date_time BETWEEN "+StartTime+" AND "
-                            +EndTime+filterUserCreator+filterEdrpou+filterOrderNumber
-                            +filterGiftName+filterTypePay+" ORDER BY orders.date_time DESC";
+                            + filter + " AND client.official_name LIKE '%" + jTextField39.getText()
+                            + "%' AND orders.date_time BETWEEN " + StartTime + " AND "
+                            + EndTime + filterUserCreator + filterEdrpou + filterOrderNumber
+                            + filterGiftName + filterTypePay + " ORDER BY orders.date_time DESC";
                 }
             } else {
                 if (jTextField48.getText().isEmpty()) {
@@ -2306,74 +2321,73 @@ public class MainForm extends javax.swing.JApplet {
                             + "client.official_name,orders.state,(SELECT MIN(date_time) "
                             + "FROM delivery WHERE delivery.id_orders=_id_) AS min_delivery,"
                             + "orders.number FROM orders,client,gift,suborder "
-                            + "WHERE orders.id_client=client.id "+filter
-                            +" AND client.official_name LIKE '%"+jTextField39.getText()
-                            +"%' AND orders.date_time BETWEEN "+StartTime+" AND "
-                            +EndTime+filterUserCreator+filterEdrpou+filterOrderNumber
-                            +filterGiftName+filterTypePay+" ORDER BY min_delivery";
+                            + "WHERE orders.id_client=client.id " + filter
+                            + " AND client.official_name LIKE '%" + jTextField39.getText()
+                            + "%' AND orders.date_time BETWEEN " + StartTime + " AND "
+                            + EndTime + filterUserCreator + filterEdrpou + filterOrderNumber
+                            + filterGiftName + filterTypePay + " ORDER BY min_delivery";
                 } else {
                     sql = "SELECT DISTINCT orders.id AS _id_,orders.date_time,orders.id_client,"
                             + "client.official_name,orders.state,(SELECT MIN(date_time) "
                             + "FROM delivery WHERE delivery.id_orders=_id_) AS min_delivery,"
                             + "orders.number FROM orders,client,gift,suborder "
-                            + "WHERE orders.id_client=client.id "+filter
-                            +" AND client.official_name LIKE '%"+jTextField39.getText()
-                            +"%' AND orders.date_time BETWEEN "+StartTime+" AND "
-                            +EndTime+filterUserCreator+filterEdrpou+filterOrderNumber
-                            +filterGiftName+filterGiftName+filterTypePay+" ORDER BY min_delivery"; 
+                            + "WHERE orders.id_client=client.id " + filter
+                            + " AND client.official_name LIKE '%" + jTextField39.getText()
+                            + "%' AND orders.date_time BETWEEN " + StartTime + " AND "
+                            + EndTime + filterUserCreator + filterEdrpou + filterOrderNumber
+                            + filterGiftName + filterGiftName + filterTypePay + " ORDER BY min_delivery";
                 }
             }
-            Object[][] obj = db.SelectSQL(sql,null);
+            Object[][] obj = db.SelectSQL(sql, null);
             Orders.set(obj);
             return obj != null;
         } catch (Exception ex) {
             return false;
         }
     }
-    
+
     public boolean areOrdersSortedByDateOfOrder() {
         return jRadioButton6.isSelected();
     }
-    
+
     public void MakeTableOfOrders() {
         int SelectedRow = jTable3.getSelectedRow();
         String[] columnNames;
         if (jRadioButton6.isSelected()) {
-            columnNames = new String[]{"Заказ","№", "Клиент",""};
+            columnNames = new String[]{"Заказ", "№", "Клиент", ""};
         } else {
-            columnNames = new String[]{"Доставка","№", "Клиент",""};
+            columnNames = new String[]{"Доставка", "№", "Клиент", ""};
         }
-        Object data[][] = new Object[0][columnNames.length+1];
+        Object data[][] = new Object[0][columnNames.length + 1];
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        
+
 //        int amount = 0;
 //        int currentAmount;
 //        double cost = 0;
 //        double currentCost;
-     
         if (!Orders.IsNull()) {
-            
-            data = new Object[Orders.getLength()][columnNames.length+1];
+
+            data = new Object[Orders.getLength()][columnNames.length + 1];
             int j = 0;
             for (int i = 0; i < Orders.getLength(); i++) {
-                    if (jRadioButton6.isSelected()) {
-                        data[j][0] = sdf.format(new Date(Orders.getLong(i,"DATE_TIME")));
+                if (jRadioButton6.isSelected()) {
+                    data[j][0] = sdf.format(new Date(Orders.getLong(i, "DATE_TIME")));
+                } else {
+                    if (Orders.get(i, "MIN_DATE_DELIVERY") == null) {
+                        data[j][0] = "-";
                     } else {
-                        if (Orders.get(i,"MIN_DATE_DELIVERY")==null) {
-                            data[j][0] = "-";
-                        } else {
-                            int minDate = Orders.get(i,"MIN_DATE_DELIVERY") instanceof Integer ? Orders.getInt(i,"MIN_DATE_DELIVERY") : Orders.getLong(i,"MIN_DATE_DELIVERY").intValue();
-                            data[j][0] = sdf.format(new Date(minDate*1000L));
-                        }
+                        int minDate = Orders.get(i, "MIN_DATE_DELIVERY") instanceof Integer ? Orders.getInt(i, "MIN_DATE_DELIVERY") : Orders.getLong(i, "MIN_DATE_DELIVERY").intValue();
+                        data[j][0] = sdf.format(new Date(minDate * 1000L));
                     }
-                    data[j][1] = Orders.getString(i,"NUMBER");
-                    data[j][2] = Orders.getString(i,"CLIENT_NAME");
-                    data[j][3] = Orders.getInt(i,"STATE");
+                }
+                data[j][1] = Orders.getString(i, "NUMBER");
+                data[j][2] = Orders.getString(i, "CLIENT_NAME");
+                data[j][3] = Orders.getInt(i, "STATE");
 //                    data[j][4] = System.currentTimeMillis()-Orders.getLong(i,"DATE_TIME")<36*3600*1000; //заказы младше 36 часов будут выделяться цветом
-                    
-                    j++;
-                    
-                    //Автоматический подсчет количеста подарков в выбраных заказах и их общей суммы
+
+                j++;
+
+                //Автоматический подсчет количеста подарков в выбраных заказах и их общей суммы
 //                    GetOrdersCount(i);
 //                    for (int k=0; k<OrdersCount.getLength(); k++) {
 //                        currentAmount = OrdersCount.getInt(k,"AMOUNT");
@@ -2381,46 +2395,43 @@ public class MainForm extends javax.swing.JApplet {
 //                        cost += currentCost;
 //                        amount += currentAmount;
 //                    }
-
             }
         }
         jTable3.makeTable(columnNames, data);
-        if ((SelectedRow!=-1) && (SelectedRow<jTable3.getRowCount())) {
+        if ((SelectedRow != -1) && (SelectedRow < jTable3.getRowCount())) {
             jTable3.setRowSelectionInterval(SelectedRow, SelectedRow);
         }
         SelectNodeOfTableOrders();
-        
-        jPanel59.setVisible(true); 
+
+        jPanel59.setVisible(true);
     }
-    
+
     public void ShowGiftsAndSumm() {
         int amount = 0;
         int currentAmount;
         double cost = 0;
         double currentCost;
-        
+
         for (int i = 0; i < Orders.getLength(); i++) {
             //Подсчет количеста подарков в выбраных заказах и их общей суммы
             GetOrdersCount(i);
-            for (int k=0; k<OrdersCount.getLength(); k++) {
-                currentAmount = OrdersCount.getInt(k,"AMOUNT");
-                currentCost = (double) currentAmount * OrdersCount.getDouble(k,"COST");
+            for (int k = 0; k < OrdersCount.getLength(); k++) {
+                currentAmount = OrdersCount.getInt(k, "AMOUNT");
+                currentCost = (double) currentAmount * OrdersCount.getDouble(k, "COST");
                 cost += currentCost;
                 amount += currentAmount;
             }
         }
-        
+
         JOptionPane.showMessageDialog(null, amount + " подарков на сумму " + FormatUAH.format(cost));
-        
-        
+
 //        jTextField5.setText(Integer.toString(amount));
 //        jTextField36.setText(FormatUAH.format(cost));
-        
     }
-    
+
     public void SelectNodeOfTableOrders() {
         int SelectedRow = jTable3.getSelectedRow();
-        if (SelectedRow==-1) {
+        if (SelectedRow == -1) {
             jPanel85.setVisible(false);
             jPanel96.setVisible(false);
             Orders.setPosition(-1);
@@ -2429,12 +2440,12 @@ public class MainForm extends javax.swing.JApplet {
             jPanel85.setVisible(true);
             jPanel96.setVisible(true);
             Orders.setPosition(SelectedRow);
-            jTabbedPane4.setTitleAt(0, "Состав заказа №"+Orders.getString("NUMBER"));            
-            Object[][] obj = db.SelectSQL("SELECT type_pay,date_pay,date_pack,prepay,discount,comm_packing,comm,delivery_cost,(SELECT user.name FROM user WHERE id=ORD.user_creator_id LIMIT 1) FROM orders ORD WHERE id=?",new Object[]{Orders.getInt("ID")});
+            jTabbedPane4.setTitleAt(0, "Состав заказа №" + Orders.getString("NUMBER"));
+            Object[][] obj = db.SelectSQL("SELECT type_pay,date_pay,date_pack,prepay,discount,comm_packing,comm,delivery_cost,(SELECT user.name FROM user WHERE id=ORD.user_creator_id LIMIT 1) FROM orders ORD WHERE id=?", new Object[]{Orders.getInt("ID")});
             ExtendedOrder.set(obj);
-            
+
             SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
-            
+
             int type_pay = ExtendedOrder.getInt("TYPE_PAY");
             switch (type_pay) {
                 case 0:
@@ -2476,22 +2487,22 @@ public class MainForm extends javax.swing.JApplet {
                 default:
                     jLabel79.setText("");
                     jComboBoxPaymentTypesOrderDetail.setSelectedIndex(-1);
-            }                    
+            }
             jLabel79.setVisible(true);
             jComboBoxPaymentTypesOrderDetail.setVisible(false);
-            
-            jTextArea8.setText(ExtendedOrder.getString("COMM"));            
+
+            jTextArea8.setText(ExtendedOrder.getString("COMM"));
             jTextArea8.setEditable(false);
             jTextArea8.setBackground(jTextArea8.getParent().getParent().getParent().getBackground());
-            jTextArea8.setForeground(new Color(200,0,0));
+            jTextArea8.setForeground(new Color(200, 0, 0));
             jTextArea8.setBorder(BorderFactory.createEmptyBorder());
 
-            jTextArea9.setText(ExtendedOrder.getString("COMM_PACKING"));            
+            jTextArea9.setText(ExtendedOrder.getString("COMM_PACKING"));
             jTextArea9.setEditable(false);
             jTextArea9.setBackground(jTextArea9.getParent().getParent().getParent().getBackground());
-            jTextArea9.setForeground(new Color(200,0,0));
+            jTextArea9.setForeground(new Color(200, 0, 0));
             jTextArea9.setBorder(BorderFactory.createEmptyBorder());
-            
+
             if (userLevel == 1) {
                 if (CanEditOrders) {
                     jButton27.setVisible(true);
@@ -2499,54 +2510,54 @@ public class MainForm extends javax.swing.JApplet {
                     jButton27.setVisible(false);
                 }
             } else {
-                if ((userLevel == 0) && (Orders.getInt("STATE")<Order.ORDER_DONE)) {
+                if ((userLevel == 0) && (Orders.getInt("STATE") < Order.ORDER_DONE)) {
                     jButton27.setVisible(true);
                 } else {
                     jButton27.setVisible(false);
                 }
             }
-            
+
             jButtonSaveOrder.setVisible(false);
             jButton29.setVisible(false);
-            
+
             int d = ExtendedOrder.getInt("DATE_PAY");
-            if (d==0) {
+            if (d == 0) {
                 jLabel82.setText("не оплачено");
                 jLabel82.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
             } else {
-                jLabel82.setText(sdf2.format(new Date(d*1000L)));
+                jLabel82.setText(sdf2.format(new Date(d * 1000L)));
                 jLabel82.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
             }
-            
+
             d = ExtendedOrder.getInt("DATE_PACK");
-            if (d==0){
+            if (d == 0) {
                 jLabel84.setText("не упаковано");
                 jLabel84.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
             } else {
-                jLabel84.setText(sdf2.format(new Date(d*1000L)));
+                jLabel84.setText(sdf2.format(new Date(d * 1000L)));
                 jLabel84.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
             }
-          
+
             jTextField33.setEditable(false);
             jTextField33.setText(FormatUAH.format(ExtendedOrder.getDouble("PREPAY")));
             jTextField33.setBorder(BorderFactory.createEmptyBorder());
             jTextField33.setBackground(jTextField33.getParent().getBackground());
-            jTextField33.setForeground(new Color(200,0,0));
-            
+            jTextField33.setForeground(new Color(200, 0, 0));
+
             jTextField37.setEditable(false);
             jTextField37.setText(FormatUAH.format(ExtendedOrder.getDouble("DISCOUNT")));
             jTextField37.setBorder(BorderFactory.createEmptyBorder());
             jTextField37.setBackground(jTextField33.getParent().getBackground());
-            jTextField37.setForeground(new Color(200,0,0));
-            
+            jTextField37.setForeground(new Color(200, 0, 0));
+
             jTextField41.setEditable(false);
             jTextField41.setText(FormatUAH.format(ExtendedOrder.getDouble("DELIVERY_COST")));
             jTextField41.setBorder(BorderFactory.createEmptyBorder());
             jTextField41.setBackground(jTextField41.getParent().getBackground());
-            jTextField41.setForeground(new Color(200,0,0));
-            
+            jTextField41.setForeground(new Color(200, 0, 0));
+
             int state = Orders.getInt("STATE");
-            if (state==Order.ORDER_CANCEL) {
+            if (state == Order.ORDER_CANCEL) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
@@ -2554,7 +2565,7 @@ public class MainForm extends javax.swing.JApplet {
                 jButton19.setVisible(false);
                 jButton78.setVisible(false);
                 jButton100.setVisible(false);
-            } else if ((state==Order.ORDER_PREPARE) && (CanEditOrders)) {
+            } else if ((state == Order.ORDER_PREPARE) && (CanEditOrders)) {
                 jButton11.setVisible(true);
                 jButton12.setVisible(true);
                 jButton16.setVisible(true);
@@ -2563,7 +2574,7 @@ public class MainForm extends javax.swing.JApplet {
                 jButton19.setVisible(false);
                 jButton78.setVisible(false);
                 jButton100.setVisible(false);
-            } else if ((state==Order.ORDER_PREPARE) && (!CanEditOrders)) {
+            } else if ((state == Order.ORDER_PREPARE) && (!CanEditOrders)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
@@ -2571,8 +2582,8 @@ public class MainForm extends javax.swing.JApplet {
                 jButton19.setVisible(false);
                 jButton78.setVisible(false);
                 jButton100.setVisible(false);
-            } else if ((state==Order.ORDER_PAY) && (CanPayOrders)) {
-                if (CurrentUser.getInt("LEVEL")==DIRECTOR) {
+            } else if ((state == Order.ORDER_PAY) && (CanPayOrders)) {
+                if (CurrentUser.getInt("LEVEL") == DIRECTOR) {
                     jButton11.setVisible(true);
                     jButton12.setVisible(true);
                 } else {
@@ -2584,9 +2595,9 @@ public class MainForm extends javax.swing.JApplet {
                 jButton74.setVisible(false);
                 jButton19.setVisible(false);
                 jButton78.setVisible(false);
-                jButton100.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));                
+                jButton100.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/exclamation-red-icon.png")));
                 jButton100.setVisible(true);
-            } else if ((state==Order.ORDER_PAY) && (!CanPayOrders)) {
+            } else if ((state == Order.ORDER_PAY) && (!CanPayOrders)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
@@ -2594,8 +2605,8 @@ public class MainForm extends javax.swing.JApplet {
                 jButton19.setVisible(false);
                 jButton78.setVisible(false);
                 jButton100.setVisible(CanEditOrders);
-            } else if ((state==Order.ORDER_PACK) && (CanPackOrders)) {
-                if (CurrentUser.getInt("LEVEL")==DIRECTOR) {
+            } else if ((state == Order.ORDER_PACK) && (CanPackOrders)) {
+                if (CurrentUser.getInt("LEVEL") == DIRECTOR) {
                     jButton11.setVisible(true);
                     jButton12.setVisible(true);
                 } else {
@@ -2606,10 +2617,10 @@ public class MainForm extends javax.swing.JApplet {
                 jButton16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/lock-icon2.png")));
                 jButton74.setVisible(true);
                 jButton19.setVisible(false);
-                jButton78.setVisible(true); 
+                jButton78.setVisible(true);
                 jButton100.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/coins-icon.png")));
                 jButton100.setVisible(true);
-            } else if ((state==Order.ORDER_PACK) && (!CanPackOrders)) {
+            } else if ((state == Order.ORDER_PACK) && (!CanPackOrders)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
@@ -2617,7 +2628,7 @@ public class MainForm extends javax.swing.JApplet {
                 jButton19.setVisible(false);
                 jButton78.setVisible(false);
                 jButton100.setVisible(false);
-            } else if ((state==Order.ORDER_STORAGE)  && (CurrentUser.getInt("LEVEL")==DIRECTOR)) {
+            } else if ((state == Order.ORDER_STORAGE) && (CurrentUser.getInt("LEVEL") == DIRECTOR)) {
                 jButton11.setVisible(true);
                 jButton12.setVisible(true);
                 jButton16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
@@ -2627,7 +2638,7 @@ public class MainForm extends javax.swing.JApplet {
                 jButton78.setVisible(false);
                 jButton100.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/upakovka_146_2.png")));
                 jButton100.setVisible(true);
-            } else if ((state==Order.ORDER_STORAGE)  && (CurrentUser.getInt("LEVEL")!=DIRECTOR)) {
+            } else if ((state == Order.ORDER_STORAGE) && (CurrentUser.getInt("LEVEL") != DIRECTOR)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
@@ -2635,7 +2646,7 @@ public class MainForm extends javax.swing.JApplet {
                 jButton19.setVisible(true);
                 jButton78.setVisible(false);
                 jButton100.setVisible(false);
-            } else if ((state==Order.ORDER_SEND) && (CurrentUser.getInt("LEVEL")==DIRECTOR)) {
+            } else if ((state == Order.ORDER_SEND) && (CurrentUser.getInt("LEVEL") == DIRECTOR)) {
                 jButton11.setVisible(true);
                 jButton12.setVisible(true);
                 jButton16.setVisible(true);
@@ -2645,34 +2656,33 @@ public class MainForm extends javax.swing.JApplet {
                 jButton78.setVisible(false);
                 jButton100.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/lock-icon2.png")));
                 jButton100.setVisible(true);
-            } else if ((state==Order.ORDER_SEND) && (CurrentUser.getInt("LEVEL")!=DIRECTOR)) {
+            } else if ((state == Order.ORDER_SEND) && (CurrentUser.getInt("LEVEL") != DIRECTOR)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
                 jButton74.setVisible(false);
                 jButton19.setVisible(true);
-                jButton78.setVisible(false); 
+                jButton78.setVisible(false);
                 jButton100.setVisible(false);
-            }
-//                else if ((state==Order.ORDER_DELIVERED) && (CurrentUser.getInt("LEVEL")==DIRECTOR)) {
-//                jButton11.setVisible(false);
-//                jButton12.setVisible(false);
-//                jButton16.setVisible(true);
-//                jButton16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
-//                jButton74.setVisible(false);
-//                jButton19.setVisible(true);
-//                jButton78.setVisible(false); 
-//                jButton100.setVisible(false);
-//            } else if ((state==Order.ORDER_DELIVERED) && (CurrentUser.getInt("LEVEL")!=DIRECTOR)) {
-//                jButton11.setVisible(false);
-//                jButton12.setVisible(false);
-//                jButton16.setVisible(false);
-//                jButton74.setVisible(false);
-//                jButton19.setVisible(true);
-//                jButton78.setVisible(false); 
-//                jButton100.setVisible(false);
-//            }
-            else if ((state==Order.ORDER_DONE) && (CurrentUser.getInt("LEVEL")==DIRECTOR)) {
+            } //                else if ((state==Order.ORDER_DELIVERED) && (CurrentUser.getInt("LEVEL")==DIRECTOR)) {
+            //                jButton11.setVisible(false);
+            //                jButton12.setVisible(false);
+            //                jButton16.setVisible(true);
+            //                jButton16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
+            //                jButton74.setVisible(false);
+            //                jButton19.setVisible(true);
+            //                jButton78.setVisible(false); 
+            //                jButton100.setVisible(false);
+            //            } else if ((state==Order.ORDER_DELIVERED) && (CurrentUser.getInt("LEVEL")!=DIRECTOR)) {
+            //                jButton11.setVisible(false);
+            //                jButton12.setVisible(false);
+            //                jButton16.setVisible(false);
+            //                jButton74.setVisible(false);
+            //                jButton19.setVisible(true);
+            //                jButton78.setVisible(false); 
+            //                jButton100.setVisible(false);
+            //            }
+            else if ((state == Order.ORDER_DONE) && (CurrentUser.getInt("LEVEL") == DIRECTOR)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
@@ -2681,77 +2691,77 @@ public class MainForm extends javax.swing.JApplet {
                 jButton78.setVisible(false);
                 jButton100.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
                 jButton100.setVisible(true);
-            } else if ((state==Order.ORDER_DONE) && (CurrentUser.getInt("LEVEL")!=DIRECTOR)) {
+            } else if ((state == Order.ORDER_DONE) && (CurrentUser.getInt("LEVEL") != DIRECTOR)) {
                 jButton11.setVisible(false);
                 jButton12.setVisible(false);
                 jButton16.setVisible(false);
                 jButton74.setVisible(false);
                 jButton19.setVisible(false);
-                jButton78.setVisible(false); 
+                jButton78.setVisible(false);
                 jButton100.setVisible(false);
             }
-           
+
             MakeTableOfDeliveryOrder();
-            
+
             GetSubOrders();
             MakeTableOfSubOrders();
-            
+
             double Summ = 0;
-            for (int i=0;i<SubOrders.getLength();i++) {
-                Summ+=SubOrders.getDouble(i,"COST")*SubOrders.getInt(i,"AMOUNT");
+            for (int i = 0; i < SubOrders.getLength(); i++) {
+                Summ += SubOrders.getDouble(i, "COST") * SubOrders.getInt(i, "AMOUNT");
             }
             Summ -= ExtendedOrder.getDouble("DISCOUNT");
-            jLabel104.setText(FormatUAH.format(ExtendedOrder.getDouble("DELIVERY_COST") 
-                    + Summ  - ExtendedOrder.getDouble("PREPAY")));
-            
+            jLabel104.setText(FormatUAH.format(ExtendedOrder.getDouble("DELIVERY_COST")
+                    + Summ - ExtendedOrder.getDouble("PREPAY")));
+
             jLabel114.setText(FormatUAH.format(ExtendedOrder.getDouble("DELIVERY_COST")));
-            
+
             Object user_creator = ExtendedOrder.get("USER_CREATOR_NAME");
-            jTextArea12.setText(user_creator==null ? "неизвестен" : (String)user_creator);
+            jTextArea12.setText(user_creator == null ? "неизвестен" : (String) user_creator);
         }
     }
-    
+
     public void setDeliveryCostLabelText(String s) {
         jLabel104.setText(s);
     }
-    
+
     public boolean GetSubOrders() {
         Object[][] obj = db.SelectSQL("SELECT suborder.id,suborder.id_gift,gift.name,"
                 + "gift.cost_packing,suborder.id_packing,packing.name,packing.number,"
                 + "suborder.amount,suborder.cost,suborder.self_cost,suborder.packed,"
                 + "packing.weight FROM suborder,gift,packing WHERE suborder.id_orders=?"
                 + " AND suborder.id_gift=gift.id AND suborder.id_packing=packing.id "
-                + "ORDER BY suborder.id",new Object[]{Orders.getInt("ID")});
+                + "ORDER BY suborder.id", new Object[]{Orders.getInt("ID")});
         SubOrders.set(obj);
-        return obj!=null;
+        return obj != null;
     }
-    
+
     public boolean GetOrdersCount(int row) {
-        Object[][] obj = db.SelectSQL("SELECT amount,cost FROM suborder WHERE id_orders=?",new Object[]{Orders.getInt(row, "ID")});
+        Object[][] obj = db.SelectSQL("SELECT amount,cost FROM suborder WHERE id_orders=?", new Object[]{Orders.getInt(row, "ID")});
         OrdersCount.set(obj);
-        return obj!=null;
+        return obj != null;
     }
-    
+
     public void MakeTableOfSubOrders() {
         Object data[][] = new Object[0][6];
         if (!SubOrders.IsNull()) {
-            data = new Object[SubOrders.getLength()+1][6];
+            data = new Object[SubOrders.getLength() + 1][6];
             double Summ_cost = 0;
             double Summ_self_cost = 0;
             int Summ_amount = 0;
             for (int i = 0; i < SubOrders.getLength(); i++) {
-                data[i][0] = SubOrders.getString(i,"GIFT_NAME");
-                data[i][1] = "№"+SubOrders.getInt(i,"PACKING_NUMBER")+" "+SubOrders.getString(i,"PACKING_NAME");
-                double self_cost = SubOrders.getDouble(i,"SELF_COST");
-                int amount = SubOrders.getInt(i,"AMOUNT");                
-                Summ_self_cost+=self_cost*amount;
+                data[i][0] = SubOrders.getString(i, "GIFT_NAME");
+                data[i][1] = "№" + SubOrders.getInt(i, "PACKING_NUMBER") + " " + SubOrders.getString(i, "PACKING_NAME");
+                double self_cost = SubOrders.getDouble(i, "SELF_COST");
+                int amount = SubOrders.getInt(i, "AMOUNT");
+                Summ_self_cost += self_cost * amount;
                 data[i][2] = FormatUAH.format(self_cost);
-                double cost = SubOrders.getDouble(i,"COST");
+                double cost = SubOrders.getDouble(i, "COST");
                 data[i][3] = FormatUAH.format(cost);
                 data[i][4] = amount;
-                Summ_amount+=amount;
-                Summ_cost+=cost*amount;
-                data[i][5] = FormatUAH.format(cost*amount);
+                Summ_amount += amount;
+                Summ_cost += cost * amount;
+                data[i][5] = FormatUAH.format(cost * amount);
             }
             data[SubOrders.getLength()][1] = "<html><font color='#C80000'>Сумма:</font><html>";
             data[SubOrders.getLength()][2] = FormatUAH.format(Summ_self_cost);
@@ -2759,12 +2769,12 @@ public class MainForm extends javax.swing.JApplet {
             data[SubOrders.getLength()][5] = FormatUAH.format(Summ_cost);
         }
         int state = Orders.getInt("STATE");
-        boolean editable = (state==Order.ORDER_PREPARE) && (CanEditOrders);
+        boolean editable = (state == Order.ORDER_PREPARE) && (CanEditOrders);
         jTable5.makeTable(data, this, editable, userLevel);
     }
-    
+
     private void MakeTableOfDeliveryOrder() {
-        DeliveryOrder.set(db.SelectSQL("SELECT id,date_time,date_delivery_country,date_send,date_close,contact,who_pays,delivery_type,address,content,present,comm,debt,state,(SELECT type_pay FROM orders WHERE id=?) FROM delivery WHERE id_orders=?",new Object[]{Orders.getInt("ID"),Orders.getInt("ID")}));
+        DeliveryOrder.set(db.SelectSQL("SELECT id,date_time,date_delivery_country,date_send,date_close,contact,who_pays,delivery_type,address,content,present,comm,debt,state,(SELECT type_pay FROM orders WHERE id=?) FROM delivery WHERE id_orders=?", new Object[]{Orders.getInt("ID"), Orders.getInt("ID")}));
         Object data[][] = new Object[0][7];
         if (!DeliveryOrder.IsNull()) {
             data = new Object[DeliveryOrder.getLength()][10];
@@ -2773,27 +2783,27 @@ public class MainForm extends javax.swing.JApplet {
                 int date_time = DeliveryOrder.getInt(i, "DATE_TIME");
                 int date_send = DeliveryOrder.getInt(i, "DATE_SEND");
                 int date_close = DeliveryOrder.getInt(i, "DATE_CLOSE");
-                
-                data[i][0] = DeliveryOrder.getInt(i,"STATE");
-                data[i][1] = "доставка: "+(date_time==0 ? "" : sdf.format(new Date(date_time*1000L)))+"\nотослано: "+(date_send==0? "" : sdf.format(new Date(date_send*1000L)))+"\nзакрыто: "+(date_close==0 ? "" : sdf.format(new Date(date_close*1000L)));
-                data[i][2] = DeliveryOrder.getString(i,"CONTACT");
+
+                data[i][0] = DeliveryOrder.getInt(i, "STATE");
+                data[i][1] = "доставка: " + (date_time == 0 ? "" : sdf.format(new Date(date_time * 1000L))) + "\nотослано: " + (date_send == 0 ? "" : sdf.format(new Date(date_send * 1000L))) + "\nзакрыто: " + (date_close == 0 ? "" : sdf.format(new Date(date_close * 1000L)));
+                data[i][2] = DeliveryOrder.getString(i, "CONTACT");
                 data[i][6] = DeliveryOrder.getString(i, "WHO_PAYS");
-                data[i][3] = DeliveryOrder.getString(i,"DELIVERY_TYPE");
-                data[i][4] = DeliveryOrder.getString(i,"ADDRESS");
-                data[i][5] = DeliveryOrder.getString(i,"CONTENT");
-                int payType = DeliveryOrder.getInt(i,"TYPE_PAY_ORDER"); //2 и 3 и 5 - безнал
-                data[i][7] = FormatUAH.format(DeliveryOrder.getDouble(i,"DEBT"))+(payType==2 || payType==3 ? " БН" : "");
-                data[i][9] = DeliveryOrder.getString(i,"COMM");
-                data[i][8] = DeliveryOrder.getString(i,"PRESENT");
+                data[i][3] = DeliveryOrder.getString(i, "DELIVERY_TYPE");
+                data[i][4] = DeliveryOrder.getString(i, "ADDRESS");
+                data[i][5] = DeliveryOrder.getString(i, "CONTENT");
+                int payType = DeliveryOrder.getInt(i, "TYPE_PAY_ORDER"); //2 и 3 и 5 - безнал
+                data[i][7] = FormatUAH.format(DeliveryOrder.getDouble(i, "DEBT")) + (payType == 2 || payType == 3 ? " БН" : "");
+                data[i][9] = DeliveryOrder.getString(i, "COMM");
+                data[i][8] = DeliveryOrder.getString(i, "PRESENT");
             }
-        } 
+        }
         jTable14.makeTable(data);
     }
-    
+
     private void MakeTreeOfCandiesInStorage() {
         int[] SaveCurrentRow = jTree10.getSelectionRows();
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"", 0});
         DefaultMutableTreeNode child1 = null;
         DefaultMutableTreeNode child2;
         int last_factory = 0;
@@ -2811,11 +2821,11 @@ public class MainForm extends javax.swing.JApplet {
                 String name = Candies.getString(i, "CANDY_NAME");
                 int storage = Candies.getInt(i, "STORAGE");
                 int reserved = Candies.getInt(i, "RESERVED");
-                double reserved_boxes = reserved*1.0/Candies.getInt(i,"AMOUNT_IN_BOX");
-                double storage_boxes = storage*1.0/Candies.getInt(i,"AMOUNT_IN_BOX");
-                double free = storage_boxes-reserved_boxes;
-                boolean IsUsed = Candies.getInt(i,"ISUSED")!=0;
-                Object obj[] = new Object[]{name, i, FormatUAH.format(storage_boxes), FormatUAH.format(reserved_boxes), IsUsed, reserved_boxes>storage_boxes, FormatUAH.format(free)};
+                double reserved_boxes = reserved * 1.0 / Candies.getInt(i, "AMOUNT_IN_BOX");
+                double storage_boxes = storage * 1.0 / Candies.getInt(i, "AMOUNT_IN_BOX");
+                double free = storage_boxes - reserved_boxes;
+                boolean IsUsed = Candies.getInt(i, "ISUSED") != 0;
+                Object obj[] = new Object[]{name, i, FormatUAH.format(storage_boxes), FormatUAH.format(reserved_boxes), IsUsed, reserved_boxes > storage_boxes, FormatUAH.format(free)};
                 child2 = new DefaultMutableTreeNode(obj);
                 child1.add(child2);
             }
@@ -2828,10 +2838,10 @@ public class MainForm extends javax.swing.JApplet {
         }
 
         jTree10.setSelectionRows(SaveCurrentRow);
-        SelectNodeOfTreeInStorage(jTree10,Candies,jTable6,true);
+        SelectNodeOfTreeInStorage(jTree10, Candies, jTable6, true);
         MakeTableOfStorageCandyReserv();
-    }    
-    
+    }
+
     public void updateTableOrdersAndSelectLastAddedOrder() {
         GetOrders();
         MakeTableOfOrders();
@@ -2851,98 +2861,98 @@ public class MainForm extends javax.swing.JApplet {
             }
         }
     }
-    
+
     private void MakeTableOfStoragePackingReserv() {
         Object data[][] = new Object[0][3];
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree11.getLastSelectedPathComponent();
-        if ((SelectedNode!=null) && (SelectedNode.getLevel()==2)) {
-            int index = (Integer)((Object[])SelectedNode.getUserObject())[1];
+        if ((SelectedNode != null) && (SelectedNode.getLevel() == 2)) {
+            int index = (Integer) ((Object[]) SelectedNode.getUserObject())[1];
             ObjectResultSet StoragePackingReserv = new ObjectResultSet();
-            StoragePackingReserv.setColumnNames(new String[]{"AMOUNT","CLIENT","MANAGER"});
-            StoragePackingReserv.set(db.SelectSQL("SELECT SUM(suborder.amount-suborder.packed),client.official_name,user.name FROM suborder,client,orders,user WHERE suborder.id_packing=? AND suborder.id_orders=orders.id AND (orders.state=1 OR orders.state=2) AND orders.id_client=client.id AND user.id=orders.user_creator_id GROUP BY client.id",new Object[]{FilteredPackings.getInt(index,"ID")}));
+            StoragePackingReserv.setColumnNames(new String[]{"AMOUNT", "CLIENT", "MANAGER"});
+            StoragePackingReserv.set(db.SelectSQL("SELECT SUM(suborder.amount-suborder.packed),client.official_name,user.name FROM suborder,client,orders,user WHERE suborder.id_packing=? AND suborder.id_orders=orders.id AND (orders.state=1 OR orders.state=2) AND orders.id_client=client.id AND user.id=orders.user_creator_id GROUP BY client.id", new Object[]{FilteredPackings.getInt(index, "ID")}));
             if (!StoragePackingReserv.IsNull()) {
                 int sum = 0;
-                data = new Object[StoragePackingReserv.getLength()+1][3];
-                for (int i=0;i<StoragePackingReserv.getLength();i++) {
-                    sum+=StoragePackingReserv.getBigDecimalAsLong(i,"AMOUNT");
-                    data[i][0] = StoragePackingReserv.getBigDecimalAsLong(i,"AMOUNT");
-                    data[i][1] = StoragePackingReserv.getString(i,"CLIENT");
-                    data[i][2] = StoragePackingReserv.getString(i,"MANAGER");
-                    
+                data = new Object[StoragePackingReserv.getLength() + 1][3];
+                for (int i = 0; i < StoragePackingReserv.getLength(); i++) {
+                    sum += StoragePackingReserv.getBigDecimalAsLong(i, "AMOUNT");
+                    data[i][0] = StoragePackingReserv.getBigDecimalAsLong(i, "AMOUNT");
+                    data[i][1] = StoragePackingReserv.getString(i, "CLIENT");
+                    data[i][2] = StoragePackingReserv.getString(i, "MANAGER");
+
                 }
                 data[StoragePackingReserv.getLength()][0] = FormatUAH.format(sum);
                 data[StoragePackingReserv.getLength()][1] = "<html><font color='red'>ИТОГО</font></html>";
             }
         }
-        jTable16.makeTable(data);            
+        jTable16.makeTable(data);
     }
-    
+
     private void MakeTableOfStorageOrderPref() {
         int SelectedRow = jTable22.getSelectedRow();
-        
+
         String packingRecord = (String) jTable22.getValueAt(SelectedRow, 1);
         String[] packingRecordArr = packingRecord.split(" ");
         String packingNumber = packingRecordArr[0].substring(1);
         String packingName = "";
-        for (int i=1;i<packingRecordArr.length;i++) {
-            if (i!=1) {
+        for (int i = 1; i < packingRecordArr.length; i++) {
+            if (i != 1) {
                 packingName += " ";
             }
             packingName += packingRecordArr[i];
         }
 
         System.out.println("P.name :_" + packingName + "_");
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         Object data[][] = new Object[0][4];
         ObjectResultSet StorageOrderPref = new ObjectResultSet();
-        StorageOrderPref.setColumnNames(new String[]{"CLIENT","AMOUNT","DATE","MANAGER"});
-        StorageOrderPref.set(db.SelectSQL("SELECT DISTINCT client.official_name, S.amount, D.date_time, U.name \n" +
-                "FROM user U, client, delivery D, orders O, suborder S, packing P \n" +
-                "WHERE P.number = ? AND P.name = ? AND S.id_packing = P.id AND O.id = S.id_orders AND O.state < 3\n" +
-                "AND O.state > 0 AND D.id_orders = O.id AND client.id = O.id_client AND U.id = O.user_creator_id",new Object[]{packingNumber, packingName}));
+        StorageOrderPref.setColumnNames(new String[]{"CLIENT", "AMOUNT", "DATE", "MANAGER"});
+        StorageOrderPref.set(db.SelectSQL("SELECT DISTINCT client.official_name, S.amount, D.date_time, U.name \n"
+                + "FROM user U, client, delivery D, orders O, suborder S, packing P \n"
+                + "WHERE P.number = ? AND P.name = ? AND S.id_packing = P.id AND O.id = S.id_orders AND O.state < 3\n"
+                + "AND O.state > 0 AND D.id_orders = O.id AND client.id = O.id_client AND U.id = O.user_creator_id", new Object[]{packingNumber, packingName}));
         if (!StorageOrderPref.IsNull()) {
             data = new Object[StorageOrderPref.getLength()][4];
-            for (int i=0;i<StorageOrderPref.getLength();i++) {
-                    
-                data[i][0] = StorageOrderPref.getString(i,"CLIENT");
-                data[i][1] = StorageOrderPref.getInt(i,"AMOUNT");
-                data[i][2] = sdf.format(new Date(StorageOrderPref.getInt(i,"DATE")*1000L));
-                data[i][3] = StorageOrderPref.getString(i,"MANAGER");  
+            for (int i = 0; i < StorageOrderPref.getLength(); i++) {
+
+                data[i][0] = StorageOrderPref.getString(i, "CLIENT");
+                data[i][1] = StorageOrderPref.getInt(i, "AMOUNT");
+                data[i][2] = sdf.format(new Date(StorageOrderPref.getInt(i, "DATE") * 1000L));
+                data[i][3] = StorageOrderPref.getString(i, "MANAGER");
             }
         }
 
-        jTable11.makeTable(data);            
+        jTable11.makeTable(data);
     }
-    
+
     private void MakeTableOfStorageCandyReserv() {
         Object data[][] = new Object[0][2];
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree10.getLastSelectedPathComponent();
-        if ((SelectedNode!=null) && (SelectedNode.getLevel()==2)) {
-            int index = (Integer)((Object[])SelectedNode.getUserObject())[1];
+        if ((SelectedNode != null) && (SelectedNode.getLevel() == 2)) {
+            int index = (Integer) ((Object[]) SelectedNode.getUserObject())[1];
             ObjectResultSet StorageCandyReserv = new ObjectResultSet();
-            StorageCandyReserv.setColumnNames(new String[]{"AMOUNT","AMOUNT_IN_BOX","CLIENT"});
-            StorageCandyReserv.set(db.SelectSQL("SELECT sum(suborder.amount - suborder.packed)*gift_candy.amount,candy.AMOUNT_IN_BOX, client.official_name FROM suborder, client, orders, gift_candy,candy WHERE suborder.id_gift = gift_candy.ID_GIFT AND gift_candy.ID_CANDY=candy.id AND candy.ID=? AND suborder.id_orders = orders.id AND orders.state = 2 AND orders.id_client = client.id GROUP BY client.id",new Object[]{Candies.getInt(index,"ID")}));
+            StorageCandyReserv.setColumnNames(new String[]{"AMOUNT", "AMOUNT_IN_BOX", "CLIENT"});
+            StorageCandyReserv.set(db.SelectSQL("SELECT sum(suborder.amount - suborder.packed)*gift_candy.amount,candy.AMOUNT_IN_BOX, client.official_name FROM suborder, client, orders, gift_candy,candy WHERE suborder.id_gift = gift_candy.ID_GIFT AND gift_candy.ID_CANDY=candy.id AND candy.ID=? AND suborder.id_orders = orders.id AND orders.state = 2 AND orders.id_client = client.id GROUP BY client.id", new Object[]{Candies.getInt(index, "ID")}));
             if (!StorageCandyReserv.IsNull()) {
-                data = new Object[StorageCandyReserv.getLength()+1][2];
+                data = new Object[StorageCandyReserv.getLength() + 1][2];
                 double sum = 0;
-                for (int i=0;i<StorageCandyReserv.getLength();i++) {
-                    double summ = StorageCandyReserv.getBigDecimalAsLong(i,"AMOUNT")*1.0/StorageCandyReserv.getInt(i,"AMOUNT_IN_BOX");
-                    sum+=summ;
+                for (int i = 0; i < StorageCandyReserv.getLength(); i++) {
+                    double summ = StorageCandyReserv.getBigDecimalAsLong(i, "AMOUNT") * 1.0 / StorageCandyReserv.getInt(i, "AMOUNT_IN_BOX");
+                    sum += summ;
                     data[i][0] = FormatUAH.format(summ);
-                    data[i][1] = StorageCandyReserv.getString(i,"CLIENT");
+                    data[i][1] = StorageCandyReserv.getString(i, "CLIENT");
                 }
                 data[StorageCandyReserv.getLength()][0] = FormatUAH.format(sum);
                 data[StorageCandyReserv.getLength()][1] = "<html><font color='red'>ИТОГО</font></html>";
             }
         }
-        jTable17.makeTable(data);            
-    }    
-    
+        jTable17.makeTable(data);
+    }
+
     private void MakeTreeOfPackingsInStorage() {
         int[] SaveCurrentRow = jTree11.getSelectionRows();
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"",0});
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(new Object[]{"", 0});
         DefaultMutableTreeNode child_0 = new DefaultMutableTreeNode(new Object[]{"Картон", 0});
         DefaultMutableTreeNode child_1 = new DefaultMutableTreeNode(new Object[]{"Пакет", 1});
         DefaultMutableTreeNode child_2 = new DefaultMutableTreeNode(new Object[]{"Туба", 2});
@@ -2955,7 +2965,7 @@ public class MainForm extends javax.swing.JApplet {
         top.add(child_4);
 
         boolean thereWereProblemsWithFTP = false;
-        
+
         for (int i = 0; i < FilteredPackings.getLength(); i++) {
             int type = FilteredPackings.getInt(i, "TYPE");
             String filename = FilteredPackings.getString(i, "FILENAME").trim();
@@ -2964,7 +2974,7 @@ public class MainForm extends javax.swing.JApplet {
                     try {
                         if (!thereWereProblemsWithFTP) {
                             Image image = FTP.readImageFromFileOrDownloadFromFTP(filename);
-                            PackingsImages.addImage(image, filename);                    
+                            PackingsImages.addImage(image, filename);
                         }
                     } catch (Exception ex) {
                         thereWereProblemsWithFTP = true;
@@ -2973,10 +2983,10 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
             }
-            
+
             int storage = FilteredPackings.getInt(i, "STORAGE");
             int reserved = FilteredPackings.getInt(i, "RESERVED");
-            DefaultMutableTreeNode dftn = new DefaultMutableTreeNode(new Object[]{"№"+Integer.toString(FilteredPackings.getInt(i, "NUMBER"))+"  "+FilteredPackings.getString(i, "NAME"), i,PackingsImages.getImage(filename),storage,reserved,FilteredPackings.getBoolean(i, "MARKED")});
+            DefaultMutableTreeNode dftn = new DefaultMutableTreeNode(new Object[]{"№" + Integer.toString(FilteredPackings.getInt(i, "NUMBER")) + "  " + FilteredPackings.getString(i, "NAME"), i, PackingsImages.getImage(filename), storage, reserved, FilteredPackings.getBoolean(i, "MARKED")});
             switch (type) {
                 case 0:
                     child_0.add(dftn);
@@ -3001,41 +3011,41 @@ public class MainForm extends javax.swing.JApplet {
             jTree11.expandRow(i);
         }
         jTree11.setSelectionRows(SaveCurrentRow);
-        SelectNodeOfTreeInStorage(jTree11,FilteredPackings,jTable8,false);
+        SelectNodeOfTreeInStorage(jTree11, FilteredPackings, jTable8, false);
         MakeTableOfStoragePackingReserv();
-        
+
         if (thereWereProblemsWithFTP) {
             JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");
         }
-   }
+    }
 
-   private void GetStorage(int type, int id_object) {
-       if (jRadioButton1.isSelected()) {
-           Storage.set(db.SelectSQL("(SELECT storage_factura.date_time AS DT, storage_factura.amount, user.name, '', storage_factura.factura FROM storage_factura, user WHERE storage_factura.type = ? AND id_object = ? AND user.id = storage_factura.id_user ORDER BY DT DESC LIMIT 100) "+
-                                " UNION (SELECT storage_orders.date_time AS DT, storage_orders.amount, '', client.official_name, '' FROM storage_orders, orders, client WHERE storage_orders.type = ? AND id_object = ? AND storage_orders.id_orders = orders.ID AND orders.ID_CLIENT=client.id ORDER BY DT DESC LIMIT 100) ORDER BY DT DESC",new Object[]{type, id_object, type, id_object}));
-       } else {
-           Calendar cal = (Calendar) jDateChooser3.getCalendar().clone();
-           cal.set(Calendar.SECOND, 0);
-           cal.set(Calendar.MINUTE, 0);
-           cal.set(Calendar.HOUR_OF_DAY, 0);
-           int Start = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
-           cal = (Calendar) jDateChooser4.getCalendar().clone();
-           cal.set(Calendar.SECOND, 0);
-           cal.set(Calendar.MINUTE, 0);
-           cal.set(Calendar.HOUR_OF_DAY, 0);
-           cal.add(Calendar.DAY_OF_MONTH, 1);
-           int End = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
-           Storage.set(db.SelectSQL("(SELECT storage_factura.date_time AS DT, storage_factura.amount, user.name, '', storage_factura.factura FROM storage_factura, user WHERE storage_factura.type = ? AND id_object = ? AND user.id = storage_factura.id_user AND storage_factura.date_time BETWEEN ? AND ? ORDER BY DT DESC LIMIT 100) "+
-                                " UNION (SELECT storage_orders.date_time AS DT, storage_orders.amount, '', client.official_name, '' FROM storage_orders, orders, client WHERE storage_orders.type = ? AND id_object = ? AND storage_orders.id_orders = orders.ID AND orders.ID_CLIENT=client.id AND storage_orders.date_time BETWEEN ? AND ? ORDER BY DT DESC LIMIT 100) ORDER BY DT DESC",new Object[]{type, id_object, Start,End, type,id_object,Start,End}));
-       }
-   }
-   
-   private void SelectNodeOfTreeInStorage(JTree tree, ObjectResultSet ors, TableStorage table, boolean IsCandy) {
+    private void GetStorage(int type, int id_object) {
+        if (jRadioButton1.isSelected()) {
+            Storage.set(db.SelectSQL("(SELECT storage_factura.date_time AS DT, storage_factura.amount, user.name, '', storage_factura.factura FROM storage_factura, user WHERE storage_factura.type = ? AND id_object = ? AND user.id = storage_factura.id_user ORDER BY DT DESC LIMIT 100) "
+                    + " UNION (SELECT storage_orders.date_time AS DT, storage_orders.amount, '', client.official_name, '' FROM storage_orders, orders, client WHERE storage_orders.type = ? AND id_object = ? AND storage_orders.id_orders = orders.ID AND orders.ID_CLIENT=client.id ORDER BY DT DESC LIMIT 100) ORDER BY DT DESC", new Object[]{type, id_object, type, id_object}));
+        } else {
+            Calendar cal = (Calendar) jDateChooser3.getCalendar().clone();
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            int Start = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
+            cal = (Calendar) jDateChooser4.getCalendar().clone();
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            int End = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
+            Storage.set(db.SelectSQL("(SELECT storage_factura.date_time AS DT, storage_factura.amount, user.name, '', storage_factura.factura FROM storage_factura, user WHERE storage_factura.type = ? AND id_object = ? AND user.id = storage_factura.id_user AND storage_factura.date_time BETWEEN ? AND ? ORDER BY DT DESC LIMIT 100) "
+                    + " UNION (SELECT storage_orders.date_time AS DT, storage_orders.amount, '', client.official_name, '' FROM storage_orders, orders, client WHERE storage_orders.type = ? AND id_object = ? AND storage_orders.id_orders = orders.ID AND orders.ID_CLIENT=client.id AND storage_orders.date_time BETWEEN ? AND ? ORDER BY DT DESC LIMIT 100) ORDER BY DT DESC", new Object[]{type, id_object, Start, End, type, id_object, Start, End}));
+        }
+    }
+
+    private void SelectNodeOfTreeInStorage(JTree tree, ObjectResultSet ors, TableStorage table, boolean IsCandy) {
         Object[] obj;
         int index;
-        Object data[][] = new Object[0][5];        
+        Object data[][] = new Object[0][5];
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-        if ((SelectedNode == null) || (SelectedNode.getLevel()==1)) {
+        if ((SelectedNode == null) || (SelectedNode.getLevel() == 1)) {
             jButton72.setVisible(false);
             jButton52.setVisible(false);
         } else {
@@ -3043,39 +3053,39 @@ public class MainForm extends javax.swing.JApplet {
             jButton52.setVisible(CanEditStorage);
             obj = (Object[]) SelectedNode.getUserObject();
             index = (Integer) obj[1];
-            if (SelectedNode.getLevel()==1) {
-                
+            if (SelectedNode.getLevel() == 1) {
+
             } else {
-                GetStorage((IsCandy ? 1 : 2),ors.getInt(index, "ID"));
+                GetStorage((IsCandy ? 1 : 2), ors.getInt(index, "ID"));
                 if (!Storage.IsNull()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-                    data = new Object[Storage.getLength()+1][5];
+                    data = new Object[Storage.getLength() + 1][5];
                     double sum = 0;
                     double summ;
                     for (int i = 0; i < Storage.getLength(); i++) {
-                        data[i][0] = sdf.format(new Date(Storage.getInt(i,"DATE_TIME")*1000L));
-                        int amount = Storage.getInt(i,"AMOUNT");
-                        String color = amount<0 ? "<html><font color='blue'>" : "<html><font color='#C80000'>";
+                        data[i][0] = sdf.format(new Date(Storage.getInt(i, "DATE_TIME") * 1000L));
+                        int amount = Storage.getInt(i, "AMOUNT");
+                        String color = amount < 0 ? "<html><font color='blue'>" : "<html><font color='#C80000'>";
                         if (IsCandy) {
-                            summ = amount*1.0/Candies.getInt(index,"AMOUNT_IN_BOX");
+                            summ = amount * 1.0 / Candies.getInt(index, "AMOUNT_IN_BOX");
                             sum += summ;
-                            data[i][1] = color + FormatUAH.format(summ)+"</font></html>";
+                            data[i][1] = color + FormatUAH.format(summ) + "</font></html>";
                         } else {
-                            data[i][1] = color + Integer.toString(amount)+"</font></html>";
+                            data[i][1] = color + Integer.toString(amount) + "</font></html>";
                             sum += amount;
                         }
-                        data[i][2] = Storage.getString(i,"USER");
-                        data[i][3] = Storage.getString(i,"FACTURA");
-                        data[i][4] = Storage.getString(i,"CLIENT");
+                        data[i][2] = Storage.getString(i, "USER");
+                        data[i][3] = Storage.getString(i, "FACTURA");
+                        data[i][4] = Storage.getString(i, "CLIENT");
                     }
                     data[Storage.getLength()][0] = "<html><font color='red'>ИТОГО:</font></html>";
                     data[Storage.getLength()][1] = FormatUAH.format(sum);
                 }
             }
         }
-        table.makeTable(data);            
-   }
-   
+        table.makeTable(data);
+    }
+
     private boolean DoTransactionInStorage(int id, int type, double value, String number_factura, String tablename) {
         int date_time = ((Long) (Calendar.getInstance().getTimeInMillis() / 1000)).intValue();
         int id_user = CurrentUser.getInt("ID");
@@ -3092,30 +3102,30 @@ public class MainForm extends javax.swing.JApplet {
             db.DoSQL("ROLLBACK");
         }
         return result;
-    }   
-   
+    }
+
     private void GetConstants() {
         Constants.set(db.SelectSQL("SELECT * FROM constants", null));
     }
-    
+
     private void MakePanelOfConstants() {
-        JTextField[] mas = new JTextField[]{jTextField23,jTextField40,jTextField42,jTextField44};
+        JTextField[] mas = new JTextField[]{jTextField23, jTextField40, jTextField42, jTextField44};
         for (JTextField ma : mas) {
             ma.setEditable(false);
             ma.setBorder(null);
             ma.setBackground(ma.getParent().getBackground());
-            ma.setForeground(new Color(200,0,0));
-        }     
+            ma.setForeground(new Color(200, 0, 0));
+        }
         jTextField23.setText(FormatUAH.format(Constants.getDouble("STICK_COST")));
         jTextField40.setText(FormatUAH.format(Constants.getDouble("COST_BOX_FOR_1_GIFT")));
         jTextField42.setText(Constants.getString("FTPaddress"));
         jTextField44.setText(Constants.getString("FTPpass"));
-        
+
         jButton56.setVisible(true);
         jButton57.setVisible(false);
         jButton58.setVisible(false);
     }
- 
+
     private void MakeTableOfOrderCandyForStorage() {
         Object data[][] = new Object[0][6];
         if (!Candies.IsNull()) {
@@ -3127,79 +3137,79 @@ public class MainForm extends javax.swing.JApplet {
             double Summ_cost_factory = 0;
             double Summ_weight = 0;
             double Summ_cost = 0;
-            double discount = Candies.getLength()>0 ? Candies.getDouble(0,"DISCOUNT") : 0;
-            
+            double discount = Candies.getLength() > 0 ? Candies.getDouble(0, "DISCOUNT") : 0;
+
             for (int i = 0; i < Candies.getLength(); i++) {
                 id_factory = Candies.getInt(i, "ID_FACTORY");
                 if (id_factory != last_factory) {
-                    if (Summ_cost_factory>0) {
+                    if (Summ_cost_factory > 0) {
                         last_factory = id_factory;
-                        Summ_weight+=Summ_weight_factory;
-                        Summ_cost+=Summ_cost_factory*(100-discount)/100;
-                        vec.add(new String[]{"<html><font color='#C80000'><b>ИТОГО:</b></font></html>","","","<html><font color='#C80000'><b>"+FormatKG.format(Summ_weight_factory)+"</b></font><html>","","<html><font color='#C80000'><b>"+FormatUAH.format(Summ_cost_factory)+"</b></font><html>"});
-                        vec.add(new String[]{"","","","","<html><font color='#C80000'><b>СКИДКА,%</b></font></html>","<html><font color='#C80000'><b>"+FormatKG.format(discount)+"</b></font><html>"});
-                        vec.add(new String[]{"","","","","","<html><font color='#C80000'><b>"+FormatUAH.format(Summ_cost_factory*(100-discount)/100)+"</b></font><html>"});
-                        vec.add(new String[]{"","","","","",""});           
-                        discount = Candies.getDouble(i,"DISCOUNT");                                        
+                        Summ_weight += Summ_weight_factory;
+                        Summ_cost += Summ_cost_factory * (100 - discount) / 100;
+                        vec.add(new String[]{"<html><font color='#C80000'><b>ИТОГО:</b></font></html>", "", "", "<html><font color='#C80000'><b>" + FormatKG.format(Summ_weight_factory) + "</b></font><html>", "", "<html><font color='#C80000'><b>" + FormatUAH.format(Summ_cost_factory) + "</b></font><html>"});
+                        vec.add(new String[]{"", "", "", "", "<html><font color='#C80000'><b>СКИДКА,%</b></font></html>", "<html><font color='#C80000'><b>" + FormatKG.format(discount) + "</b></font><html>"});
+                        vec.add(new String[]{"", "", "", "", "", "<html><font color='#C80000'><b>" + FormatUAH.format(Summ_cost_factory * (100 - discount) / 100) + "</b></font><html>"});
+                        vec.add(new String[]{"", "", "", "", "", ""});
+                        discount = Candies.getDouble(i, "DISCOUNT");
                         Summ_weight_factory = 0;
                         Summ_cost_factory = 0;
                     } else {
-                        last_factory = id_factory;                        
+                        last_factory = id_factory;
                     }
                 }
                 if (Candies.getInt(i, "ID") != 0) {
                     int storage = Candies.getInt(i, "STORAGE");
                     int reserved = Candies.getInt(i, "RESERVED");
-                    double amount_boxes = (storage-reserved)*1.0/Candies.getInt(i,"AMOUNT_IN_BOX");
-                    if (amount_boxes<0) {
+                    double amount_boxes = (storage - reserved) * 1.0 / Candies.getInt(i, "AMOUNT_IN_BOX");
+                    if (amount_boxes < 0) {
                         String[] obj = new String[6];
-                        int amount = ((Double)(-Math.floor(amount_boxes))).intValue();
+                        int amount = ((Double) (-Math.floor(amount_boxes))).intValue();
                         obj[0] = Candies.getString(i, "FACTORY_NAME");
                         obj[1] = Candies.getString(i, "CANDY_NAME");
                         obj[2] = Integer.toString(amount);
-                        double weight = Candies.getDouble(i,"BOX_WEIGHT")*amount;
+                        double weight = Candies.getDouble(i, "BOX_WEIGHT") * amount;
                         obj[3] = FormatKG.format(weight);
-                        obj[4] = FormatUAH.format(Candies.getDouble(i,"COST_KG"));
-                        double cost = weight*Candies.getDouble(i,"COST_KG");
+                        obj[4] = FormatUAH.format(Candies.getDouble(i, "COST_KG"));
+                        double cost = weight * Candies.getDouble(i, "COST_KG");
                         obj[5] = FormatUAH.format(cost);
-                        Summ_weight_factory+=weight;
-                        Summ_cost_factory+=cost;
+                        Summ_weight_factory += weight;
+                        Summ_cost_factory += cost;
                         vec.add(obj);
                     }
                 }
             }
-            Summ_weight+=Summ_weight_factory;
-            Summ_cost+=Summ_cost_factory*(100-discount)/100;
-            vec.add(new String[]{"<html><font color='#C80000'><b>ИТОГО:</b></font></html>","","","<html><font color='#C80000'><b>"+FormatKG.format(Summ_weight_factory)+"</b></font><html>","","<html><font color='#C80000'><b>"+FormatUAH.format(Summ_cost_factory)+"</b></font><html>"});
-            vec.add(new String[]{"","","","","<html><font color='#C80000'><b>СКИДКА,%</b></font></html>","<html><font color='#C80000'><b>"+FormatKG.format(discount)+"</b></font><html>"});
-            vec.add(new String[]{"","","","","","<html><font color='#C80000'><b>"+FormatUAH.format(Summ_cost_factory*(100-discount)/100)+"</b></font><html>"});
-            vec.add(new String[]{"","","","","",""});            
-            vec.add(new String[]{"<html><font color='#C80000'><b>ИТОГО:</b></font></html>","","","<html><font color='#C80000'><b>"+FormatKG.format(Summ_weight)+"</b></font><html>","","<html><font color='#C80000'><b>"+FormatUAH.format(Summ_cost)+"</b></font><html>"});            
-            
+            Summ_weight += Summ_weight_factory;
+            Summ_cost += Summ_cost_factory * (100 - discount) / 100;
+            vec.add(new String[]{"<html><font color='#C80000'><b>ИТОГО:</b></font></html>", "", "", "<html><font color='#C80000'><b>" + FormatKG.format(Summ_weight_factory) + "</b></font><html>", "", "<html><font color='#C80000'><b>" + FormatUAH.format(Summ_cost_factory) + "</b></font><html>"});
+            vec.add(new String[]{"", "", "", "", "<html><font color='#C80000'><b>СКИДКА,%</b></font></html>", "<html><font color='#C80000'><b>" + FormatKG.format(discount) + "</b></font><html>"});
+            vec.add(new String[]{"", "", "", "", "", "<html><font color='#C80000'><b>" + FormatUAH.format(Summ_cost_factory * (100 - discount) / 100) + "</b></font><html>"});
+            vec.add(new String[]{"", "", "", "", "", ""});
+            vec.add(new String[]{"<html><font color='#C80000'><b>ИТОГО:</b></font></html>", "", "", "<html><font color='#C80000'><b>" + FormatKG.format(Summ_weight) + "</b></font><html>", "", "<html><font color='#C80000'><b>" + FormatUAH.format(Summ_cost) + "</b></font><html>"});
+
             data = new Object[vec.size()][6];
-            for (int i=0;i<vec.size();i++) {
-                System.arraycopy((String[])vec.get(i), 0, data[i], 0, ((String[])vec.get(i)).length);
+            for (int i = 0; i < vec.size(); i++) {
+                System.arraycopy((String[]) vec.get(i), 0, data[i], 0, ((String[]) vec.get(i)).length);
             }
         }
-        jTable9.makeTable(data);                    
+        jTable9.makeTable(data);
     }
-    
+
     private void MakeTableOfOrderPackingForStorage() {
         Object data[][] = new Object[0][6];
-        
+
         boolean thereWereProblemsWithFTP = false;
-            
+
         if (!Packings.IsNull()) {
 
-            data = new Object[Packings.getLength()+1][6];
+            data = new Object[Packings.getLength() + 1][6];
             double allSum = 0;
             int count = 0;
-            
-            for (int i = 0;i<Packings.getLength();i++) {
+
+            for (int i = 0; i < Packings.getLength(); i++) {
                 int storage = Packings.getInt(i, "STORAGE");
                 int reserved = Packings.getInt(i, "RESERVED");
-                if (storage-reserved<0) { 
-                    String fileName = Packings.getString(i,"FILENAME").trim();
+                if (storage - reserved < 0) {
+                    String fileName = Packings.getString(i, "FILENAME").trim();
                     if (!PackingsImages.existsImageWithName(fileName)) {
                         if ((fileName != null) && (!"".equals(fileName))) {
                             try {
@@ -3213,15 +3223,15 @@ public class MainForm extends javax.swing.JApplet {
                                 thereWereProblemsWithFTP = true;
                             }
                         }
-                    }                    
+                    }
                     data[count][0] = PackingsImages.getImage(fileName);
-                    data[count][1] = "№"+Packings.getInt(i,"NUMBER")+" "+Packings.getString(i,"NAME");
-                    data[count][2] = -(storage-reserved);
-                    data[count][3] = FormatUAH.format(Packings.getDouble(i,"COST"));
-                    double sum = Packings.getDouble(i,"COST")*(-(storage-reserved));
+                    data[count][1] = "№" + Packings.getInt(i, "NUMBER") + " " + Packings.getString(i, "NAME");
+                    data[count][2] = -(storage - reserved);
+                    data[count][3] = FormatUAH.format(Packings.getDouble(i, "COST"));
+                    double sum = Packings.getDouble(i, "COST") * (-(storage - reserved));
                     data[count][4] = FormatUAH.format(sum);
                     data[count][5] = i;
-                    allSum+=sum;
+                    allSum += sum;
                     count++;
                 }
             }
@@ -3231,48 +3241,48 @@ public class MainForm extends javax.swing.JApplet {
             data[count][3] = "<html><font color='#C80000'><b>ИТОГО:</b></font></html>";
             data[count][4] = FormatUAH.format(allSum);
             data[count][5] = -1;
-            data = Arrays.copyOf(data, count+1);
+            data = Arrays.copyOf(data, count + 1);
         }
-        jTable22.makeTable(data);        
-        
+        jTable22.makeTable(data);
+
         if (thereWereProblemsWithFTP) {
             JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");
         }
-        
-    }    
-    
+
+    }
+
     public void GetDelivery() {
         int startTime = 0;
         int endTime = 0;
-        
+
         if (jRadioButton3.isSelected()) {
-            int year = (int)jComboBox5.getSelectedItem();
+            int year = (int) jComboBox5.getSelectedItem();
             Calendar cal = Calendar.getInstance();
             cal.set(year, 0, 1, 0, 0, 0);
-            startTime = (int)(cal.getTimeInMillis()/1000);
-            cal.set(year+1, 0, 1, 0, 0, 0);
-            endTime = (int)(cal.getTimeInMillis()/1000);
+            startTime = (int) (cal.getTimeInMillis() / 1000);
+            cal.set(year + 1, 0, 1, 0, 0, 0);
+            endTime = (int) (cal.getTimeInMillis() / 1000);
         } else if (jRadioButton4.isSelected()) {
-            Calendar cal = (Calendar)jDateChooser7.getCalendar().clone();
+            Calendar cal = (Calendar) jDateChooser7.getCalendar().clone();
             cal.set(Calendar.MILLISECOND, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.HOUR_OF_DAY, 0);
-            startTime = (int)(cal.getTimeInMillis()/1000); 
-            endTime = (int)(cal.getTimeInMillis()/1000+24*3600-1);
+            startTime = (int) (cal.getTimeInMillis() / 1000);
+            endTime = (int) (cal.getTimeInMillis() / 1000 + 24 * 3600 - 1);
         }
-        
-        String filterState = jComboBox3.getSelectedIndex()==0 ? "" : " AND D.state="+(jComboBox3.getSelectedIndex()-1);
-        String filterManager = jComboBox7.getSelectedIndex()==0 ? "" : " AND orders.user_creator_id="+jComboBox7.getSelectedID();
-        String filterOrderNumber = jTextField49.getText().isEmpty() ? "" : " AND orders.number LIKE '"+jTextField49.getText()+"%'";
-        String filterExpeditors = jComboBox14.getSelectedIndex()==0 ? "" : " AND D.id_expeditors="+jComboBox14.getSelectedID();
-        String filterEdrpou = jTextField59.getText().isEmpty() ? "" : " AND client.EDRPOU LIKE '%"+jTextField59.getText()+"%'";
-        String filterClientName = jTextField51.getText().isEmpty() ? "" : " AND client.official_name LIKE '%"+jTextField51.getText()+"%'";
+
+        String filterState = jComboBox3.getSelectedIndex() == 0 ? "" : " AND D.state=" + (jComboBox3.getSelectedIndex() - 1);
+        String filterManager = jComboBox7.getSelectedIndex() == 0 ? "" : " AND orders.user_creator_id=" + jComboBox7.getSelectedID();
+        String filterOrderNumber = jTextField49.getText().isEmpty() ? "" : " AND orders.number LIKE '" + jTextField49.getText() + "%'";
+        String filterExpeditors = jComboBox14.getSelectedIndex() == 0 ? "" : " AND D.id_expeditors=" + jComboBox14.getSelectedID();
+        String filterEdrpou = jTextField59.getText().isEmpty() ? "" : " AND client.EDRPOU LIKE '%" + jTextField59.getText() + "%'";
+        String filterClientName = jTextField51.getText().isEmpty() ? "" : " AND client.official_name LIKE '%" + jTextField51.getText() + "%'";
         String l = (String) jComboBox16.getItemAt(jComboBox16.getSelectedIndex());
-        String filterDType = jComboBox16.getSelectedIndex()==0 ? "" : " AND D.delivery_type='"+l+"'";
-        String filterTypePay = jComboBoxDeliveryPayment.getSelectedIndex()==0 ? "" : " AND orders.type_pay = '" + (jComboBoxDeliveryPayment.getSelectedIndex()-1) + "'";
-        String filterTTN = jTextField60.getText().isEmpty() ? "" : " AND D.TTN LIKE '%"+jTextField60.getText()+"%'";
-        
+        String filterDType = jComboBox16.getSelectedIndex() == 0 ? "" : " AND D.delivery_type='" + l + "'";
+        String filterTypePay = jComboBoxDeliveryPayment.getSelectedIndex() == 0 ? "" : " AND orders.type_pay = '" + (jComboBoxDeliveryPayment.getSelectedIndex() - 1) + "'";
+        String filterTTN = jTextField60.getText().isEmpty() ? "" : " AND D.TTN LIKE '%" + jTextField60.getText() + "%'";
+
         Delivery.set(db.SelectSQL("SELECT D.id,D.date_time,D.date_send,D.date_close,"
                 + "D.ttn,D.contact,D.who_pays,D.delivery_type,D.address,D.content,"
                 + "D.present,D.comm,D.state,client.official_name,D.id_orders,D.debt,"
@@ -3280,45 +3290,46 @@ public class MainForm extends javax.swing.JApplet {
                 + "AND orders.user_creator_id=user.id),orders.type_pay,(SELECT name "
                 + "FROM expeditors WHERE id=D.id_expeditors) FROM delivery D,orders,client "
                 + "WHERE D.id_orders=orders.id AND orders.id_client=client.id"
-                +filterState+filterManager+filterOrderNumber+filterExpeditors
-                +filterDType+filterClientName+filterTypePay+filterEdrpou+filterTTN
-                +" AND D.date_time BETWEEN ? AND ? ORDER BY client.official_name",new Object[]{startTime,endTime}));            
+                + filterState + filterManager + filterOrderNumber + filterExpeditors
+                + filterDType + filterClientName + filterTypePay + filterEdrpou + filterTTN
+                + " AND D.date_time BETWEEN ? AND ? ORDER BY client.official_name", new Object[]{startTime, endTime}));
     }
-    
+
     public int getDeliveryTableSelectedRow() {
         return jTable12.getSelectedRow();
     }
-    
+
     public void MakeTableOfDelivery() {
         Object data[][] = new Object[0][15];
         if (!Delivery.IsNull()) {
             data = new Object[Delivery.getLength()][15];
             for (int i = 0; i < Delivery.getLength(); i++) {
-                data[i][0] = i+1;
-                data[i][1] = Delivery.getInt(i,"STATE");
-                data[i][2] = " "+new SimpleDateFormat("dd-MMM-yyyy").format(new Date(Delivery.getInt(i,"DATE_TIME")*1000L));
-                data[i][3] = " "+Delivery.get(i,"EXPEDITORS_NAME")==null ? "" : Delivery.getString(i,"EXPEDITORS_NAME");
-                data[i][4] = " "+Delivery.getString(i,"TTN");
-                data[i][5] = " "+Delivery.getString(i,"CLIENT");
-                data[i][6] = " "+Delivery.getString(i,"CONTACT");
-                data[i][7] = " "+Delivery.getString(i,"DELIVERY_TYPE");
-                data[i][8] = " "+Delivery.getString(i,"ADDRESS");
-                data[i][9] = " "+Delivery.getString(i,"CONTENT");
-                data[i][10] = " "+Delivery.getString(i,"WHO_PAYS");
-                int payType = Delivery.getInt(i,"TYPE_PAY_ORDER"); //2 и 3 и 5 - безнал
-                data[i][11] = " "+FormatUAH.format(Delivery.getDouble(i,"DEBT"))+(payType==2 || payType==3 ? " БН" : "");
-                data[i][12] = " "+Delivery.getString(i,"PRESENT");
-                data[i][13] = " "+Delivery.getString(i,"COMM");
-                data[i][14] = " "+Delivery.get(i,"USER_CREATOR_NAME")==null ? "" : Delivery.getString(i,"USER_CREATOR_NAME");
+                data[i][0] = i + 1;
+                data[i][1] = Delivery.getInt(i, "STATE");
+                data[i][2] = " " + new SimpleDateFormat("dd-MMM-yyyy").format(new Date(Delivery.getInt(i, "DATE_TIME") * 1000L));
+                data[i][3] = " " + Delivery.get(i, "EXPEDITORS_NAME") == null ? "" : Delivery.getString(i, "EXPEDITORS_NAME");
+                data[i][4] = " " + Delivery.getString(i, "TTN");
+                data[i][5] = " " + Delivery.getString(i, "CLIENT");
+                data[i][6] = " " + Delivery.getString(i, "CONTACT");
+                data[i][7] = " " + Delivery.getString(i, "DELIVERY_TYPE");
+                data[i][8] = " " + Delivery.getString(i, "ADDRESS");
+                data[i][9] = " " + Delivery.getString(i, "CONTENT");
+                data[i][10] = " " + Delivery.getString(i, "WHO_PAYS");
+                int payType = Delivery.getInt(i, "TYPE_PAY_ORDER"); //2 и 3 и 5 - безнал
+                data[i][11] = " " + FormatUAH.format(Delivery.getDouble(i, "DEBT")) + (payType == 2 || payType == 3 ? " БН" : "");
+                data[i][12] = " " + Delivery.getString(i, "PRESENT");
+                data[i][13] = " " + Delivery.getString(i, "COMM");
+                data[i][14] = " " + Delivery.get(i, "USER_CREATOR_NAME") == null ? "" : Delivery.getString(i, "USER_CREATOR_NAME");
             }
         }
         jTable12.makeTable(data);
         SelectNodeOfTableDelivery();
     }
-    
+
     CellEditorListener ChangeNotification = new CellEditorListener() {
         @Override
-        public void editingCanceled(ChangeEvent e) {}
+        public void editingCanceled(ChangeEvent e) {
+        }
 
         @Override
         public void editingStopped(ChangeEvent e) {
@@ -3341,7 +3352,7 @@ public class MainForm extends javax.swing.JApplet {
 
         }
     };
-    
+
 //    CellEditorListener EditConditers = new CellEditorListener() {
 //        @Override
 //        public void editingCanceled(ChangeEvent e) {}
@@ -3366,9 +3377,8 @@ public class MainForm extends javax.swing.JApplet {
 //
 //        }
 //    };
-    
     private void SelectNodeOfTableDelivery() {
-        if (jTable12.getSelectedRow()==-1) {
+        if (jTable12.getSelectedRow() == -1) {
             jButton82.setVisible(false);
             Delivery.setPosition(-1);
         } else {
@@ -3384,7 +3394,7 @@ public class MainForm extends javax.swing.JApplet {
                     jButton82.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Lorry-icon.png")));
                     break;
                 case Order.ORDER_SEND:
-                    jButton82.setVisible(CurrentUser.getInt("LEVEL")==DIRECTOR);
+                    jButton82.setVisible(CurrentUser.getInt("LEVEL") == DIRECTOR);
                     jButton82.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Ok-icon.png")));
                     break;
 //                case Order.ORDER_DELIVERED:
@@ -3393,75 +3403,75 @@ public class MainForm extends javax.swing.JApplet {
                     break;
             }
 //            && Delivery.getInt("STATE")!=Order.ORDER_DELIVERED
-            if (CanEditExpeditors && expeditorsDialog.isVisible() && Delivery.getInt("STATE")!=Order.ORDER_DONE) {
+            if (CanEditExpeditors && expeditorsDialog.isVisible() && Delivery.getInt("STATE") != Order.ORDER_DONE) {
                 expeditorsDialog.addRow(jTable12.getSelectedRow());
             }
         }
     }
-    
+
     private void RefreshNodeCandies() {
-        Object[][] obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight, candy.amount_in_box, candy.cost_kg, null,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),null FROM candy WHERE candy.id=? LIMIT 1",new Object[]{Candies.getInt("ID")});
-        Candies.refreshValue(Candies.getPosition(),obj[0]);
-        boolean IsUsed = Candies.getInt("ISUSED") !=0;
-        ((DefaultMutableTreeNode)jTree1.getLastSelectedPathComponent()).setUserObject(new Object[]{Candies.getString("CANDY_NAME"), Candies.getPosition(), IsUsed});
+        Object[][] obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight, candy.amount_in_box, candy.cost_kg, null,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),null FROM candy WHERE candy.id=? LIMIT 1", new Object[]{Candies.getInt("ID")});
+        Candies.refreshValue(Candies.getPosition(), obj[0]);
+        boolean IsUsed = Candies.getInt("ISUSED") != 0;
+        ((DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent()).setUserObject(new Object[]{Candies.getString("CANDY_NAME"), Candies.getPosition(), IsUsed});
         jTree1.repaint();
         SelectNodeOfTreeCandies();
     }
-    
+
     private void RefreshNodeCandiesInStorage() {
-        Object[] user_obj = (Object[])((DefaultMutableTreeNode)jTree10.getLastSelectedPathComponent()).getUserObject();
-        int position = (Integer)user_obj[1];
-        Object[][] obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight, candy.amount_in_box, candy.cost_kg, null,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),null FROM candy WHERE candy.id=? LIMIT 1",new Object[]{Candies.getInt(position,"ID")});
-        Candies.refreshValue(position,obj[0]);
-        String name = Candies.getString(position,"CANDY_NAME");
-        int storage = Candies.getInt(position,"STORAGE");
-        int reserved = Candies.getInt(position,"RESERVED");
-        double reserved_boxes = reserved*1.0/Candies.getInt(position,"AMOUNT_IN_BOX");
-        double storage_boxes = storage*1.0/Candies.getInt(position,"AMOUNT_IN_BOX");
-        double free = storage_boxes-reserved_boxes;
-        boolean IsUsed = Candies.getInt(position,"ISUSED")!=0;
-        ((DefaultMutableTreeNode)jTree10.getLastSelectedPathComponent()).setUserObject(new Object[]{name, position, FormatUAH.format(storage_boxes), FormatUAH.format(reserved_boxes), IsUsed, reserved_boxes>storage_boxes, FormatUAH.format(free)});
+        Object[] user_obj = (Object[]) ((DefaultMutableTreeNode) jTree10.getLastSelectedPathComponent()).getUserObject();
+        int position = (Integer) user_obj[1];
+        Object[][] obj = db.SelectSQL("SELECT candy.id as candy_id, candy.name as candy_name, candy.id_factory AS id_factory, candy.box_weight, candy.amount_in_box, candy.cost_kg, null,candy.cost_kg*candy.box_weight/candy.amount_in_box as candy_cost,candy.storage,candy.reserved,candy.comm,candy.last_change_cost,(SELECT id_candy FROM gift_candy WHERE id_candy=candy_id LIMIT 1),null FROM candy WHERE candy.id=? LIMIT 1", new Object[]{Candies.getInt(position, "ID")});
+        Candies.refreshValue(position, obj[0]);
+        String name = Candies.getString(position, "CANDY_NAME");
+        int storage = Candies.getInt(position, "STORAGE");
+        int reserved = Candies.getInt(position, "RESERVED");
+        double reserved_boxes = reserved * 1.0 / Candies.getInt(position, "AMOUNT_IN_BOX");
+        double storage_boxes = storage * 1.0 / Candies.getInt(position, "AMOUNT_IN_BOX");
+        double free = storage_boxes - reserved_boxes;
+        boolean IsUsed = Candies.getInt(position, "ISUSED") != 0;
+        ((DefaultMutableTreeNode) jTree10.getLastSelectedPathComponent()).setUserObject(new Object[]{name, position, FormatUAH.format(storage_boxes), FormatUAH.format(reserved_boxes), IsUsed, reserved_boxes > storage_boxes, FormatUAH.format(free)});
         jTree10.repaint();
-        SelectNodeOfTreeInStorage(jTree10,Candies,jTable6,true);
-    }    
-    
+        SelectNodeOfTreeInStorage(jTree10, Candies, jTable6, true);
+    }
+
     private void RefreshNodePackings() {
-        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing WHERE id=?",new Object[]{Packings.getInt("ID")});
-        Packings.refreshValue(Packings.getPosition(),obj[0]);
+        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing WHERE id=?", new Object[]{Packings.getInt("ID")});
+        Packings.refreshValue(Packings.getPosition(), obj[0]);
         String filename = Packings.getString("FILENAME").trim();
-        
+
         boolean thereWereProblemsWithFTP = false;
-        
+
         if (!PackingsImages.existsImageWithName(filename)) {
             if ((filename != null) && (!"".equals(filename))) {
-                    try {
-                        if (!thereWereProblemsWithFTP) {
-                            Image image = FTP.readImageFromFileOrDownloadFromFTP(filename);
-                            PackingsImages.addImage(image, filename);                    
-                        }
-                    } catch (Exception ex) {
-                        thereWereProblemsWithFTP = true;
+                try {
+                    if (!thereWereProblemsWithFTP) {
+                        Image image = FTP.readImageFromFileOrDownloadFromFTP(filename);
+                        PackingsImages.addImage(image, filename);
                     }
+                } catch (Exception ex) {
+                    thereWereProblemsWithFTP = true;
+                }
             }
-        }        
-        ((DefaultMutableTreeNode)jTree6.getLastSelectedPathComponent()).setUserObject(new Object[]{"№"+Integer.toString(Packings.getInt("NUMBER"))+"  "+Packings.getString("NAME"), Packings.getPosition(),FormatKG.format(Packings.getDouble("CAPACITY"))+" кг",PackingsImages.getImage(filename),Packings.getBoolean("MARKED")});
+        }
+        ((DefaultMutableTreeNode) jTree6.getLastSelectedPathComponent()).setUserObject(new Object[]{"№" + Integer.toString(Packings.getInt("NUMBER")) + "  " + Packings.getString("NAME"), Packings.getPosition(), FormatKG.format(Packings.getDouble("CAPACITY")) + " кг", PackingsImages.getImage(filename), Packings.getBoolean("MARKED")});
         jTree6.repaint();
         SelectNodeOfTreePackings();
-        
+
         if (thereWereProblemsWithFTP) {
-         //   JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");            
+            //   JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");            
         }
-    }    
-    
+    }
+
     private void RefreshNodePackingsInStorage() {
-        Object[] user_obj = (Object[])((DefaultMutableTreeNode)jTree11.getLastSelectedPathComponent()).getUserObject();
-        int position = (Integer)user_obj[1];
-        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing WHERE id=?",new Object[]{FilteredPackings.getInt(position,"ID")});
-        FilteredPackings.refreshValue(position,obj[0]);
-        String filename = FilteredPackings.getString(position,"FILENAME").trim();
-        
+        Object[] user_obj = (Object[]) ((DefaultMutableTreeNode) jTree11.getLastSelectedPathComponent()).getUserObject();
+        int position = (Integer) user_obj[1];
+        Object[][] obj = db.SelectSQL("SELECT ID,NAME,TYPE,NUMBER,CAPACITY,STORAGE,RESERVED,FILENAME,COST,MARKED FROM packing WHERE id=?", new Object[]{FilteredPackings.getInt(position, "ID")});
+        FilteredPackings.refreshValue(position, obj[0]);
+        String filename = FilteredPackings.getString(position, "FILENAME").trim();
+
         boolean thereWereProblemsWithFTP = false;
-        
+
         if ((filename != null) && (!"".equals(filename))) {
             try {
                 if (!thereWereProblemsWithFTP) {
@@ -3472,41 +3482,41 @@ public class MainForm extends javax.swing.JApplet {
                 thereWereProblemsWithFTP = true;
             }
         }
-        int storage = FilteredPackings.getInt(position,"STORAGE");
-        int reserved = FilteredPackings.getInt(position,"RESERVED");
-        ((DefaultMutableTreeNode)jTree11.getLastSelectedPathComponent()).setUserObject(new Object[]{"№"+Integer.toString(FilteredPackings.getInt(position,"NUMBER"))+"  "+FilteredPackings.getString(position,"NAME"), position,PackingsImages.getImage(filename),storage,reserved,FilteredPackings.getBoolean(position, "MARKED")});
+        int storage = FilteredPackings.getInt(position, "STORAGE");
+        int reserved = FilteredPackings.getInt(position, "RESERVED");
+        ((DefaultMutableTreeNode) jTree11.getLastSelectedPathComponent()).setUserObject(new Object[]{"№" + Integer.toString(FilteredPackings.getInt(position, "NUMBER")) + "  " + FilteredPackings.getString(position, "NAME"), position, PackingsImages.getImage(filename), storage, reserved, FilteredPackings.getBoolean(position, "MARKED")});
         jTree11.repaint();
-        SelectNodeOfTreeInStorage(jTree11,FilteredPackings,jTable8,false);
+        SelectNodeOfTreeInStorage(jTree11, FilteredPackings, jTable8, false);
         MakeTableOfStoragePackingReserv();
-        
+
         if (thereWereProblemsWithFTP) {
-          //  JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");
+            //  JOptionPane.showMessageDialog(null, "Проблемы с загрузкой изображений с сервера");
         }
-    }    
-  
+    }
+
     private void GetFinances() {
-        Calendar cal = (Calendar)jDateChooser8.getCalendar().clone();
+        Calendar cal = (Calendar) jDateChooser8.getCalendar().clone();
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         long StartTime = cal.getTimeInMillis();
-        cal = (Calendar)jDateChooser9.getCalendar().clone();
+        cal = (Calendar) jDateChooser9.getCalendar().clone();
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         long EndTime = cal.getTimeInMillis();
-        Finances.set(db.SelectSQL("SELECT t.DATE_TIME, t.delivery_cost, client.official_NAME, sum(suborder.AMOUNT * suborder.SELF_COST), sum(suborder.AMOUNT * suborder.COST), (SELECT sum(delivery.COST) FROM delivery WHERE delivery.ID_ORDERS = t.id), (SELECT sum(delivery.PAYMENT) "+
-                "FROM delivery WHERE delivery.ID_ORDERS = t.id) , (SELECT sum(delivery.COURIER) FROM delivery WHERE delivery.ID_ORDERS = t.id) FROM client, orders t, suborder "+
-                " WHERE t.ID=suborder.ID_ORDERS AND t.STATE = 5 AND t.ID_CLIENT = client.ID AND t.DATE_TIME BETWEEN ? AND ? GROUP BY t.ID ORDER BY t.DATE_TIME",new Object[]{StartTime,EndTime}));
+        Finances.set(db.SelectSQL("SELECT t.DATE_TIME, t.delivery_cost, client.official_NAME, sum(suborder.AMOUNT * suborder.SELF_COST), sum(suborder.AMOUNT * suborder.COST), (SELECT sum(delivery.COST) FROM delivery WHERE delivery.ID_ORDERS = t.id), (SELECT sum(delivery.PAYMENT) "
+                + "FROM delivery WHERE delivery.ID_ORDERS = t.id) , (SELECT sum(delivery.COURIER) FROM delivery WHERE delivery.ID_ORDERS = t.id) FROM client, orders t, suborder "
+                + " WHERE t.ID=suborder.ID_ORDERS AND t.STATE = 5 AND t.ID_CLIENT = client.ID AND t.DATE_TIME BETWEEN ? AND ? GROUP BY t.ID ORDER BY t.DATE_TIME", new Object[]{StartTime, EndTime}));
     }
 
     private void MakeTableOfFinances() {
         Object data[][] = new Object[0][9];
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         if (!Finances.IsNull()) {
-            data = new Object[Finances.getLength()+1][9];
+            data = new Object[Finances.getLength() + 1][9];
             double cost;
             double self_cost;
             double delivery_cost;
@@ -3521,26 +3531,26 @@ public class MainForm extends javax.swing.JApplet {
             double summ_delivery_courier_cost = 0;
             double summ_self_cost = 0;
             double summ_cost = 0;
-            
+
             for (int i = 0; i < Finances.getLength(); i++) {
-                self_cost = Finances.getDouble(i,"SELF_COST");                
-                cost = Finances.getDouble(i,"COST");                
-                delivery_payment = Finances.getDouble(i,"DELIVERY_PAYMENT");
-                delivery_transport_cost = Finances.getDouble(i,"DELIVERY_TRANSPORT_COST");
-                delivery_cost = Finances.getDouble(i,"DELIVERY_COST");
-                delivery_courier_cost = Finances.getDouble(i,"DELIVERY_COURIER_COST");
-                profit = cost-self_cost+(delivery_cost-delivery_payment-delivery_transport_cost-delivery_courier_cost);
-                
-                summ_delivery_payment+=delivery_payment;
-                summ_delivery_transport_cost+=delivery_transport_cost;
-                summ_delivery_cost+=delivery_cost;
-                summ_delivery_courier_cost+=delivery_courier_cost;
-                summ_profit+=profit;
-                summ_self_cost +=-self_cost;
-                summ_cost+=cost;
-                
-                data[i][0] = sdf.format(new Date(Finances.getLong(i,"DATE_TIME")));
-                data[i][1] = Finances.getString(i,"CLIENT_NAME");
+                self_cost = Finances.getDouble(i, "SELF_COST");
+                cost = Finances.getDouble(i, "COST");
+                delivery_payment = Finances.getDouble(i, "DELIVERY_PAYMENT");
+                delivery_transport_cost = Finances.getDouble(i, "DELIVERY_TRANSPORT_COST");
+                delivery_cost = Finances.getDouble(i, "DELIVERY_COST");
+                delivery_courier_cost = Finances.getDouble(i, "DELIVERY_COURIER_COST");
+                profit = cost - self_cost + (delivery_cost - delivery_payment - delivery_transport_cost - delivery_courier_cost);
+
+                summ_delivery_payment += delivery_payment;
+                summ_delivery_transport_cost += delivery_transport_cost;
+                summ_delivery_cost += delivery_cost;
+                summ_delivery_courier_cost += delivery_courier_cost;
+                summ_profit += profit;
+                summ_self_cost += -self_cost;
+                summ_cost += cost;
+
+                data[i][0] = sdf.format(new Date(Finances.getLong(i, "DATE_TIME")));
+                data[i][1] = Finances.getString(i, "CLIENT_NAME");
                 data[i][2] = FormatUAH.format(-self_cost);
                 data[i][3] = FormatUAH.format(cost);
                 data[i][4] = FormatUAH.format(delivery_cost);
@@ -3558,61 +3568,63 @@ public class MainForm extends javax.swing.JApplet {
             data[Finances.getLength()][7] = FormatUAH.format(-summ_delivery_courier_cost);
             data[Finances.getLength()][8] = FormatUAH.format(summ_profit);
         }
-        jTable19.makeTable(data); 
+        jTable19.makeTable(data);
     }
-    
+
     public void GetExpenses() {
-        Calendar cal = (Calendar)jDateChooser10.getCalendar().clone();
+        Calendar cal = (Calendar) jDateChooser10.getCalendar().clone();
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
-        long StartTime = cal.getTimeInMillis()/1000;
-        cal = (Calendar)jDateChooser11.getCalendar().clone();
+        long StartTime = cal.getTimeInMillis() / 1000;
+        cal = (Calendar) jDateChooser11.getCalendar().clone();
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.SECOND, 59);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.HOUR_OF_DAY, 23);
-        long EndTime = cal.getTimeInMillis()/1000;        
-        Expenses.set(db.SelectSQL("SELECT * FROM expense WHERE date_time BETWEEN ? AND ? AND name LIKE '%"+jTextField45.getText()+"%' ORDER BY date_time",new Object[]{StartTime,EndTime}));
+        long EndTime = cal.getTimeInMillis() / 1000;
+        Expenses.set(db.SelectSQL("SELECT * FROM expense WHERE date_time BETWEEN ? AND ? AND name LIKE '%" + jTextField45.getText() + "%' ORDER BY date_time", new Object[]{StartTime, EndTime}));
     }
-    
+
     public int getExpensesTableSelectedRow() {
         return jTable20.getSelectedRow();
     }
-    
+
     public int getExpensesTableRowCount() {
         return jTable20.getRowCount();
     }
-    
+
     public void MakeTableOfExpenses() {
         Object data[][] = new Object[0][3];
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         if (!Expenses.IsNull()) {
-            data = new Object[Expenses.getLength()+1][3];
+            data = new Object[Expenses.getLength() + 1][3];
             double summ = 0;
             for (int i = 0; i < Expenses.getLength(); i++) {
-                data[i][0] = sdf.format(new Date(Expenses.getInt(i,"DATE_TIME")*1000L));
-                data[i][1] = Expenses.getString(i,"NAME");
-                data[i][2] = FormatUAH.format(Expenses.getDouble(i,"COST"));
-                summ+=Expenses.getDouble(i,"COST");
+                data[i][0] = sdf.format(new Date(Expenses.getInt(i, "DATE_TIME") * 1000L));
+                data[i][1] = Expenses.getString(i, "NAME");
+                data[i][2] = FormatUAH.format(Expenses.getDouble(i, "COST"));
+                summ += Expenses.getDouble(i, "COST");
             }
             data[Expenses.getLength()][2] = FormatUAH.format(summ);
         }
-        jTable20.makeTable(data); 
+        jTable20.makeTable(data);
     }
-    
+
     private void deleteOrCancelOrder() {
         if (Orders.getPosition() == -1) {
             return;
         }
         int state = Orders.getInt("STATE");
         if (state > Order.ORDER_PACK) {
-            if (userLevel==DIRECTOR) {
+            if (userLevel == DIRECTOR) {
                 String str;
                 while (true) {
                     str = JOptionPane.showInputDialog(null, "Заказ уже упакован. Его отмена может привести к потере/порче данных!\nВведите свой пароль для отмены заказа на свой страх и риск", "Отмена заказа", JOptionPane.WARNING_MESSAGE);
-                    if (str==null) return;
+                    if (str == null) {
+                        return;
+                    }
                     if (str.equals(CurrentUser.getString("PASS"))) {
                         cancelOrder(state);
                         return;
@@ -3623,72 +3635,72 @@ public class MainForm extends javax.swing.JApplet {
                 return;
             }
         }
-        
+
         if (Orders.getInt("STATE") == Order.ORDER_CANCEL) {
             deleteOrder();
         } else {
             cancelOrder(state);
-        }        
+        }
     }
-    
+
     private void deleteOrder() {
-            if (JOptionPane.showConfirmDialog(null, "Окончательно удалить заказ " + Orders.getString("CLIENT_NAME") + " ?", "Окончательное удаление заказа", JOptionPane.YES_NO_OPTION) == 0) {
-                int id_orders = Orders.getInt("ID");
-                boolean result = db.DoSQL("START TRANSACTION");
-                if (result) {
-                    if (SubOrders.getLength() > 0) {
-                        result = db.UpdateSQL("DELETE FROM suborder WHERE id_orders=?", new Object[]{id_orders});
-                    }
-                    if (result) {
-                        result = db.UpdateSQL("DELETE FROM orders WHERE id=? LIMIT 1", new Object[]{id_orders});
-                    }
+        if (JOptionPane.showConfirmDialog(null, "Окончательно удалить заказ " + Orders.getString("CLIENT_NAME") + " ?", "Окончательное удаление заказа", JOptionPane.YES_NO_OPTION) == 0) {
+            int id_orders = Orders.getInt("ID");
+            boolean result = db.DoSQL("START TRANSACTION");
+            if (result) {
+                if (SubOrders.getLength() > 0) {
+                    result = db.UpdateSQL("DELETE FROM suborder WHERE id_orders=?", new Object[]{id_orders});
                 }
                 if (result) {
-                    db.DoSQL("COMMIT");
-                    GetOrders();
-                    MakeTableOfOrders();
-                } else {
-                    db.DoSQL("ROLLBACK");
-                    JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
+                    result = db.UpdateSQL("DELETE FROM orders WHERE id=? LIMIT 1", new Object[]{id_orders});
                 }
             }
+            if (result) {
+                db.DoSQL("COMMIT");
+                GetOrders();
+                MakeTableOfOrders();
+            } else {
+                db.DoSQL("ROLLBACK");
+                JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
+            }
+        }
     }
-    
+
     private void cancelOrder(int orderState) {
-            if (JOptionPane.showConfirmDialog(null, "Действительно отменить заказ для " + Orders.getString("CLIENT_NAME") + " ?", "Отмена заказа", JOptionPane.YES_NO_OPTION) == 0) {
-                int id_orders = Orders.getInt("ID");
-                boolean result = db.DoSQL("START TRANSACTION");
+        if (JOptionPane.showConfirmDialog(null, "Действительно отменить заказ для " + Orders.getString("CLIENT_NAME") + " ?", "Отмена заказа", JOptionPane.YES_NO_OPTION) == 0) {
+            int id_orders = Orders.getInt("ID");
+            boolean result = db.DoSQL("START TRANSACTION");
+            if (result) {
+                result = db.UpdateSQL("UPDATE orders SET state=-1 WHERE id=?", new Object[]{id_orders});
                 if (result) {
-                    result = db.UpdateSQL("UPDATE orders SET state=-1 WHERE id=?", new Object[]{id_orders});
-                    if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=-1 WHERE id_orders=?", new Object[]{id_orders});
-                        if (SubOrders.getLength() > 0) {
-                            if (orderState >= Order.ORDER_PACK) {
-                                for (int i = 0; i < SubOrders.getLength(); i++) {
-                                    result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
-                                }
-                                for (int i=0;i<SubOrders.getLength();i++) {
-                                   result = result && db.UpdateSQL("UPDATE candy, gift_candy, suborder SET candy.reserved = candy.reserved - suborder.amount*gift_candy.amount WHERE gift_candy.ID_CANDY = candy.ID AND gift_candy.ID_GIFT=suborder.ID_GIFT AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")}); 
-                                }
-                            } else if (orderState == Order.ORDER_PAY) {
-                                for (int i = 0; i < SubOrders.getLength(); i++) {
-                                    result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
-                                }                                
+                    db.UpdateSQL("UPDATE delivery SET state=-1 WHERE id_orders=?", new Object[]{id_orders});
+                    if (SubOrders.getLength() > 0) {
+                        if (orderState >= Order.ORDER_PACK) {
+                            for (int i = 0; i < SubOrders.getLength(); i++) {
+                                result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
+                            }
+                            for (int i = 0; i < SubOrders.getLength(); i++) {
+                                result = result && db.UpdateSQL("UPDATE candy, gift_candy, suborder SET candy.reserved = candy.reserved - suborder.amount*gift_candy.amount WHERE gift_candy.ID_CANDY = candy.ID AND gift_candy.ID_GIFT=suborder.ID_GIFT AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
+                            }
+                        } else if (orderState == Order.ORDER_PAY) {
+                            for (int i = 0; i < SubOrders.getLength(); i++) {
+                                result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
                             }
                         }
                     }
                 }
-                if (result) {
-                    db.DoSQL("COMMIT");
-                    GetOrders();
-                    MakeTableOfOrders();
-                } else {
-                    db.DoSQL("ROLLBACK");
-                    JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
-                }
             }
+            if (result) {
+                db.DoSQL("COMMIT");
+                GetOrders();
+                MakeTableOfOrders();
+            } else {
+                db.DoSQL("ROLLBACK");
+                JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
+            }
+        }
     }
-    
+
     private void login() {
         jLabel72.setVisible(false);
         jLabel73.setVisible(false);
@@ -3696,13 +3708,13 @@ public class MainForm extends javax.swing.JApplet {
             jLabel73.setVisible(true);
         } else {
             try {
-                Object[][] obj = db.SelectSQL("SELECT * FROM user WHERE login=? AND pass=?",new Object[]{jTextField16.getText(),new String(jPasswordField1.getPassword())});
-                CurrentUser.setColumnNames(new String[]{"ID", "NAME", "LOGIN", "PASS", "LEVEL", "CAN_ENTER","FINANCE_PASS"});
+                Object[][] obj = db.SelectSQL("SELECT * FROM user WHERE login=? AND pass=?", new Object[]{jTextField16.getText(), new String(jPasswordField1.getPassword())});
+                CurrentUser.setColumnNames(new String[]{"ID", "NAME", "LOGIN", "PASS", "LEVEL", "CAN_ENTER", "FINANCE_PASS"});
                 CurrentUser.set(obj);
                 if (!CurrentUser.IsNull()) {
                     CurrentUser.setPosition(0);
                     if (jPasswordField2.getPassword().length != 0) {
-                        if (db.UpdateSQL("UPDATE user SET pass=? WHERE id=?",new Object[]{new String(jPasswordField2.getPassword()),CurrentUser.getInt("ID_USER")})) {
+                        if (db.UpdateSQL("UPDATE user SET pass=? WHERE id=?", new Object[]{new String(jPasswordField2.getPassword()), CurrentUser.getInt("ID_USER")})) {
                             JOptionPane.showMessageDialog(null, "Пароль успешно изменен");
                         } else {
                             JOptionPane.showMessageDialog(null, "Не удалось изменить пароль");
@@ -3710,7 +3722,7 @@ public class MainForm extends javax.swing.JApplet {
                         }
                     }
                     if (CurrentUser.get("CAN_ENTER").equals(false)) {
-                        JOptionPane.showMessageDialog(null,"Вход в систему запрещен администратором");
+                        JOptionPane.showMessageDialog(null, "Вход в систему запрещен администратором");
                     } else {
                         Start();
                     }
@@ -3721,59 +3733,59 @@ public class MainForm extends javax.swing.JApplet {
                 System.out.println(ex.getMessage() + " login?!");
                 jLabel72.setVisible(true);
             }
-        }        
+        }
     }
-    
+
     private void unblockSession() {
         jLabel72.setVisible(false);
-        jLabel73.setVisible(false);     
+        jLabel73.setVisible(false);
         try {
-                Object[][] obj = db.SelectSQL("SELECT * FROM user WHERE login=? AND pass=?",new Object[]{jTextField16.getText(),new String(jPasswordField1.getPassword())});
-                CurrentUser.setColumnNames(new String[]{"ID", "NAME", "LOGIN", "PASS", "LEVEL", "CAN_ENTER"});
-                CurrentUser.set(obj);
-                if (!CurrentUser.IsNull()) {
-                    CurrentUser.setPosition(0);
-                    if (CurrentUser.get("CAN_ENTER").equals(false)) {
-                        JOptionPane.showMessageDialog(null,"Вход в систему запрещен администратором");
-                    } else {
-                        CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
-                        cl.show(jPanel1.getParent(), "card3");
-                    }
+            Object[][] obj = db.SelectSQL("SELECT * FROM user WHERE login=? AND pass=?", new Object[]{jTextField16.getText(), new String(jPasswordField1.getPassword())});
+            CurrentUser.setColumnNames(new String[]{"ID", "NAME", "LOGIN", "PASS", "LEVEL", "CAN_ENTER"});
+            CurrentUser.set(obj);
+            if (!CurrentUser.IsNull()) {
+                CurrentUser.setPosition(0);
+                if (CurrentUser.get("CAN_ENTER").equals(false)) {
+                    JOptionPane.showMessageDialog(null, "Вход в систему запрещен администратором");
                 } else {
-                    jLabel72.setVisible(true);
+                    CardLayout cl = (CardLayout) jPanel1.getParent().getLayout();
+                    cl.show(jPanel1.getParent(), "card3");
                 }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+            } else {
                 jLabel72.setVisible(true);
-            }        
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            jLabel72.setVisible(true);
+        }
     }
-    
+
     private void changeView_Table_Tree_CandiesForPackage() {
-        CardLayout cl = (CardLayout)jPanel182.getLayout();
+        CardLayout cl = (CardLayout) jPanel182.getLayout();
         if (jCheckBox3.isSelected()) {
             cl.show(jPanel182, "card1");
         } else {
             cl.show(jPanel182, "card2");
         }
     }
-    
+
     private void addCandyToGift() {
         if (jCheckBox3.isSelected()) { //group candies by fabric
             DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree5.getLastSelectedPathComponent();
-            if ((SelectedNode!=null) && (SelectedNode.getLevel()==2) && (Gifts.getPosition()!=-1)) {
+            if ((SelectedNode != null) && (SelectedNode.getLevel() == 2) && (Gifts.getPosition() != -1)) {
                 Object[] obj = (Object[]) SelectedNode.getUserObject();
                 int id = (Integer) obj[1];
-                if (db.UpdateSQL("INSERT INTO gift_candy(id_gift,id_candy,amount) VALUES(?,?,1)",new Object[]{Gifts.getInt("ID"), Candies.getInt(id, "ID")})) {
+                if (db.UpdateSQL("INSERT INTO gift_candy(id_gift,id_candy,amount) VALUES(?,?,1)", new Object[]{Gifts.getInt("ID"), Candies.getInt(id, "ID")})) {
                     GetGiftsCandy();
                     MakeTableOfGiftsCandy();
                 } else {
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
                 }
-            }        
+            }
         } else { // group candies by cost or name
-            if ((jTable18.getSelectedRow()!=-1) && (Gifts.getPosition()!=-1)) {
+            if ((jTable18.getSelectedRow() != -1) && (Gifts.getPosition() != -1)) {
                 int id = jTable18.getIDselectedCandy();
-                if (db.UpdateSQL("INSERT INTO gift_candy(id_gift,id_candy,amount) VALUES(?,?,1)",new Object[]{Gifts.getInt("ID"), id})) {
+                if (db.UpdateSQL("INSERT INTO gift_candy(id_gift,id_candy,amount) VALUES(?,?,1)", new Object[]{Gifts.getInt("ID"), id})) {
                     GetGiftsCandy();
                     MakeTableOfGiftsCandy();
                 } else {
@@ -3782,46 +3794,46 @@ public class MainForm extends javax.swing.JApplet {
             }
         }
     }
-    
+
     private void changeTab() {
         if (!CurrentUser.IsNull()) {
-            if (jTabbedPane1.getSelectedComponent()==jPanel4) {
+            if (jTabbedPane1.getSelectedComponent() == jPanel4) {
                 GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
-                MakeTreeOfCandies();                                    
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel41) {
+                MakeTreeOfCandies();
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel41) {
                 GetPackings();
-                MakeTreeOfPackings();                                                                        
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel37) {
+                MakeTreeOfPackings();
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel37) {
                 jToggleButton3.setSelected(jToggleButton1.isSelected());
                 GetGifts();
                 MakeTreeOfGifts();
                 MakeTreeOfCandiesForGift();
                 MakeTableOfCandiesForGift();
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel7) {
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel7) {
                 GetFolders();
                 GetClients(jToggleButton5.isSelected());
-                MakeTreeOfClients();                
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel9) {
+                MakeTreeOfClients();
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel9) {
                 GetOrders();
                 MakeTableOfOrders();
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel8) {
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel8) {
                 jTabbedPane2StateChanged(null);
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel5) {
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel5) {
                 GetUsers();
                 MakeTreeOfUsers();
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel45) {
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel45) {
                 GetConstants();
-                MakePanelOfConstants();                
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel19) {
+                MakePanelOfConstants();
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel19) {
                 GetDelivery();
                 MakeTableOfDelivery();
-            } else if (jTabbedPane1.getSelectedComponent()==jPanel174) {
+            } else if (jTabbedPane1.getSelectedComponent() == jPanel174) {
                 jPanel183.setVisible(false);
                 char[] str;
-                JPasswordField passwordField = new JPasswordField();                
+                JPasswordField passwordField = new JPasswordField();
                 passwordField.setEchoChar('*');
                 while (true) {
-                    if (JOptionPane.showConfirmDialog(null, passwordField,"Для доступа введите пароль", JOptionPane.WARNING_MESSAGE)==JOptionPane.CANCEL_OPTION) {
+                    if (JOptionPane.showConfirmDialog(null, passwordField, "Для доступа введите пароль", JOptionPane.WARNING_MESSAGE) == JOptionPane.CANCEL_OPTION) {
                         jTabbedPane1.setSelectedIndex(0);
                         return;
                     }
@@ -3836,17 +3848,18 @@ public class MainForm extends javax.swing.JApplet {
                         if (new String(digest.digest()).equals(CurrentUser.getString("FINANCE_PASS"))) {
                             break;
                         }
-                    } catch (Exception ex) {}
-                }  
-                jPanel183.setVisible(true);                
+                    } catch (Exception ex) {
+                    }
+                }
+                jPanel183.setVisible(true);
                 GetFinances();
                 MakeTableOfFinances();
                 GetExpenses();
                 MakeTableOfExpenses();
             }
-        }        
+        }
     }
-    
+
     private void createWindowAfterDragClient(String draggedToFolderName) {
         final JDialog windowAfterDragClient = new JDialog();
         windowAfterDragClient.setTitle("Выбрать действие");
@@ -3878,7 +3891,7 @@ public class MainForm extends javax.swing.JApplet {
         jTextArea11.setRows(5);
         jTextArea11.setWrapStyleWord(true);
         jTextArea11.setBorder(null);
-        jTextArea11.setText("Клиент '"+draggedClientName+"'\nиз папки '"+draggedFromFolderName+"'\nв папку '"+draggedToFolderName+"'\nКопировать/переместить?");
+        jTextArea11.setText("Клиент '" + draggedClientName + "'\nиз папки '" + draggedFromFolderName + "'\nв папку '" + draggedToFolderName + "'\nКопировать/переместить?");
         jScrollPane47.setViewportView(jTextArea11);
 
         jPanel188.add(jScrollPane47);
@@ -3897,8 +3910,8 @@ public class MainForm extends javax.swing.JApplet {
         jButton122.setText("копировать");
         jButton122.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (db.UpdateSQL("INSERT INTO client_folder(ID_CLIENT,ID_FOLDER) VALUES(?,?)", new Object[]{draggedClientID,draggedToFolderID})) {
-                   GetFolders();
+                if (db.UpdateSQL("INSERT INTO client_folder(ID_CLIENT,ID_FOLDER) VALUES(?,?)", new Object[]{draggedClientID, draggedToFolderID})) {
+                    GetFolders();
                     MakeTreeOfClients();
                     windowAfterDragClient.setVisible(false);
                 }
@@ -3911,8 +3924,8 @@ public class MainForm extends javax.swing.JApplet {
         jButton123.setText("переместить");
         jButton123.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (db.UpdateSQL("INSERT INTO client_folder(ID_CLIENT,ID_FOLDER) VALUES(?,?)", new Object[]{draggedClientID,draggedToFolderID})) {
-                   db.UpdateSQL("DELETE FROM client_folder WHERE id_client=? AND id_folder=?",new Object[]{draggedClientID,draggedFromFolderID});
+                if (db.UpdateSQL("INSERT INTO client_folder(ID_CLIENT,ID_FOLDER) VALUES(?,?)", new Object[]{draggedClientID, draggedToFolderID})) {
+                    db.UpdateSQL("DELETE FROM client_folder WHERE id_client=? AND id_folder=?", new Object[]{draggedClientID, draggedFromFolderID});
                     GetFolders();
                     MakeTreeOfClients();
                     windowAfterDragClient.setVisible(false);
@@ -3926,14 +3939,14 @@ public class MainForm extends javax.swing.JApplet {
         windowAfterDragClient.setLocationRelativeTo(null);
         windowAfterDragClient.setVisible(true);
     }
-    
+
     private void showWindowDeliveryCost() {
         if (Users.IsNull()) {
             GetUsers();
         }
         productDeliveryDialog.initDialog();
     }
-    
+
     public void makeRevenueExpenses(double value, String number_factura) {
         switch (jTabbedPane2.getSelectedIndex()) {
             case 0:
@@ -3957,35 +3970,35 @@ public class MainForm extends javax.swing.JApplet {
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
                 }
                 break;
-        }      
+        }
     }
-    
+
     public int getOrderDeliverySelectedRow() {
         return jTable14.getSelectedRow();
     }
-    
+
     public String getOrderDebtValueFromItsLabel() {
         return jLabel104.getText();
     }
-    
+
     public int getTableOrderSelectedRow() {
         return jTable3.getSelectedRow();
     }
-    
+
     public boolean getExpeditors() {
-        Object[][] obj = db.SelectSQL("SELECT id, name, driver FROM expeditors ORDER BY name",null);
+        Object[][] obj = db.SelectSQL("SELECT id, name, driver FROM expeditors ORDER BY name", null);
         Expeditors.set(obj);
-        return obj!=null;
+        return obj != null;
     }
-    
+
     public void fillComboboxExpeditorsInDeliveryFilter() {
         jComboBox14.removeAllItems();
         jComboBox14.addItem(" ");
-        for (int i = 0;i<Expeditors.getLength();i++) {
+        for (int i = 0; i < Expeditors.getLength(); i++) {
             jComboBox14.addItem(new Object[]{Expeditors.getInt(i, "ID"), Expeditors.getString(i, "NAME")});
         }
     }
-    
+
     public void fillComboboxDeliveryTypesInDeliveryFilter() {
         jComboBox16.removeAllItems();
         jComboBox16.addItem(" ");
@@ -3995,36 +4008,36 @@ public class MainForm extends javax.swing.JApplet {
         jComboBox16.addItem("Самовывоз Склад");
         jComboBox16.addItem("Самовывоз Офис");
     }
-    
+
     public void showClientWhichIsCalling(int idClient) {
         jComboBox9.setSelectedIndex(0); //сбрасываем фильтры
         jComboBox10.setSelectedIndex(0);
         jTextField38.setText("");
-        
+
         GetFolders();
         GetClients(jToggleButton5.isSelected()); //обновляем список
         MakeTreeOfClients();
-        
+
         jTabbedPane1.setSelectedComponent(jPanel7); //show clients tab
-        
+
         TreeModel model = jTree3.getModel();
-        for (int i = 0;i<model.getChildCount(model.getRoot());i++) {
-            DefaultMutableTreeNode dftm = (DefaultMutableTreeNode)model.getChild(model.getRoot(), i);
-            for (int j = 0;j<model.getChildCount(dftm);j++) {
-                DefaultMutableTreeNode leaf = (DefaultMutableTreeNode)model.getChild(dftm, j);
+        for (int i = 0; i < model.getChildCount(model.getRoot()); i++) {
+            DefaultMutableTreeNode dftm = (DefaultMutableTreeNode) model.getChild(model.getRoot(), i);
+            for (int j = 0; j < model.getChildCount(dftm); j++) {
+                DefaultMutableTreeNode leaf = (DefaultMutableTreeNode) model.getChild(dftm, j);
                 Object[] obj = (Object[]) leaf.getUserObject();
-                int index = (Integer)obj[1];
-                if (Clients.getInt(index,"ID")==idClient) {
+                int index = (Integer) obj[1];
+                if (Clients.getInt(index, "ID") == idClient) {
                     jTree3.setSelectionPath(new TreePath(leaf.getPath()));
                     Rectangle r = jTree3.getRowBounds(jTree3.getMinSelectionRow());
                     Point p = new Point(r.x, r.y);
-                    ((JViewport)(jTree3.getParent())).setViewPosition(p);
+                    ((JViewport) (jTree3.getParent())).setViewPosition(p);
                     SelectNodeOfTreeClients();
                 }
             }
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -4237,7 +4250,7 @@ public class MainForm extends javax.swing.JApplet {
         jPanel24 = new javax.swing.JPanel();
         jLabel134 = new javax.swing.JLabel();
         jComboBox8 = new ComboboxClientState(false);
-        jLabel135 = new javax.swing.JLabel();
+        jLabelManager = new javax.swing.JLabel();
         jComboBox11 = new ComboboxUsers();
         jPanel105 = new javax.swing.JPanel();
         jLabel100 = new javax.swing.JLabel();
@@ -6322,14 +6335,14 @@ public class MainForm extends javax.swing.JApplet {
         jComboBox8.setPreferredSize(new java.awt.Dimension(49, 24));
         jPanel24.add(jComboBox8);
 
-        jLabel135.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel135.setForeground(new java.awt.Color(0, 0, 255));
-        jLabel135.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel135.setText("Менеджер:");
-        jLabel135.setMaximumSize(new java.awt.Dimension(70, 18));
-        jLabel135.setMinimumSize(new java.awt.Dimension(70, 18));
-        jLabel135.setPreferredSize(new java.awt.Dimension(70, 18));
-        jPanel24.add(jLabel135);
+        jLabelManager.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabelManager.setForeground(new java.awt.Color(0, 0, 255));
+        jLabelManager.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelManager.setText("Менеджер:");
+        jLabelManager.setMaximumSize(new java.awt.Dimension(70, 18));
+        jLabelManager.setMinimumSize(new java.awt.Dimension(70, 18));
+        jLabelManager.setPreferredSize(new java.awt.Dimension(70, 18));
+        jPanel24.add(jLabelManager);
 
         jComboBox11.setMaximumSize(new java.awt.Dimension(135, 24));
         jComboBox11.setMinimumSize(new java.awt.Dimension(135, 24));
@@ -9792,14 +9805,14 @@ public class MainForm extends javax.swing.JApplet {
         jButton1.setVisible(false);
         jButton2.setVisible(true);
         jButton3.setVisible(true);
-        
-        JTextField[] mas = new JTextField[]{jTextField1,jTextField2,jTextField3,jTextField4,jTextField31};
+
+        JTextField[] mas = new JTextField[]{jTextField1, jTextField2, jTextField3, jTextField4, jTextField31};
         for (JTextField ma : mas) {
             ma.setEditable(true);
             ma.setBorder(BorderFactory.createEtchedBorder());
             ma.setBackground(Color.WHITE);
             ma.setForeground(Color.BLACK);
-        }        
+        }
         jTextArea5.setBackground(Color.WHITE);
         jTextArea5.setForeground(Color.black);
         jTextArea5.setEditable(true);
@@ -9819,12 +9832,12 @@ public class MainForm extends javax.swing.JApplet {
                 s = jTextField4.getText();
                 double d2 = Double.parseDouble(s.replaceAll(" ", "").replace(',', '.'));
                 int last_change_cost;
-                if (d2!=Candies.getDouble("COST_KG")) {
-                    last_change_cost = ((Long)(Calendar.getInstance().getTimeInMillis()/1000)).intValue();
+                if (d2 != Candies.getDouble("COST_KG")) {
+                    last_change_cost = ((Long) (Calendar.getInstance().getTimeInMillis() / 1000)).intValue();
                 } else {
                     last_change_cost = Candies.getInt("LAST_CHANGE_COST");
                 }
-                if (db.UpdateSQL("UPDATE candy SET name=?, box_weight=?, cost_kg=?, amount_in_box=?, comm=?, last_change_cost=? WHERE id=?", new Object[]{jTextField1.getText(), d1, d2, Integer.parseInt(jTextField3.getText()), jTextArea5.getText(),last_change_cost,Candies.getInt("ID")})) {
+                if (db.UpdateSQL("UPDATE candy SET name=?, box_weight=?, cost_kg=?, amount_in_box=?, comm=?, last_change_cost=? WHERE id=?", new Object[]{jTextField1.getText(), d1, d2, Integer.parseInt(jTextField3.getText()), jTextArea5.getText(), last_change_cost, Candies.getInt("ID")})) {
                     RefreshNodeCandies();
                 } else {
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
@@ -9836,7 +9849,7 @@ public class MainForm extends javax.swing.JApplet {
             try {
                 String s = jTextField31.getText();
                 double discount = Double.parseDouble(s.replaceAll(" ", "").replace(',', '.'));
-                if (db.UpdateSQL("UPDATE factory SET name=?,discount=? WHERE id=?",new Object[]{jTextField1.getText(),discount,Candies.getInt("ID_FACTORY")})) {
+                if (db.UpdateSQL("UPDATE factory SET name=?,discount=? WHERE id=?", new Object[]{jTextField1.getText(), discount, Candies.getInt("ID_FACTORY")})) {
                     GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
                     MakeTreeOfCandies();
                 } else {
@@ -9860,17 +9873,17 @@ public class MainForm extends javax.swing.JApplet {
         jButton17.setVisible(false);
         jButton24.setVisible(true);
         jButton51.setVisible(true);
-        JTextField[] mas = new JTextField[]{jTextField9,jTextField10,jTextField12,jTextField24};
+        JTextField[] mas = new JTextField[]{jTextField9, jTextField10, jTextField12, jTextField24};
         for (JTextField ma : mas) {
             ma.setEditable(true);
             ma.setBorder(BorderFactory.createEtchedBorder());
             ma.setBackground(Color.WHITE);
             ma.setForeground(Color.black);
-        }        
+        }
         jCheckBox1.setEnabled(true);
         jLabel129.setEnabled(true);
         jLabel129.setText("<html><u>зашифрован, нажмите для изменения</u></html>");
-        jComboBox12.setEnabled(Users.getInt("LEVEL")==STORAGE_WORKER);
+        jComboBox12.setEnabled(Users.getInt("LEVEL") == STORAGE_WORKER);
         jComboBox13.setEnabled(true);
         jTextArea10.setBackground(Color.WHITE);
         jTextArea10.setForeground(Color.black);
@@ -9886,11 +9899,11 @@ public class MainForm extends javax.swing.JApplet {
         String phone = jTextField24.getText();
         String comment = jTextArea10.getText();
         int idPosition = jComboBox12.getSelectedIndex();
-        int idBoss = (Users.getInt("LEVEL")==STORAGE_WORKER) && (idPosition==STORAGE_WORKER_PACKER) ? jComboBox13.getSelectedID() : -1;
-       
+        int idBoss = (Users.getInt("LEVEL") == STORAGE_WORKER) && (idPosition == STORAGE_WORKER_PACKER) ? jComboBox13.getSelectedID() : -1;
+
         int id_user = Users.getInt("ID");
 
-        if (db.UpdateSQL("UPDATE user SET name=?,login=?,pass=?,can_enter=?,phone=?,id_position=?,comment=?,id_user_boss=? WHERE id=?",new Object[]{name,login,pass,can_enter,phone,idPosition,comment,idBoss,id_user})) {
+        if (db.UpdateSQL("UPDATE user SET name=?,login=?,pass=?,can_enter=?,phone=?,id_position=?,comment=?,id_user_boss=? WHERE id=?", new Object[]{name, login, pass, can_enter, phone, idPosition, comment, idBoss, id_user})) {
             GetUsers();
             MakeTreeOfUsers();
         } else {
@@ -9910,13 +9923,13 @@ public class MainForm extends javax.swing.JApplet {
         jTextArea7.setBorder(BorderFactory.createEtchedBorder());
         jTextArea7.setBackground(Color.WHITE);
         jTextArea7.setForeground(Color.black);
-        
+
         jComboBox8.setEnabled(true);
         jComboBox11.setEnabled(true);
-        
-        JTextField[] mas = new JTextField[]{jTextField47,jTextField6,jTextField7,
-            jTextField25,jTextField52,jTextField13,jTextField8,jTextField11,jTextField34,jTextField35,jTextField26,jTextField27,
-            jTextField28,jTextField29,jTextField15,jTextField14,jTextField22};
+
+        JTextField[] mas = new JTextField[]{jTextField47, jTextField6, jTextField7,
+            jTextField25, jTextField52, jTextField13, jTextField8, jTextField11, jTextField34, jTextField35, jTextField26, jTextField27,
+            jTextField28, jTextField29, jTextField15, jTextField14, jTextField22};
         for (JTextField ma : mas) {
             ma.setBorder(BorderFactory.createEtchedBorder());
             ma.setBackground(Color.WHITE);
@@ -9925,37 +9938,41 @@ public class MainForm extends javax.swing.JApplet {
         }
         jLabel74.setVisible(false);
         jDateChooser5.setVisible(true);
-      
+
     }//GEN-LAST:event_jButton4MousePressed
 
     public boolean checkTheClient(String str) {
-        char[] symbols = str.toCharArray();  
-        if(symbols.length < 3 || symbols.length > 15 ) return false;  
-          
-        String validationString = "#№\"\'";  
-          
-        for(char c : symbols){  
-            if(validationString.indexOf(c)!=-1) return true;  
-        }  
-          
+        char[] symbols = str.toCharArray();
+        if (symbols.length < 3 || symbols.length > 15) {
+            return false;
+        }
+
+        String validationString = "#№\"\'";
+
+        for (char c : symbols) {
+            if (validationString.indexOf(c) != -1) {
+                return true;
+            }
+        }
+
         return false;
     }
-    
+
     private void jButton5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MousePressed
         int clientID = Clients.getInt("ID");
-        DefaultMutableTreeNode folderNode = (DefaultMutableTreeNode)jTree3.getSelectionPath().getParentPath().getLastPathComponent();
-        int folderID = (int)((Object[])folderNode.getUserObject())[0];
+        DefaultMutableTreeNode folderNode = (DefaultMutableTreeNode) jTree3.getSelectionPath().getParentPath().getLastPathComponent();
+        int folderID = (int) ((Object[]) folderNode.getUserObject())[0];
         String toCheck = jTextField47.getText();
-        
-        if(checkTheClient(toCheck)) {
+
+        if (checkTheClient(toCheck)) {
             JOptionPane.showMessageDialog(null, "Название клиента не может содержать номер или кавычки");
         } else {
             boolean clientExists = false;
             String existingValue = "";
             Object[][] objecto = db.SelectSQL("SELECT phone1, phone2, phone3, "
-                    + "email1, email2, email3, edrpou FROM client",new Object[]{});
+                    + "email1, email2, email3, edrpou FROM client", new Object[]{});
             ClientsToCheck.set(objecto);
-            for (int i=0; i<ClientsToCheck.getLength(); i++) {
+            for (int i = 0; i < ClientsToCheck.getLength(); i++) {
                 //////////////// - checking phones - /////////////////
                 if (jTextField7.getText() == null ? ClientsToCheck.getString(i, "PHONE1") == null : jTextField7.getText().equals(ClientsToCheck.getString(i, "PHONE1"))) {
                     existingValue = jTextField7.getText();
@@ -9965,7 +9982,7 @@ public class MainForm extends javax.swing.JApplet {
                         break;
                     }
                 }
-                if (jTextField7.getText() == null ? ClientsToCheck.getString(i, "PHONE2") == null : jTextField7.getText().equals(ClientsToCheck.getString(i, "PHONE2"))){
+                if (jTextField7.getText() == null ? ClientsToCheck.getString(i, "PHONE2") == null : jTextField7.getText().equals(ClientsToCheck.getString(i, "PHONE2"))) {
                     existingValue = jTextField7.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -9973,7 +9990,7 @@ public class MainForm extends javax.swing.JApplet {
                         break;
                     }
                 }
-                if (jTextField7.getText() == null ? ClientsToCheck.getString(i, "PHONE3") == null : jTextField7.getText().equals(ClientsToCheck.getString(i, "PHONE3"))){
+                if (jTextField7.getText() == null ? ClientsToCheck.getString(i, "PHONE3") == null : jTextField7.getText().equals(ClientsToCheck.getString(i, "PHONE3"))) {
                     existingValue = jTextField7.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -9982,7 +9999,7 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
                 ///////////////////////////////////////////////////
-                if (jTextField11.getText() == null ? ClientsToCheck.getString(i, "PHONE1") == null : jTextField11.getText().equals(ClientsToCheck.getString(i, "PHONE1"))){
+                if (jTextField11.getText() == null ? ClientsToCheck.getString(i, "PHONE1") == null : jTextField11.getText().equals(ClientsToCheck.getString(i, "PHONE1"))) {
                     existingValue = jTextField11.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -9990,7 +10007,7 @@ public class MainForm extends javax.swing.JApplet {
                         break;
                     }
                 }
-                if (jTextField11.getText() == null ? ClientsToCheck.getString(i, "PHONE2") == null : jTextField11.getText().equals(ClientsToCheck.getString(i, "PHONE2"))){
+                if (jTextField11.getText() == null ? ClientsToCheck.getString(i, "PHONE2") == null : jTextField11.getText().equals(ClientsToCheck.getString(i, "PHONE2"))) {
                     existingValue = jTextField11.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -9998,7 +10015,7 @@ public class MainForm extends javax.swing.JApplet {
                         break;
                     }
                 }
-                if (jTextField11.getText() == null ? ClientsToCheck.getString(i, "PHONE3") == null : jTextField11.getText().equals(ClientsToCheck.getString(i, "PHONE3"))){
+                if (jTextField11.getText() == null ? ClientsToCheck.getString(i, "PHONE3") == null : jTextField11.getText().equals(ClientsToCheck.getString(i, "PHONE3"))) {
                     existingValue = jTextField11.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -10007,7 +10024,7 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
                 ////////////////////////////////////////////////////
-                if (jTextField28.getText() == null ? ClientsToCheck.getString(i, "PHONE1") == null : jTextField28.getText().equals(ClientsToCheck.getString(i, "PHONE1"))){
+                if (jTextField28.getText() == null ? ClientsToCheck.getString(i, "PHONE1") == null : jTextField28.getText().equals(ClientsToCheck.getString(i, "PHONE1"))) {
                     existingValue = jTextField28.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -10015,7 +10032,7 @@ public class MainForm extends javax.swing.JApplet {
                         break;
                     }
                 }
-                if (jTextField28.getText() == null ? ClientsToCheck.getString(i, "PHONE2") == null : jTextField28.getText().equals(ClientsToCheck.getString(i, "PHONE2"))){
+                if (jTextField28.getText() == null ? ClientsToCheck.getString(i, "PHONE2") == null : jTextField28.getText().equals(ClientsToCheck.getString(i, "PHONE2"))) {
                     existingValue = jTextField28.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -10023,7 +10040,7 @@ public class MainForm extends javax.swing.JApplet {
                         break;
                     }
                 }
-                if (jTextField28.getText() == null ? ClientsToCheck.getString(i, "PHONE3") == null : jTextField28.getText().equals(ClientsToCheck.getString(i, "PHONE3"))){
+                if (jTextField28.getText() == null ? ClientsToCheck.getString(i, "PHONE3") == null : jTextField28.getText().equals(ClientsToCheck.getString(i, "PHONE3"))) {
                     existingValue = jTextField28.getText();
                     if (existingValue.length() > 3) {
                         clientExists = true;
@@ -10032,7 +10049,7 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
                 ////////////////// - phones are checked - //////////////////////
-                
+
                 ///////////////// - checking emails - /////////////////////////
                 if (jTextField13.getText() == null ? ClientsToCheck.getString(i, "EMAIL1") == null : jTextField13.getText().equals(ClientsToCheck.getString(i, "EMAIL1"))) {
                     existingValue = jTextField13.getText();
@@ -10109,7 +10126,7 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
                 ///////////// - finished checking emails - ///////////////////
-                
+
                 if (jTextField22.getText() == null ? ClientsToCheck.getString(i, "EDRPOU") == null : jTextField22.getText().equals(ClientsToCheck.getString(i, "EDRPOU"))) {
                     existingValue = jTextField22.getText();
                     if (existingValue.length() > 3) {
@@ -10117,7 +10134,7 @@ public class MainForm extends javax.swing.JApplet {
                         i = 20000;
                         break;
                     }
-                }    
+                }
             }
 
             if (clientExists && newClientMode) {
@@ -10128,32 +10145,32 @@ public class MainForm extends javax.swing.JApplet {
                         + "phone2=?,additional_phone2=?,phone3=?,additional_phone3=?,"
                         + "email1=?,email2=?,email3=?,address=?,site=?,comm=?,state=?,"
                         + "user_creator_id=?,edrpou=? WHERE id=?",
-                        new Object[]{"", jTextField47.getText(), 
-                            jDateChooser5.getCalendar().getTimeInMillis()/1000,
-                            jTextField6.getText(), jTextField8.getText(),jTextField27.getText(),
-                            jTextField7.getText(),jTextField25.getText(),jTextField52.getText(),jTextField11.getText(),
-                            jTextField34.getText(),jTextField28.getText(),jTextField35.getText(),
-                            jTextField13.getText(),jTextField26.getText(),jTextField29.getText(),
-                            jTextField15.getText(),jTextField14.getText(),jTextArea7.getText(), 
-                            ClientState.getValueForDB(jComboBox8.getSelectedState()), 
-                            jComboBox11.getSelectedID(), jTextField22.getText(),Clients.getInt("ID")})) {
+                        new Object[]{"", jTextField47.getText(),
+                            jDateChooser5.getCalendar().getTimeInMillis() / 1000,
+                            jTextField6.getText(), jTextField8.getText(), jTextField27.getText(),
+                            jTextField7.getText(), jTextField25.getText(), jTextField52.getText(), jTextField11.getText(),
+                            jTextField34.getText(), jTextField28.getText(), jTextField35.getText(),
+                            jTextField13.getText(), jTextField26.getText(), jTextField29.getText(),
+                            jTextField15.getText(), jTextField14.getText(), jTextArea7.getText(),
+                            ClientState.getValueForDB(jComboBox8.getSelectedState()),
+                            jComboBox11.getSelectedID(), jTextField22.getText(), Clients.getInt("ID")})) {
                     GetClients(jToggleButton5.isSelected());
                     MakeTreeOfClients();
                     newClientMode = false;
 
-                    DefaultMutableTreeNode root = (DefaultMutableTreeNode)jTree3.getModel().getRoot();
-                    for (int i = 0;i<root.getChildCount();i++) {
-                        DefaultMutableTreeNode folder = (DefaultMutableTreeNode)root.getChildAt(i);
-                        Object[] obj = (Object[])folder.getUserObject();
-                        int foldID = (int)obj[0];
-                        if (foldID==folderID) {
-                            for (int j = 0;j<folder.getChildCount();j++) {
-                                DefaultMutableTreeNode client = (DefaultMutableTreeNode)folder.getChildAt(j);
-                                Object[] ob = (Object[])client.getUserObject();
-                                int clienID = Clients.getInt((int)ob[1],"ID");
-                                if (clienID==clientID) {
+                    DefaultMutableTreeNode root = (DefaultMutableTreeNode) jTree3.getModel().getRoot();
+                    for (int i = 0; i < root.getChildCount(); i++) {
+                        DefaultMutableTreeNode folder = (DefaultMutableTreeNode) root.getChildAt(i);
+                        Object[] obj = (Object[]) folder.getUserObject();
+                        int foldID = (int) obj[0];
+                        if (foldID == folderID) {
+                            for (int j = 0; j < folder.getChildCount(); j++) {
+                                DefaultMutableTreeNode client = (DefaultMutableTreeNode) folder.getChildAt(j);
+                                Object[] ob = (Object[]) client.getUserObject();
+                                int clienID = Clients.getInt((int) ob[1], "ID");
+                                if (clienID == clientID) {
                                     jTree3.setSelectionPath(new TreePath(client.getPath()));
-                                    SelectNodeOfTreeClients();       
+                                    SelectNodeOfTreeClients();
                                     break;
                                 }
                             }
@@ -10163,8 +10180,8 @@ public class MainForm extends javax.swing.JApplet {
                 } else {
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
                 }
-            } 
-        }   
+            }
+        }
     }//GEN-LAST:event_jButton5MousePressed
 
     private void jButton6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MousePressed
@@ -10181,25 +10198,25 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jTree3KeyReleased
 
     private void jTextField16KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField16KeyPressed
-        if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             login();
         }
 }//GEN-LAST:event_jTextField16KeyPressed
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
-        if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             login();
         }
 }//GEN-LAST:event_jPasswordField1KeyPressed
 
     private void jPasswordField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2KeyPressed
-        if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             login();
         }
 }//GEN-LAST:event_jPasswordField2KeyPressed
 
     private void jPasswordField3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3KeyPressed
-        if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             login();
         }
 }//GEN-LAST:event_jPasswordField3KeyPressed
@@ -10222,7 +10239,7 @@ public class MainForm extends javax.swing.JApplet {
 
     private void jButton8MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MousePressed
         int SelectedRow = jTable1.getSelectedRow();
-        if ((SelectedRow!=-1) && (SelectedRow!=jTable1.getRowCount()-1)) {
+        if ((SelectedRow != -1) && (SelectedRow != jTable1.getRowCount() - 1)) {
             if (db.UpdateSQL("DELETE FROM gift_candy WHERE id=?", new Object[]{Gift_Candy.getInt(SelectedRow, "ID")})) {
                 GetGiftsCandy();
                 MakeTableOfGiftsCandy();
@@ -10248,9 +10265,9 @@ public class MainForm extends javax.swing.JApplet {
         jTextArea6.setForeground(Color.BLACK);
         jTextArea6.setEditable(true);
         jTextArea6.setBorder(BorderFactory.createEtchedBorder());
-        
+
         jCheckBox4.setEnabled(true);
-        
+
         jButton9.setVisible(true);
         jButton45.setVisible(true);
         jButton13.setVisible(false);
@@ -10267,13 +10284,13 @@ public class MainForm extends javax.swing.JApplet {
             int number = Integer.parseInt(jTextField30.getText());
             s = jTextField20.getText();
             double d3 = Double.parseDouble(s.replaceAll(" ", "").replace(',', '.'));
-            if (db.UpdateSQL("UPDATE packing SET name=?,number=?, cost=?, weight=?, capacity=?,comm=?,marked=? WHERE id=?", new Object[]{jTextField17.getText(), number, d1, d2, d3, jTextArea6.getText(),jCheckBox4.isSelected() ? 1 : 0,Packings.getInt("ID")})) {
+            if (db.UpdateSQL("UPDATE packing SET name=?,number=?, cost=?, weight=?, capacity=?,comm=?,marked=? WHERE id=?", new Object[]{jTextField17.getText(), number, d1, d2, d3, jTextArea6.getText(), jCheckBox4.isSelected() ? 1 : 0, Packings.getInt("ID")})) {
                 RefreshNodePackings();
             } else {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
         } catch (NumberFormatException | HeadlessException ex) {
-            JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");            
+            JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
     }//GEN-LAST:event_jButton14MousePressed
 
@@ -10293,14 +10310,14 @@ public class MainForm extends javax.swing.JApplet {
             String name = chooser.getSelectedFile().getName();
             try {
                 FTP.uploadFile(chooser.getSelectedFile(), name);
-                if (db.UpdateSQL("UPDATE packing SET filename=? WHERE id=?",new Object[]{name,Packings.getInt("ID")})) {
+                if (db.UpdateSQL("UPDATE packing SET filename=? WHERE id=?", new Object[]{name, Packings.getInt("ID")})) {
                     RefreshNodePackings();
                 } else {
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(null, "Не удалось подключиться к FTP-серверу \n"+ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Не удалось подключиться к FTP-серверу \n" + ex.getMessage());
             }
         }
     }//GEN-LAST:event_jButton9MousePressed
@@ -10331,14 +10348,14 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton10MousePressed
 
     private void jButton11MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton11MousePressed
-        GetGifts();        
+        GetGifts();
         orderComplectationDialog.initDialog(Gifts);
     }//GEN-LAST:event_jButton11MousePressed
 
     private void jButton12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MousePressed
         int SelectedRow = jTable5.getSelectedRow();
-        if ((SelectedRow!=-1) && (SelectedRow<jTable5.getRowCount()-1)) {
-            if (db.UpdateSQL("DELETE FROM suborder WHERE id=?",new Object[]{SubOrders.getInt(SelectedRow, "ID")})) {
+        if ((SelectedRow != -1) && (SelectedRow < jTable5.getRowCount() - 1)) {
+            if (db.UpdateSQL("DELETE FROM suborder WHERE id=?", new Object[]{SubOrders.getInt(SelectedRow, "ID")})) {
                 GetSubOrders();
                 MakeTableOfSubOrders();
             } else {
@@ -10349,28 +10366,28 @@ public class MainForm extends javax.swing.JApplet {
 
     private void jButton16MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton16MousePressed
         int state = Orders.getInt("STATE");
-        int date = ((Long)(Calendar.getInstance().getTimeInMillis()/1000)).intValue();
-        int id_orders = Orders.getInt("ID"); 
+        int date = ((Long) (Calendar.getInstance().getTimeInMillis() / 1000)).intValue();
+        int id_orders = Orders.getInt("ID");
         boolean result;
         switch (state) {
             case Order.ORDER_PREPARE:
                 JOptionPane.showMessageDialog(null, "Проверьте ВМЕСТИМОСТЬ ДОСТАВКИ и ДОЛГ!");
-                if (ExtendedOrder.getInt("TYPE_PAY")==-1) { //не выбран тип оплаты
+                if (ExtendedOrder.getInt("TYPE_PAY") == -1) { //не выбран тип оплаты
                     JOptionPane.showMessageDialog(null, "Выберите тип оплаты заказа!");
                     return;
                 }
                 result = db.DoSQL("START TRANSACTION");
                 if (result) {
-                    result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?",new Object[]{Order.ORDER_PAY,id_orders});
+                    result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_PAY, id_orders});
                     if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_PAY,id_orders});
-                        for (int i=0;i<SubOrders.getLength();i++) {
-                            result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved + suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")});
+                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_PAY, id_orders});
+                        for (int i = 0; i < SubOrders.getLength(); i++) {
+                            result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved + suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
                         }
                     }
                 }
                 if (result) {
-                    db.DoSQL("COMMIT");   
+                    db.DoSQL("COMMIT");
                     GetOrders();
                     MakeTableOfOrders();
                 } else {
@@ -10379,22 +10396,22 @@ public class MainForm extends javax.swing.JApplet {
                 }
                 break;
             case Order.ORDER_PAY:
-                if (DeliveryOrder.getLength()==0) {
+                if (DeliveryOrder.getLength() == 0) {
                     JOptionPane.showMessageDialog(null, "Заполните хотя бы одну доставку для заказа!");
                     return;
                 }
                 result = db.DoSQL("START TRANSACTION");
                 if (result) {
-                    result = db.UpdateSQL("UPDATE orders SET state=?,date_pay=? WHERE id=?",new Object[]{Order.ORDER_PACK,date,id_orders});                    
+                    result = db.UpdateSQL("UPDATE orders SET state=?,date_pay=? WHERE id=?", new Object[]{Order.ORDER_PACK, date, id_orders});
                     if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_PACK,id_orders});                        
-                        for (int i=0;i<SubOrders.getLength();i++) {
-                            result = result && db.UpdateSQL("UPDATE candy, gift_candy, suborder SET candy.reserved = candy.reserved + suborder.amount*gift_candy.amount WHERE gift_candy.ID_CANDY = candy.ID AND gift_candy.ID_GIFT=suborder.ID_GIFT AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")}); 
+                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_PACK, id_orders});
+                        for (int i = 0; i < SubOrders.getLength(); i++) {
+                            result = result && db.UpdateSQL("UPDATE candy, gift_candy, suborder SET candy.reserved = candy.reserved + suborder.amount*gift_candy.amount WHERE gift_candy.ID_CANDY = candy.ID AND gift_candy.ID_GIFT=suborder.ID_GIFT AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
                         }
-                    } 
+                    }
                 }
                 if (result) {
-                    db.DoSQL("COMMIT");   
+                    db.DoSQL("COMMIT");
                     GetOrders();
                     MakeTableOfOrders();
                 } else {
@@ -10403,8 +10420,8 @@ public class MainForm extends javax.swing.JApplet {
                 }
                 break;
             case Order.ORDER_PACK:
-                for (int i=0;i<SubOrders.getLength();i++) {
-                    if (SubOrders.getInt(i,"AMOUNT")!=SubOrders.getInt(i,"PACKED")) {
+                for (int i = 0; i < SubOrders.getLength(); i++) {
+                    if (SubOrders.getInt(i, "AMOUNT") != SubOrders.getInt(i, "PACKED")) {
                         JOptionPane.showMessageDialog(null, "Заказ еще не упакован полностью!");
                         return;
                     }
@@ -10413,21 +10430,21 @@ public class MainForm extends javax.swing.JApplet {
                 if (result) {
                     result = db.UpdateSQL("UPDATE orders SET state=?,date_pack=? WHERE id=?", new Object[]{Order.ORDER_STORAGE, date, id_orders});
                     if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_STORAGE,id_orders});
+                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_STORAGE, id_orders});
                     }
                 }
                 if (result) {
-                    db.DoSQL("COMMIT"); 
+                    db.DoSQL("COMMIT");
                     GetOrders();
-                    MakeTableOfOrders();            
+                    MakeTableOfOrders();
                 } else {
                     db.DoSQL("ROLLBACK");
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
                 }
                 break;
             case Order.ORDER_STORAGE:
-                for (int i=0;i<SubOrders.getLength();i++) {
-                    if (SubOrders.getInt(i,"AMOUNT")!=SubOrders.getInt(i,"PACKED")) {
+                for (int i = 0; i < SubOrders.getLength(); i++) {
+                    if (SubOrders.getInt(i, "AMOUNT") != SubOrders.getInt(i, "PACKED")) {
                         JOptionPane.showMessageDialog(null, "Заказ еще не упакован полностью!");
                         return;
                     }
@@ -10436,13 +10453,13 @@ public class MainForm extends javax.swing.JApplet {
                 if (result) {
                     result = db.UpdateSQL("UPDATE orders SET state=?,date_pack=? WHERE id=?", new Object[]{Order.ORDER_SEND, date, id_orders});
                     if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_SEND,id_orders});
+                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_SEND, id_orders});
                     }
                 }
                 if (result) {
-                    db.DoSQL("COMMIT"); 
+                    db.DoSQL("COMMIT");
                     GetOrders();
-                    MakeTableOfOrders();            
+                    MakeTableOfOrders();
                 } else {
                     db.DoSQL("ROLLBACK");
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
@@ -10453,13 +10470,13 @@ public class MainForm extends javax.swing.JApplet {
                 if (result) {
                     result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_DONE, id_orders});
                     if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_DONE,id_orders});
+                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_DONE, id_orders});
                     }
                 }
                 if (result) {
-                    db.DoSQL("COMMIT"); 
+                    db.DoSQL("COMMIT");
                     GetOrders();
-                    MakeTableOfOrders();            
+                    MakeTableOfOrders();
                 } else {
                     db.DoSQL("ROLLBACK");
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
@@ -10493,67 +10510,67 @@ public class MainForm extends javax.swing.JApplet {
         jButton27.setVisible(false);
         jButtonSaveOrder.setVisible(true);
         jButton29.setVisible(true);
-        
-        if(CurrentUser.getInt("LEVEL")==DIRECTOR){
+
+        if (CurrentUser.getInt("LEVEL") == DIRECTOR) {
             jTextArea12.setEditable(true);
         }
 
-        if (Orders.getInt("STATE")<Order.ORDER_PACK || CurrentUser.getInt("LEVEL")==DIRECTOR) {
+        if (Orders.getInt("STATE") < Order.ORDER_PACK || CurrentUser.getInt("LEVEL") == DIRECTOR) {
             jTextField33.setEditable(true);
             jTextField33.setBorder(BorderFactory.createEtchedBorder());
             jTextField33.setBackground(Color.WHITE);
             jTextField33.setForeground(Color.black);
-            
+
             jTextField37.setEditable(true);
             jTextField37.setBorder(BorderFactory.createEtchedBorder());
             jTextField37.setBackground(Color.WHITE);
             jTextField37.setForeground(Color.black);
-        
+
             jTextField41.setEditable(true);
             jTextField41.setBorder(BorderFactory.createEtchedBorder());
             jTextField41.setBackground(Color.WHITE);
             jTextField41.setForeground(Color.black);
-        
+
             jLabel79.setVisible(false);
             jComboBoxPaymentTypesOrderDetail.setVisible(true);
         }
-        
+
         jTextArea8.setEditable(true);
         jTextArea8.setBackground(Color.WHITE);
-        jTextArea8.setForeground(Color.BLACK);   
+        jTextArea8.setForeground(Color.BLACK);
         jTextArea8.setBorder(BorderFactory.createEtchedBorder());
         jTextArea9.setEditable(true);
         jTextArea9.setBackground(Color.WHITE);
-        jTextArea9.setForeground(Color.BLACK);       
+        jTextArea9.setForeground(Color.BLACK);
         jTextArea9.setBorder(BorderFactory.createEtchedBorder());
-        
+
     }//GEN-LAST:event_jButton27MousePressed
 
     private void jButtonSaveOrderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonSaveOrderMousePressed
-        System.out.println("Запрос на сохранение заказа: jComboBox2.getSelectedIndex()="+jComboBoxPaymentTypesOrderDetail.getSelectedIndex());
+        System.out.println("Запрос на сохранение заказа: jComboBox2.getSelectedIndex()=" + jComboBoxPaymentTypesOrderDetail.getSelectedIndex());
         try {
             int type_pay = jComboBoxPaymentTypesOrderDetail.getSelectedIndex();
             String name = jTextArea12.getText();
-            Object[][] obj = db.SelectSQL("SELECT id FROM user WHERE name=?",new Object[]{name});
+            Object[][] obj = db.SelectSQL("SELECT id FROM user WHERE name=?", new Object[]{name});
             Users.set(obj);
             Object creator = Users.get("ID");
-            String creator_id = Integer.toString((int)creator);
+            String creator_id = Integer.toString((int) creator);
             String comm = jTextArea8.getText();
             String comm_packing = jTextArea9.getText();
             double prepay = Double.parseDouble((jTextField33.getText()).replaceAll(" ", "").replace(',', '.'));
             double delivery_cost = Double.parseDouble((jTextField41.getText()).replaceAll(" ", "").replace(',', '.'));
             double discount = Double.parseDouble((jTextField37.getText()).replaceAll(" ", "").replace(',', '.'));
-            if (db.UpdateSQL("UPDATE orders SET type_pay=?,prepay=?,discount=?,comm_packing=?,comm=?,delivery_cost=?,USER_CREATOR_ID=? WHERE id=?",new Object[]{type_pay,prepay,discount,comm_packing,comm,delivery_cost,creator_id,Orders.getInt("ID")})) {
-                
-                if (DeliveryOrder.getLength()==1) {
+            if (db.UpdateSQL("UPDATE orders SET type_pay=?,prepay=?,discount=?,comm_packing=?,comm=?,delivery_cost=?,USER_CREATOR_ID=? WHERE id=?", new Object[]{type_pay, prepay, discount, comm_packing, comm, delivery_cost, creator_id, Orders.getInt("ID")})) {
+
+                if (DeliveryOrder.getLength() == 1) {
                     double Summ = 0;
-                    for (int i=0;i<SubOrders.getLength();i++) {
-                        Summ+=SubOrders.getDouble(i,"COST")*SubOrders.getInt(i,"AMOUNT");
+                    for (int i = 0; i < SubOrders.getLength(); i++) {
+                        Summ += SubOrders.getDouble(i, "COST") * SubOrders.getInt(i, "AMOUNT");
                     }
                     double newDebt = delivery_cost + Summ - prepay;
-                    db.UpdateSQL("UPDATE delivery SET debt=? WHERE id_orders=? LIMIT 1",new Object[]{newDebt,Orders.getInt("ID")});
+                    db.UpdateSQL("UPDATE delivery SET debt=? WHERE id_orders=? LIMIT 1", new Object[]{newDebt, Orders.getInt("ID")});
                 }
-                
+
                 GetOrders();
                 MakeTableOfOrders();
             } else {
@@ -10598,7 +10615,7 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton32MousePressed
 
     private void jButton30MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton30MousePressed
-        if (db.UpdateSQL("INSERT INTO factory (name,discount) VALUES('_НОВАЯ_',0)",null)) {
+        if (db.UpdateSQL("INSERT INTO factory (name,discount) VALUES('_НОВАЯ_',0)", null)) {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
             MakeTreeOfCandies();
         } else {
@@ -10611,22 +10628,22 @@ public class MainForm extends javax.swing.JApplet {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
             MakeTreeOfCandies();
             int[] mas = new int[Candies.getLength()];
-            for (int i=0;i<Candies.getLength();i++) {
+            for (int i = 0; i < Candies.getLength(); i++) {
                 mas[i] = Candies.getInt(i, "ID");
             }
             Arrays.sort(mas);
-            int max = mas[mas.length-1];
-            for (int i=0;i<jTree1.getRowCount();i++) {
-                Object[] obj = (Object[])((DefaultMutableTreeNode)jTree1.getPathForRow(i).getLastPathComponent()).getUserObject();
-                if (Candies.getInt((Integer)obj[1],"ID")==max) {
+            int max = mas[mas.length - 1];
+            for (int i = 0; i < jTree1.getRowCount(); i++) {
+                Object[] obj = (Object[]) ((DefaultMutableTreeNode) jTree1.getPathForRow(i).getLastPathComponent()).getUserObject();
+                if (Candies.getInt((Integer) obj[1], "ID") == max) {
                     jTree1.setSelectionRow(i);
                     Rectangle r = jTree1.getRowBounds(jTree1.getMinSelectionRow());
                     Point p = new Point(r.x, r.y);
-                    ((JViewport)(jTree1.getParent())).setViewPosition(p);
+                    ((JViewport) (jTree1.getParent())).setViewPosition(p);
                     SelectNodeOfTreeCandies();
                     break;
                 }
-            }            
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
@@ -10637,34 +10654,34 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jTree1MousePressed
 
     private void jButton34MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton34MousePressed
-        DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode)jTree6.getLastSelectedPathComponent();
-        if (SelectedNode!=null) {
+        DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree6.getLastSelectedPathComponent();
+        if (SelectedNode != null) {
             int type;
-            if (SelectedNode.getLevel()==1) {
-                type = (Integer)(((Object[])SelectedNode.getUserObject())[1]);
+            if (SelectedNode.getLevel() == 1) {
+                type = (Integer) (((Object[]) SelectedNode.getUserObject())[1]);
             } else {
-                type = Packings.getInt((Integer)(((Object[])SelectedNode.getUserObject())[1]),"TYPE");
+                type = Packings.getInt((Integer) (((Object[]) SelectedNode.getUserObject())[1]), "TYPE");
             }
-            if (db.UpdateSQL("INSERT INTO packing(name,type,number,cost,weight,capacity,storage,reserved,comm,filename,marked) VALUES ('_НОВЫЙ_',?,0,0,0,0,0,0,'','',0)",new Object[]{type})) {
-                GetPackings();  
+            if (db.UpdateSQL("INSERT INTO packing(name,type,number,cost,weight,capacity,storage,reserved,comm,filename,marked) VALUES ('_НОВЫЙ_',?,0,0,0,0,0,0,'','',0)", new Object[]{type})) {
+                GetPackings();
                 MakeTreeOfPackings();
                 int[] mas = new int[Packings.getLength()];
-                for (int i=0;i<Packings.getLength();i++) {
+                for (int i = 0; i < Packings.getLength(); i++) {
                     mas[i] = Packings.getInt(i, "ID");
                 }
                 Arrays.sort(mas);
-                int max = mas[mas.length-1];
-                for (int i=0;i<jTree6.getRowCount();i++) {
-                    Object[] obj = (Object[])((DefaultMutableTreeNode)jTree6.getPathForRow(i).getLastPathComponent()).getUserObject();
-                    if ((obj.length>2) && (Packings.getInt((Integer)obj[1],"ID")==max)) {
+                int max = mas[mas.length - 1];
+                for (int i = 0; i < jTree6.getRowCount(); i++) {
+                    Object[] obj = (Object[]) ((DefaultMutableTreeNode) jTree6.getPathForRow(i).getLastPathComponent()).getUserObject();
+                    if ((obj.length > 2) && (Packings.getInt((Integer) obj[1], "ID") == max)) {
                         jTree6.setSelectionRow(i);
                         Rectangle r = jTree6.getRowBounds(jTree6.getMinSelectionRow());
                         Point p = new Point(r.x, r.y);
-                        ((JViewport)(jTree6.getParent())).setViewPosition(p);
+                        ((JViewport) (jTree6.getParent())).setViewPosition(p);
                         SelectNodeOfTreePackings();
                         break;
                     }
-                }                  
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
@@ -10683,50 +10700,50 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton35MousePressed
 
     private void jButton36MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton36MousePressed
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)jTree3.getLastSelectedPathComponent();
-        if (selectedNode==null) {
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree3.getLastSelectedPathComponent();
+        if (selectedNode == null) {
             return;
         }
         int folderID;
-        if (selectedNode.getLevel()==1) { //folder
-            Object[] obj = (Object[])selectedNode.getUserObject();
-            folderID = (int)obj[0];    
-        } else if (selectedNode.getLevel()==2) { //client
-            Object[] obj = (Object[])((DefaultMutableTreeNode)selectedNode.getParent()).getUserObject();
-            folderID = (int)obj[0];
+        if (selectedNode.getLevel() == 1) { //folder
+            Object[] obj = (Object[]) selectedNode.getUserObject();
+            folderID = (int) obj[0];
+        } else if (selectedNode.getLevel() == 2) { //client
+            Object[] obj = (Object[]) ((DefaultMutableTreeNode) selectedNode.getParent()).getUserObject();
+            folderID = (int) obj[0];
         } else { //root
             return;
-        }      
-                
-        int date_time = ((Long)(Calendar.getInstance().getTimeInMillis()/1000)).intValue();
+        }
+
+        int date_time = ((Long) (Calendar.getInstance().getTimeInMillis() / 1000)).intValue();
         if (db.UpdateSQL("INSERT INTO client(date_time,official_name,name,contact1,"
                 + "contact2,contact3,phone1,phone2,phone3,email1,email2,email3,"
                 + "site,address,comm,user_creator_id) VALUES(?,'_НОВЫЙ_',"
                 + "'_НОВЫЙ_','','','','','','','','','','','','',?)",
-                new Object[]{date_time,CurrentUser.getInt("ID")})) {
-            Object[][] ob = db.SelectSQL("SELECT max(id) FROM client",new Object[]{});
-            int newClientID = (int)ob[0][0]; 
-            db.UpdateSQL("INSERT INTO client_folder(id_client,id_folder) VALUES(?,?)",new Object[]{newClientID,folderID});
+                new Object[]{date_time, CurrentUser.getInt("ID")})) {
+            Object[][] ob = db.SelectSQL("SELECT max(id) FROM client", new Object[]{});
+            int newClientID = (int) ob[0][0];
+            db.UpdateSQL("INSERT INTO client_folder(id_client,id_folder) VALUES(?,?)", new Object[]{newClientID, folderID});
             GetFolders();
             GetClients(jToggleButton5.isSelected());
             MakeTreeOfClients();
             newClientMode = true;
 
-            for (int i=0;i<jTree3.getRowCount();i++) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)jTree3.getPathForRow(i).getLastPathComponent();
-                if (node.getLevel()==1) {
+            for (int i = 0; i < jTree3.getRowCount(); i++) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTree3.getPathForRow(i).getLastPathComponent();
+                if (node.getLevel() == 1) {
                     continue;
                 }
-                Object[] obj = (Object[])node.getUserObject();
-                if (Clients.getInt((Integer)obj[1],"ID")==newClientID) {
+                Object[] obj = (Object[]) node.getUserObject();
+                if (Clients.getInt((Integer) obj[1], "ID") == newClientID) {
                     jTree3.setSelectionRow(i);
                     Rectangle r = jTree3.getRowBounds(jTree3.getMinSelectionRow());
                     Point p = new Point(r.x, r.y);
-                    ((JViewport)(jTree3.getParent())).setViewPosition(p);
+                    ((JViewport) (jTree3.getParent())).setViewPosition(p);
                     SelectNodeOfTreeClients();
                     break;
                 }
-            }              
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
@@ -10737,16 +10754,16 @@ public class MainForm extends javax.swing.JApplet {
         if (SelectedNode == null) {
             return;
         }
-        if (SelectedNode.getLevel()==2) { //если выбран клиент
-            int clientID = Clients.getInt((int)((Object[])SelectedNode.getUserObject())[1],"ID");
-            int folderID = (int)((Object[])((DefaultMutableTreeNode)SelectedNode.getParent()).getUserObject())[0];
-            
+        if (SelectedNode.getLevel() == 2) { //если выбран клиент
+            int clientID = Clients.getInt((int) ((Object[]) SelectedNode.getUserObject())[1], "ID");
+            int folderID = (int) ((Object[]) ((DefaultMutableTreeNode) SelectedNode.getParent()).getUserObject())[0];
+
             Object[][] count_obj = db.SelectSQL("SELECT count(*) FROM client_folder WHERE id_client=?", new Object[]{clientID});
-            int count = ((Long)count_obj[0][0]).intValue();
-            
-            if (count>1) {
+            int count = ((Long) count_obj[0][0]).intValue();
+
+            if (count > 1) {
                 if (JOptionPane.showConfirmDialog(null, "Клиент будет удален из ТЕКУЩЕЙ папки,\nно останется в других. Продолжить?", "Удаление клиента", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (db.UpdateSQL("DELETE FROM client_folder WHERE id_client=? AND id_folder=?",new Object[]{clientID, folderID})) {
+                    if (db.UpdateSQL("DELETE FROM client_folder WHERE id_client=? AND id_folder=?", new Object[]{clientID, folderID})) {
                         GetFolders();
                         GetClients(jToggleButton5.isSelected());
                         MakeTreeOfClients();
@@ -10757,7 +10774,7 @@ public class MainForm extends javax.swing.JApplet {
             } else { //if count==1
                 if (JOptionPane.showConfirmDialog(null, "Клиент будет удален, данное действие\nневозможно будет отменить. Продолжить?", "Удаление клиента", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (db.UpdateSQL("DELETE FROM client WHERE id=?", new Object[]{clientID})) {
-                        db.UpdateSQL("DELETE FROM client_folder WHERE id_client=? AND id_folder=?",new Object[]{clientID, folderID});
+                        db.UpdateSQL("DELETE FROM client_folder WHERE id_client=? AND id_folder=?", new Object[]{clientID, folderID});
                         GetFolders();
                         GetClients(jToggleButton5.isSelected());
                         MakeTreeOfClients();
@@ -10766,8 +10783,8 @@ public class MainForm extends javax.swing.JApplet {
                     }
                 }
             }
-        } else if (SelectedNode.getLevel()==1) { //если выбрана папка
-            int folderID = (int)((Object[])SelectedNode.getUserObject())[0];
+        } else if (SelectedNode.getLevel() == 1) { //если выбрана папка
+            int folderID = (int) ((Object[]) SelectedNode.getUserObject())[0];
             if (JOptionPane.showConfirmDialog(null, "Папка будет удалена. Продолжить?", "Удаление папки", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 if (db.UpdateSQL("DELETE FROM folder WHERE id=?", new Object[]{folderID})) {
                     db.UpdateSQL("DELETE FROM client_folder WHERE id_folder=?", new Object[]{folderID});
@@ -10782,26 +10799,26 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton37MousePressed
 
     private void jButton38MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton38MousePressed
-        if (db.UpdateSQL("INSERT INTO gift(name,cost_packing) VALUES('_НОВЫЙ_',0)",null)) {
+        if (db.UpdateSQL("INSERT INTO gift(name,cost_packing) VALUES('_НОВЫЙ_',0)", null)) {
             GetGifts();
             MakeTreeOfGifts();
             int[] mas = new int[Gifts.getLength()];
-            for (int i=0;i<Gifts.getLength();i++) {
+            for (int i = 0; i < Gifts.getLength(); i++) {
                 mas[i] = Gifts.getInt(i, "ID");
             }
             Arrays.sort(mas);
-            int max = mas[mas.length-1];
-            for (int i=0;i<jTree4.getRowCount();i++) {
-                Object[] obj = (Object[])((DefaultMutableTreeNode)jTree4.getPathForRow(i).getLastPathComponent()).getUserObject();
-                if (Gifts.getInt((Integer)obj[1],"ID")==max) {
+            int max = mas[mas.length - 1];
+            for (int i = 0; i < jTree4.getRowCount(); i++) {
+                Object[] obj = (Object[]) ((DefaultMutableTreeNode) jTree4.getPathForRow(i).getLastPathComponent()).getUserObject();
+                if (Gifts.getInt((Integer) obj[1], "ID") == max) {
                     jTree4.setSelectionRow(i);
                     Rectangle r = jTree4.getRowBounds(jTree4.getMinSelectionRow());
                     Point p = new Point(r.x, r.y);
-                    ((JViewport)(jTree4.getParent())).setViewPosition(p);
+                    ((JViewport) (jTree4.getParent())).setViewPosition(p);
                     SelectNodeOfTreeGifts();
                     break;
                 }
-            }  
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
@@ -10828,7 +10845,7 @@ public class MainForm extends javax.swing.JApplet {
         jTextField32.setEditable(true);
         jTextField32.setBackground(Color.WHITE);
         jTextField32.setForeground(Color.BLACK);
-        
+
         jButton33.setVisible(false);
         jButton40.setVisible(true);
         jButton41.setVisible(true);
@@ -10841,19 +10858,19 @@ public class MainForm extends javax.swing.JApplet {
         if (db.UpdateSQL("UPDATE gift SET name=?,cost_packing=? WHERE id=?", new Object[]{jTextField21.getText(), cost_packing, Gifts.getInt("ID")})) {
             GetGifts();
             MakeTreeOfGifts();
-            
-            DefaultMutableTreeNode root = (DefaultMutableTreeNode)jTree4.getModel().getRoot();
-            for (int i = 0;i<root.getChildCount();i++) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)root.getChildAt(i);
-                Object[] obj = (Object[])node.getUserObject();
-                int packingID = Gifts.getInt((int)obj[1],"ID");
-                if (packingID==id) {
+
+            DefaultMutableTreeNode root = (DefaultMutableTreeNode) jTree4.getModel().getRoot();
+            for (int i = 0; i < root.getChildCount(); i++) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) root.getChildAt(i);
+                Object[] obj = (Object[]) node.getUserObject();
+                int packingID = Gifts.getInt((int) obj[1], "ID");
+                if (packingID == id) {
                     jTree4.setSelectionPath(new TreePath(node.getPath()));
                     SelectNodeOfTreeGifts();
                     break;
                 }
             }
-            
+
         } else {
             JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
         }
@@ -10865,34 +10882,34 @@ public class MainForm extends javax.swing.JApplet {
 
     private void jButton42MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton42MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree2.getLastSelectedPathComponent();
-        if (SelectedNode!=null) {
+        if (SelectedNode != null) {
             Object[] obj = (Object[]) SelectedNode.getUserObject();
             int level;
-            if (SelectedNode.getLevel()==1) {
-                level = (Integer)obj[1];
+            if (SelectedNode.getLevel() == 1) {
+                level = (Integer) obj[1];
             } else {
-                level = Users.getInt((Integer)obj[1],"LEVEL");
+                level = Users.getInt((Integer) obj[1], "LEVEL");
             }
-            if (db.UpdateSQL("INSERT INTO user(name,login,pass,level,can_enter,finance_pass) VALUES('_НОВЫЙ_',?,'',?,0,'')", new Object[]{"новый"+Math.round(Math.random()*100000),level})) {
+            if (db.UpdateSQL("INSERT INTO user(name,login,pass,level,can_enter,finance_pass) VALUES('_НОВЫЙ_',?,'',?,0,'')", new Object[]{"новый" + Math.round(Math.random() * 100000), level})) {
                 GetUsers();
                 MakeTreeOfUsers();
                 int[] mas = new int[Users.getLength()];
-                for (int i=0;i<Users.getLength();i++) {
+                for (int i = 0; i < Users.getLength(); i++) {
                     mas[i] = Users.getInt(i, "ID");
                 }
                 Arrays.sort(mas);
-                int max = mas[mas.length-1];
-                for (int i=0;i<jTree2.getRowCount();i++) {
-                    Object[] objobj = (Object[])((DefaultMutableTreeNode)jTree2.getPathForRow(i).getLastPathComponent()).getUserObject();
-                    if (Users.getInt((Integer)objobj[1],"ID")==max) {
+                int max = mas[mas.length - 1];
+                for (int i = 0; i < jTree2.getRowCount(); i++) {
+                    Object[] objobj = (Object[]) ((DefaultMutableTreeNode) jTree2.getPathForRow(i).getLastPathComponent()).getUserObject();
+                    if (Users.getInt((Integer) objobj[1], "ID") == max) {
                         jTree2.setSelectionRow(i);
                         Rectangle r = jTree2.getRowBounds(jTree2.getMinSelectionRow());
                         Point p = new Point(r.x, r.y);
-                        ((JViewport)(jTree2.getParent())).setViewPosition(p);
+                        ((JViewport) (jTree2.getParent())).setViewPosition(p);
                         SelectNodeOfTreeUsers();
                         break;
                     }
-                }                  
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
@@ -10911,22 +10928,22 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton43MousePressed
 
     private void jTree10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree10MousePressed
-        SelectNodeOfTreeInStorage(jTree10,Candies,jTable6,true);
-        MakeTableOfStorageCandyReserv();        
+        SelectNodeOfTreeInStorage(jTree10, Candies, jTable6, true);
+        MakeTableOfStorageCandyReserv();
     }//GEN-LAST:event_jTree10MousePressed
 
     private void jTree10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree10KeyReleased
-        SelectNodeOfTreeInStorage(jTree10,Candies,jTable6,true);
-        MakeTableOfStorageCandyReserv();        
+        SelectNodeOfTreeInStorage(jTree10, Candies, jTable6, true);
+        MakeTableOfStorageCandyReserv();
     }//GEN-LAST:event_jTree10KeyReleased
 
     private void jTree11MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree11MousePressed
-        SelectNodeOfTreeInStorage(jTree11,FilteredPackings,jTable8,false);
+        SelectNodeOfTreeInStorage(jTree11, FilteredPackings, jTable8, false);
         MakeTableOfStoragePackingReserv();
     }//GEN-LAST:event_jTree11MousePressed
 
     private void jTree11KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree11KeyReleased
-        SelectNodeOfTreeInStorage(jTree11,FilteredPackings,jTable8,false);        
+        SelectNodeOfTreeInStorage(jTree11, FilteredPackings, jTable8, false);
         MakeTableOfStoragePackingReserv();
     }//GEN-LAST:event_jTree11KeyReleased
 
@@ -10960,13 +10977,13 @@ public class MainForm extends javax.swing.JApplet {
 
     private void jButton52MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton52MousePressed
         JTree tree;
-        if (jTabbedPane2.getSelectedIndex()==0) {
+        if (jTabbedPane2.getSelectedIndex() == 0) {
             tree = jTree10;
         } else {
-            tree = jTree11;                
-        }        
-        DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        if (SelectedNode!=null) {
+            tree = jTree11;
+        }
+        DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        if (SelectedNode != null) {
             revenueExpensesDialog.initDialog(true);
         }
     }//GEN-LAST:event_jButton52MousePressed
@@ -10977,13 +10994,13 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton55MousePressed
 
     private void jButton56MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton56MousePressed
-        JTextField[] mas = new JTextField[]{jTextField23,jTextField40,jTextField42,jTextField44};
+        JTextField[] mas = new JTextField[]{jTextField23, jTextField40, jTextField42, jTextField44};
         for (JTextField ma : mas) {
             ma.setEditable(true);
             ma.setBorder(BorderFactory.createEtchedBorder());
             ma.setBackground(Color.WHITE);
             ma.setForeground(Color.BLACK);
-        } 
+        }
         jButton56.setVisible(false);
         jButton57.setVisible(true);
         jButton58.setVisible(true);
@@ -10993,7 +11010,7 @@ public class MainForm extends javax.swing.JApplet {
         try {
             double stick_cost = Double.parseDouble(jTextField23.getText().replaceAll(" ", "").replace(',', '.'));
             double cost_box_for_1_gift = Double.parseDouble(jTextField40.getText().replaceAll(" ", "").replace(',', '.'));
-            if (db.UpdateSQL("UPDATE constants SET stick_cost=?, cost_box_for_1_gift=?, ftpaddress=?, ftppass=?", new Object[]{stick_cost,cost_box_for_1_gift,jTextField42.getText(),jTextField44.getText()})) {
+            if (db.UpdateSQL("UPDATE constants SET stick_cost=?, cost_box_for_1_gift=?, ftpaddress=?, ftppass=?", new Object[]{stick_cost, cost_box_for_1_gift, jTextField42.getText(), jTextField44.getText()})) {
                 GetConstants();
                 MakePanelOfConstants();
             } else {
@@ -11011,48 +11028,48 @@ public class MainForm extends javax.swing.JApplet {
     private void jButton59MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton59MousePressed
         DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
         String s;
-        if (SelectedNode.getLevel()==0) {
+        if (SelectedNode.getLevel() == 0) {
             s = "<html><center>Отчет по фабрикам и конфетам<br><br><table border='1'>";
             s = s + "<tr>";
-            for (int j=0;j<jTable2.getColumnCount();j++) {
-                s = s + "<td width='60' align='center'>" + jTable2.getModel().getColumnName(j)+"</td>";    
+            for (int j = 0; j < jTable2.getColumnCount(); j++) {
+                s = s + "<td width='60' align='center'>" + jTable2.getModel().getColumnName(j) + "</td>";
             }
             s = s + "</tr>";
-            for (int i=0;i<jTable2.getRowCount();i++) {
-                s = s+"<tr>";
-                for (int j=0;j<jTable2.getColumnCount();j++) {
-                    if (jTable2.getValueAt(i, j)==null) {
-                        s = s+"<td></td>";    
+            for (int i = 0; i < jTable2.getRowCount(); i++) {
+                s = s + "<tr>";
+                for (int j = 0; j < jTable2.getColumnCount(); j++) {
+                    if (jTable2.getValueAt(i, j) == null) {
+                        s = s + "<td></td>";
                     } else {
-                        s = s+"<td>"+jTable2.getValueAt(i, j)+"</td>";    
+                        s = s + "<td>" + jTable2.getValueAt(i, j) + "</td>";
                     }
                 }
-                s = s+"</tr>";
+                s = s + "</tr>";
             }
             s = s + "</table><br></center></html>";
         } else {
-            s = "<html><center>Отчет по конфетам фабрики "+Candies.getString("FACTORY_NAME") +"<br><br><table border='1'>";
+            s = "<html><center>Отчет по конфетам фабрики " + Candies.getString("FACTORY_NAME") + "<br><br><table border='1'>";
             s = s + "<tr>";
-            for (int j=0;j<jTable2.getColumnCount();j++) {
-                s = s + "<td width='60' align='center'>" + jTable2.getModel().getColumnName(j)+"</td>";    
+            for (int j = 0; j < jTable2.getColumnCount(); j++) {
+                s = s + "<td width='60' align='center'>" + jTable2.getModel().getColumnName(j) + "</td>";
             }
             s = s + "</tr>";
-            for (int i=0;i<jTable2.getRowCount();i++) {
-                s = s+"<tr>";
-                for (int j=0;j<jTable2.getColumnCount();j++) {
-                    if (jTable2.getValueAt(i, j)==null) {
-                        s = s+"<td></td>";    
+            for (int i = 0; i < jTable2.getRowCount(); i++) {
+                s = s + "<tr>";
+                for (int j = 0; j < jTable2.getColumnCount(); j++) {
+                    if (jTable2.getValueAt(i, j) == null) {
+                        s = s + "<td></td>";
                     } else {
-                        s = s+"<td>"+jTable2.getValueAt(i, j)+"</td>";    
+                        s = s + "<td>" + jTable2.getValueAt(i, j) + "</td>";
                     }
                 }
-                s = s+"</tr>";
+                s = s + "</tr>";
             }
             s = s + "</table><br></center></html>";
         }
         JEditorPane ep = new JEditorPane();
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
+        ep.setFont(new Font("Arial", Font.PLAIN, 8));
         ep.setEditorKit(new HTMLEditorKit());
         ep.setText(s);
         try {
@@ -11060,7 +11077,7 @@ public class MainForm extends javax.swing.JApplet {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-     
+
     }//GEN-LAST:event_jButton59MousePressed
 
     private void jButton60MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton60MousePressed
@@ -11075,9 +11092,9 @@ public class MainForm extends javax.swing.JApplet {
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.add(Calendar.DAY_OF_MONTH, 1);
         int End = ((Long) (cal.getTimeInMillis() / 1000)).intValue();
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        String s = "<html><center>Отчет по работе сотрудника<br>" + Users.getString("NAME") + "<br>" +sdf.format(new Date(Start*1000L))+" - "+sdf.format(new Date(End*1000L))+"<br><br>паковка<br><br><table border='1'>";
+        String s = "<html><center>Отчет по работе сотрудника<br>" + Users.getString("NAME") + "<br>" + sdf.format(new Date(Start * 1000L)) + " - " + sdf.format(new Date(End * 1000L)) + "<br><br>паковка<br><br><table border='1'>";
         s = s + "<tr>";
         for (int j = 0; j < jTable7.getColumnCount(); j++) {
             s = s + "<td width='80' align='center'>" + jTable7.getModel().getColumnName(j) + "</td>";
@@ -11112,10 +11129,10 @@ public class MainForm extends javax.swing.JApplet {
             s = s + "</tr>";
         }
         s = s + "</table><br></center></html>";
-        
+
         JEditorPane ep = new JEditorPane();
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
+        ep.setFont(new Font("Arial", Font.PLAIN, 8));
         ep.setEditorKit(new HTMLEditorKit());
         ep.setText(s);
         try {
@@ -11149,10 +11166,10 @@ public class MainForm extends javax.swing.JApplet {
             s = s + "</tr>";
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        s = s + "</table><br><br></center>Дата: "+sdf.format(Calendar.getInstance().getTime())+"<br>Пользователь: "+CurrentUser.getString("NAME")+"<br></html>";
+        s = s + "</table><br><br></center>Дата: " + sdf.format(Calendar.getInstance().getTime()) + "<br>Пользователь: " + CurrentUser.getString("NAME") + "<br></html>";
         JEditorPane ep = new JEditorPane();
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
+        ep.setFont(new Font("Arial", Font.PLAIN, 8));
         ep.setEditorKit(new HTMLEditorKit());
         ep.setText(s);
         try {
@@ -11173,7 +11190,7 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jToggleButton2StateChanged
 
     private void jButton63MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton63MousePressed
-        if (db.UpdateSQL("INSERT INTO gift(name,cost_packing) VALUES(?,?)", new Object[]{Gifts.getString("NAME")+"__2",Gifts.getDouble("COST_PACKING")})) {
+        if (db.UpdateSQL("INSERT INTO gift(name,cost_packing) VALUES(?,?)", new Object[]{Gifts.getString("NAME") + "__2", Gifts.getDouble("COST_PACKING")})) {
             if (db.UpdateSQL("INSERT INTO gift_candy(id_gift,id_candy,amount) SELECT (SELECT max(id) FROM gift),id_candy,amount FROM gift_candy WHERE id_gift=?", new Object[]{Gifts.getInt("ID")})) {
                 GetGifts();
                 MakeTreeOfGifts();
@@ -11186,28 +11203,28 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton63MousePressed
 
     private void jButton64MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton64MousePressed
-        String s = "<html><center>Состав набора '"+Gifts.getString("NAME") +"'<br><br><table border='1'>";
+        String s = "<html><center>Состав набора '" + Gifts.getString("NAME") + "'<br><br><table border='1'>";
         s = s + "<tr>";
-        for (int j=0;j<jTable1.getColumnCount();j++) {
-            s = s + "<td width='60' align='center'>" + jTable1.getModel().getColumnName(j)+"</td>";    
+        for (int j = 0; j < jTable1.getColumnCount(); j++) {
+            s = s + "<td width='60' align='center'>" + jTable1.getModel().getColumnName(j) + "</td>";
         }
         s = s + "</tr>";
-        for (int i=0;i<jTable1.getRowCount();i++) {
-            s = s+"<tr>";
-            for (int j=0;j<jTable1.getColumnCount();j++) {
-                if (jTable1.getValueAt(i, j)==null) {
-                    s = s+"<td></td>";    
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            s = s + "<tr>";
+            for (int j = 0; j < jTable1.getColumnCount(); j++) {
+                if (jTable1.getValueAt(i, j) == null) {
+                    s = s + "<td></td>";
                 } else {
-                    s = s+"<td>"+jTable1.getValueAt(i, j)+"</td>";    
+                    s = s + "<td>" + jTable1.getValueAt(i, j) + "</td>";
                 }
             }
-            s = s+"</tr>";
+            s = s + "</tr>";
         }
         s = s + "</table><br></center></html>";
 
         JEditorPane ep = new JEditorPane();
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
+        ep.setFont(new Font("Arial", Font.PLAIN, 8));
         ep.setEditorKit(new HTMLEditorKit());
         ep.setText(s);
         try {
@@ -11284,10 +11301,10 @@ public class MainForm extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton70MousePressed
 
     private void jButton71MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton71MousePressed
-        if (jTabbedPane2.getSelectedIndex()==0) {
+        if (jTabbedPane2.getSelectedIndex() == 0) {
             GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
             MakeTreeOfCandiesInStorage();
-        } else if (jTabbedPane2.getSelectedIndex()==1) {
+        } else if (jTabbedPane2.getSelectedIndex() == 1) {
             GetFilteredPackings();
             MakeTreeOfPackingsInStorage();
         }
@@ -11295,13 +11312,13 @@ public class MainForm extends javax.swing.JApplet {
 
     private void jButton72MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton72MousePressed
         JTree tree;
-        if (jTabbedPane2.getSelectedIndex()==0) {
+        if (jTabbedPane2.getSelectedIndex() == 0) {
             tree = jTree10;
         } else {
-            tree = jTree11;                
-        }        
-        DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        if (SelectedNode!=null) {
+            tree = jTree11;
+        }
+        DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        if (SelectedNode != null) {
             revenueExpensesDialog.initDialog(false);
         }
     }//GEN-LAST:event_jButton72MousePressed
@@ -11327,73 +11344,73 @@ private void jButton78MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_jButton78MousePressed
 
 private void jButton80MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton80MousePressed
-        String s = "<html><center>Отчет по доставке<br><br><table border='1'>";
-        s = s + "<tr>";
-        
-            for (int i=0;i<jTable12.getColumnCount();i++) {
-                s = s+"<td width='60px'>"+jTable12.getColumnName(i)+"</td>";
-            }
-            s = s+"</tr>";
-            for (int j=0;j<jTable12.getRowCount();j++) {        
-                s = s+"<tr>";
-                for (int i=0;i<jTable12.getColumnCount();i++) {
-                    if (i==0) {
-                        int val = (Integer)jTable12.getValueAt(j, i);
-                        s = s+"<td>"+(val==Order.ORDER_PREPARE ? "подготовка" : 
-                                (val==Order.ORDER_PAY ? "на оплате" : 
-                                (val==Order.ORDER_PACK ? "на паковке" : 
-                                (val==Order.ORDER_STORAGE ? "на складе" : 
-                                (val==Order.ORDER_SEND ? "отправлено" : "закрыто")))))+"</td>";
-                    } else {
-                        String ss = "" + jTable12.getValueAt(j, i);
-                        s = s+"<td>"
-                                +((ss==null || ss.equals("") || ss.equals(" "))
-                               ? "-" : ss)+"</td>";
-                    }
-                }
-                s = s+"</tr>";
-            }
-            s = s+"</table><br><br></center></html>";        
+    String s = "<html><center>Отчет по доставке<br><br><table border='1'>";
+    s = s + "<tr>";
 
-        JEditorPane ep = new JEditorPane();
-        ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
-        ep.setEditorKit(new HTMLEditorKit());
-        ep.setText(s);
-        try {
-            ep.print();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
+    for (int i = 0; i < jTable12.getColumnCount(); i++) {
+        s = s + "<td width='60px'>" + jTable12.getColumnName(i) + "</td>";
+    }
+    s = s + "</tr>";
+    for (int j = 0; j < jTable12.getRowCount(); j++) {
+        s = s + "<tr>";
+        for (int i = 0; i < jTable12.getColumnCount(); i++) {
+            if (i == 0) {
+                int val = (Integer) jTable12.getValueAt(j, i);
+                s = s + "<td>" + (val == Order.ORDER_PREPARE ? "подготовка"
+                        : (val == Order.ORDER_PAY ? "на оплате"
+                                : (val == Order.ORDER_PACK ? "на паковке"
+                                        : (val == Order.ORDER_STORAGE ? "на складе"
+                                                : (val == Order.ORDER_SEND ? "отправлено" : "закрыто"))))) + "</td>";
+            } else {
+                String ss = "" + jTable12.getValueAt(j, i);
+                s = s + "<td>"
+                        + ((ss == null || ss.equals("") || ss.equals(" "))
+                        ? "-" : ss) + "</td>";
+            }
         }
+        s = s + "</tr>";
+    }
+    s = s + "</table><br><br></center></html>";
+
+    JEditorPane ep = new JEditorPane();
+    ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+    ep.setFont(new Font("Arial", Font.PLAIN, 8));
+    ep.setEditorKit(new HTMLEditorKit());
+    ep.setText(s);
+    try {
+        ep.print();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
+    }
 }//GEN-LAST:event_jButton80MousePressed
 
 private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton81MousePressed
-        GetDelivery();
-        MakeTableOfDelivery();
+    GetDelivery();
+    MakeTableOfDelivery();
 }//GEN-LAST:event_jButton81MousePressed
 
     private void jButton82MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton82MousePressed
-        if (jTable12.getSelectedRowCount()>1) {
+        if (jTable12.getSelectedRowCount() > 1) {
             JOptionPane.showMessageDialog(null, "Необходимо выбрать только одну строку");
             return;
         }
         int SelectedRow = jTable12.getSelectedRow();
-        if (SelectedRow!=-1) {
-            switch (Delivery.getInt(SelectedRow,"STATE")) {
+        if (SelectedRow != -1) {
+            switch (Delivery.getInt(SelectedRow, "STATE")) {
                 case Order.ORDER_STORAGE:
                     showWindowDeliveryCost();
                     break;
                 case Order.ORDER_SEND:
-                    int id = Delivery.getInt(SelectedRow,"ID");
-                    int id_orders = Delivery.getInt(SelectedRow,"ID_ORDERS");
-                    int date = (int)(System.currentTimeMillis()/1000);
+                    int id = Delivery.getInt(SelectedRow, "ID");
+                    int id_orders = Delivery.getInt(SelectedRow, "ID_ORDERS");
+                    int date = (int) (System.currentTimeMillis() / 1000);
                     boolean result = db.DoSQL("START TRANSACTION");
                     if (result) {
-                        result = db.UpdateSQL("UPDATE delivery SET state=?,date_send=? WHERE id=?",new Object[]{Order.ORDER_DONE,date,id});
+                        result = db.UpdateSQL("UPDATE delivery SET state=?,date_send=? WHERE id=?", new Object[]{Order.ORDER_DONE, date, id});
                         if (result) {
-                            Object[][] obj = db.SelectSQL("SELECT count(id) FROM delivery WHERE state<? AND id_orders=?",new Object[]{Order.ORDER_DONE,id_orders});
-                            if ((Long)obj[0][0]==0) {
-                                result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=? LIMIT 1",new Object[]{Order.ORDER_DONE,id_orders});
+                            Object[][] obj = db.SelectSQL("SELECT count(id) FROM delivery WHERE state<? AND id_orders=?", new Object[]{Order.ORDER_DONE, id_orders});
+                            if ((Long) obj[0][0] == 0) {
+                                result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=? LIMIT 1", new Object[]{Order.ORDER_DONE, id_orders});
                             }
                         }
                     }
@@ -11404,7 +11421,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                     } else {
                         db.DoSQL("ROLLBACK");
                         JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
-                    }      
+                    }
                     break;
             }
         }
@@ -11433,7 +11450,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                         WritableWorkbook workbook;
                         WorkbookSettings ws = new WorkbookSettings();
                         ws.setLocale(new Locale("ru", "RU"));
-                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() +"\\"+ Gifts.getString("NAME") + ".xls"), ws);
+                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() + "\\" + Gifts.getString("NAME") + ".xls"), ws);
                         WritableSheet s = workbook.createSheet("Состав", 0);
                         s.getSettings().setDefaultColumnWidth(10);
                         WritableFont wf = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
@@ -11457,9 +11474,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                             s.addCell(n);
                             SummAmount += amount;
                         }
-                        l = new jxl.write.Label(1, Gift_Candy.getLength()+1, "ИТОГО:", cf);
+                        l = new jxl.write.Label(1, Gift_Candy.getLength() + 1, "ИТОГО:", cf);
                         s.addCell(l);
-                        n = new jxl.write.Number(2, Gift_Candy.getLength()+1, SummAmount, cf);
+                        n = new jxl.write.Number(2, Gift_Candy.getLength() + 1, SummAmount, cf);
                         s.addCell(n);
                         workbook.write();
                         workbook.close();
@@ -11482,7 +11499,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             ChoosedDirectory = chooser.getCurrentDirectory();
             File selectedFile = chooser.getSelectedFile();
             if (selectedFile.isDirectory()) {
-                
+
                 if (!Candies.IsNull()) {
                     ArrayList vec = new ArrayList();
                     int last_factory = Candies.getInt(0, "ID_FACTORY");
@@ -11491,7 +11508,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                     double Summ_cost_factory = 0;
                     double Summ_weight = 0;
                     double Summ_cost = 0;
-                    double discount = Candies.getLength()>0 ? Candies.getDouble(0,"DISCOUNT") : 0;
+                    double discount = Candies.getLength() > 0 ? Candies.getDouble(0, "DISCOUNT") : 0;
 //                    String excelWeight;
 //                    String excelPrice;
 //                    int correctCount = 3;
@@ -11539,37 +11556,37 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 //                                correctCount++;
                             }
                         }
-                        
+
                     }
-                    Summ_weight+=Summ_weight_factory;
-                    Summ_cost+=Summ_cost_factory*(100-discount)/100;
-                    vec.add(new String[]{"ИТОГО:","","",FormatKG.format(Summ_weight_factory),"",FormatUAH.format(Summ_cost_factory)});
-                    vec.add(new String[]{"","","","","СКИДКА,%",FormatKG.format(discount)});
-                    vec.add(new String[]{"","","","","",FormatUAH.format(Summ_cost_factory*(100-discount)/100)});
-                    vec.add(new String[]{"","","","","",""});            
-                    vec.add(new String[]{"ИТОГО:","","",FormatKG.format(Summ_weight),"",FormatUAH.format(Summ_cost)});
+                    Summ_weight += Summ_weight_factory;
+                    Summ_cost += Summ_cost_factory * (100 - discount) / 100;
+                    vec.add(new String[]{"ИТОГО:", "", "", FormatKG.format(Summ_weight_factory), "", FormatUAH.format(Summ_cost_factory)});
+                    vec.add(new String[]{"", "", "", "", "СКИДКА,%", FormatKG.format(discount)});
+                    vec.add(new String[]{"", "", "", "", "", FormatUAH.format(Summ_cost_factory * (100 - discount) / 100)});
+                    vec.add(new String[]{"", "", "", "", "", ""});
+                    vec.add(new String[]{"ИТОГО:", "", "", FormatKG.format(Summ_weight), "", FormatUAH.format(Summ_cost)});
 
                     try {
                         WritableWorkbook workbook;
                         WorkbookSettings ws = new WorkbookSettings();
                         ws.setLocale(new Locale("ru", "RU"));
-                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() +"\\заказ_конфет_для_склада.xls"), ws);
+                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() + "\\заказ_конфет_для_склада.xls"), ws);
                         WritableSheet s = workbook.createSheet("заказ конфет для склада", 0);
                         s.getSettings().setDefaultColumnWidth(10);
                         WritableFont wf = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
                         WritableCellFormat cf = new WritableCellFormat(wf);
                         jxl.write.Label l;
                         jxl.write.Number n;
-                        String[] ColumnNames = new String[]{"Фабрика", "Конфета", "Заказ, ящ.","Вес, кг","Цена 1 кг","Цена, грн"};
-                        for (int i=0;i<ColumnNames.length;i++) {
+                        String[] ColumnNames = new String[]{"Фабрика", "Конфета", "Заказ, ящ.", "Вес, кг", "Цена 1 кг", "Цена, грн"};
+                        for (int i = 0; i < ColumnNames.length; i++) {
                             l = new jxl.write.Label(i, 0, ColumnNames[i], cf);
                             s.addCell(l);
                         }
                         String[] str_mas;
-                        for (int i=0;i<vec.size();i++) {
-                            str_mas = (String[])vec.get(i);
-                            for (int j=0;j<str_mas.length;j++) {
-                                l = new jxl.write.Label(j, i+2, str_mas[j], cf);
+                        for (int i = 0; i < vec.size(); i++) {
+                            str_mas = (String[]) vec.get(i);
+                            for (int j = 0; j < str_mas.length; j++) {
+                                l = new jxl.write.Label(j, i + 2, str_mas[j], cf);
                                 s.addCell(l);
                             }
                         }
@@ -11586,12 +11603,12 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
     private void jButton89MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton89MousePressed
         int index = jTable14.getSelectedRow();
-        if (index!=-1) {
-            if (JOptionPane.showConfirmDialog(null, "Удалить доставку?","Удаление доставки",JOptionPane.YES_NO_OPTION) == 0) {
-                if (db.UpdateSQL("DELETE FROM delivery WHERE id=?",new Object[]{DeliveryOrder.getInt(index,"ID")})) {
+        if (index != -1) {
+            if (JOptionPane.showConfirmDialog(null, "Удалить доставку?", "Удаление доставки", JOptionPane.YES_NO_OPTION) == 0) {
+                if (db.UpdateSQL("DELETE FROM delivery WHERE id=?", new Object[]{DeliveryOrder.getInt(index, "ID")})) {
                     SelectNodeOfTableOrders();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");                
+                    JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
                 }
             }
         }
@@ -11607,34 +11624,34 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
     private void jButton97MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton97MousePressed
         int[] rows = jTable12.getSelectedRows();
-        if (rows.length==0) {
+        if (rows.length == 0) {
             //do nothing
-        } else if (rows.length==1) {
+        } else if (rows.length == 1) {
             String s = "<html><center>Отчет по доставке</center><br><br><b>Статус доставки:</b> ";
-            int state = Delivery.getInt(rows[0],"STATE");
-            if (state==Order.ORDER_STORAGE) {
-                s = s+ "на складе";
-            } else if (state==Order.ORDER_SEND) {
-                s = s+ "в дороге";
+            int state = Delivery.getInt(rows[0], "STATE");
+            if (state == Order.ORDER_STORAGE) {
+                s = s + "на складе";
+            } else if (state == Order.ORDER_SEND) {
+                s = s + "в дороге";
             } else {
-                s = s+ "доставлено";
+                s = s + "доставлено";
             }
-            s = s + "<br><br><b>Дата доставки: </b>"+new SimpleDateFormat("dd-MMM-yyyy").format(new Date(Delivery.getInt(rows[0],"DATE_TIME")*1000L))+"<br><br>";
-            s = s + "<b>ТТН: </b>"+Delivery.getString(rows[0],"TTN")+"<br><br>";
-            s = s + "<b>Клиент: </b>"+Delivery.getString(rows[0],"CLIENT")+"<br><br>";
-            s = s + "<b>Контактное лицо:</b><br>"+Delivery.getString(rows[0],"CONTACT")+"<br><br>";
-            s = s + "<b>Тип доставки: </b>"+Delivery.getString(rows[0],"DELIVERY_TYPE")+"<br><br>";
-            s = s + "<b>Адрес:</b><br>"+Delivery.getString(rows[0],"ADDRESS")+"<br><br>";
-            s = s + "<b>Содержание доставки:</b><br>"+Delivery.getString(rows[0],"CONTENT")+"<br><br>";
-            s = s + "<b>Кто платит: </b>"+Delivery.getString(rows[0],"WHO_PAYS")+"<br><br>";
-            int typePay = Delivery.getInt(rows[0],"TYPE_PAY_ORDER"); //2 и 3 и 5 - безнал
-            s = s + "<b>Долг: </b>"+FormatUAH.format(Delivery.getDouble(rows[0],"DEBT"))+(typePay==2 || typePay==3 ? " БН" : "")+"<br><br>";
-            s = s + "<b>Презент: </b>"+Delivery.getString(rows[0],"PRESENT")+"<br><br>";
-            s = s + "<b>Комментарий:</b><br>"+Delivery.getString(rows[0],"COMM")+"<br><br>";
+            s = s + "<br><br><b>Дата доставки: </b>" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date(Delivery.getInt(rows[0], "DATE_TIME") * 1000L)) + "<br><br>";
+            s = s + "<b>ТТН: </b>" + Delivery.getString(rows[0], "TTN") + "<br><br>";
+            s = s + "<b>Клиент: </b>" + Delivery.getString(rows[0], "CLIENT") + "<br><br>";
+            s = s + "<b>Контактное лицо:</b><br>" + Delivery.getString(rows[0], "CONTACT") + "<br><br>";
+            s = s + "<b>Тип доставки: </b>" + Delivery.getString(rows[0], "DELIVERY_TYPE") + "<br><br>";
+            s = s + "<b>Адрес:</b><br>" + Delivery.getString(rows[0], "ADDRESS") + "<br><br>";
+            s = s + "<b>Содержание доставки:</b><br>" + Delivery.getString(rows[0], "CONTENT") + "<br><br>";
+            s = s + "<b>Кто платит: </b>" + Delivery.getString(rows[0], "WHO_PAYS") + "<br><br>";
+            int typePay = Delivery.getInt(rows[0], "TYPE_PAY_ORDER"); //2 и 3 и 5 - безнал
+            s = s + "<b>Долг: </b>" + FormatUAH.format(Delivery.getDouble(rows[0], "DEBT")) + (typePay == 2 || typePay == 3 ? " БН" : "") + "<br><br>";
+            s = s + "<b>Презент: </b>" + Delivery.getString(rows[0], "PRESENT") + "<br><br>";
+            s = s + "<b>Комментарий:</b><br>" + Delivery.getString(rows[0], "COMM") + "<br><br>";
             s = s + "</html>";
             JEditorPane ep = new JEditorPane();
             ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-            ep.setFont(new Font("Arial",Font.PLAIN,8));
+            ep.setFont(new Font("Arial", Font.PLAIN, 8));
             ep.setEditorKit(new HTMLEditorKit());
             ep.setText(s);
             try {
@@ -11644,27 +11661,27 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             }
         } else {
             String s = "<html><center>Отчет по доставке<br><br><table border=1><tr>";
-            for (int i=0;i<jTable12.getColumnCount();i++) {
-                s = s+"<td width='60px'>"+jTable12.getColumnName(i)+"</td>";
+            for (int i = 0; i < jTable12.getColumnCount(); i++) {
+                s = s + "<td width='60px'>" + jTable12.getColumnName(i) + "</td>";
             }
-            s = s+"</tr>";
-            for (int j=0;j<rows.length;j++) {        
-                s = s+"<tr>";
-                for (int i=0;i<jTable12.getColumnCount();i++) {
-                    if (i==0) {
-                        int val = (Integer)jTable12.getValueAt(rows[j], i);
-                        s = s+"<td>"+(val==Order.ORDER_PREPARE ? "подготовка" : (val==Order.ORDER_PAY ? "на оплате" : (val==Order.ORDER_PACK ? "на паковке" : (val==Order.ORDER_STORAGE ? "на складе" : (val==Order.ORDER_SEND ? "отправлено" : "закрыто")))))+"</td>";
+            s = s + "</tr>";
+            for (int j = 0; j < rows.length; j++) {
+                s = s + "<tr>";
+                for (int i = 0; i < jTable12.getColumnCount(); i++) {
+                    if (i == 0) {
+                        int val = (Integer) jTable12.getValueAt(rows[j], i);
+                        s = s + "<td>" + (val == Order.ORDER_PREPARE ? "подготовка" : (val == Order.ORDER_PAY ? "на оплате" : (val == Order.ORDER_PACK ? "на паковке" : (val == Order.ORDER_STORAGE ? "на складе" : (val == Order.ORDER_SEND ? "отправлено" : "закрыто"))))) + "</td>";
                     } else {
                         String ss = "" + jTable12.getValueAt(rows[j], i);
-                        s = s+"<td>"+( (ss==null || ss.equals("") || ss.equals(" ")) ? "-" : ss)+"</td>";
+                        s = s + "<td>" + ((ss == null || ss.equals("") || ss.equals(" ")) ? "-" : ss) + "</td>";
                     }
                 }
-                s = s+"</tr>";
+                s = s + "</tr>";
             }
-            s = s+"</table><br><br></center></html>";
+            s = s + "</table><br><br></center></html>";
             JEditorPane ep = new JEditorPane();
             ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-            ep.setFont(new Font("Arial",Font.PLAIN,8));
+            ep.setFont(new Font("Arial", Font.PLAIN, 8));
             ep.setEditorKit(new HTMLEditorKit());
             ep.setText(s);
             try {
@@ -11676,15 +11693,15 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jButton97MousePressed
 
     private void jButton100MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton100MousePressed
-        if (Orders.getInt("STATE")==Order.ORDER_PAY) {
-            int id_orders = Orders.getInt("ID"); 
+        if (Orders.getInt("STATE") == Order.ORDER_PAY) {
+            int id_orders = Orders.getInt("ID");
             boolean result = db.DoSQL("START TRANSACTION");
             if (result) {
                 result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_PREPARE, id_orders});
                 if (result) {
-                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_PREPARE,id_orders});
-                    for (int i=0;i<SubOrders.getLength();i++) {
-                        result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")});
+                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_PREPARE, id_orders});
+                    for (int i = 0; i < SubOrders.getLength(); i++) {
+                        result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
                     }
                 }
             }
@@ -11696,10 +11713,10 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 db.DoSQL("ROLLBACK");
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
-        } else if (Orders.getInt("STATE")==Order.ORDER_PACK) {
+        } else if (Orders.getInt("STATE") == Order.ORDER_PACK) {
             boolean already_packed = false;
-            for (int i=0;i<SubOrders.getLength();i++) {
-                if (SubOrders.getInt(i,"PACKED")>0) {
+            for (int i = 0; i < SubOrders.getLength(); i++) {
+                if (SubOrders.getInt(i, "PACKED") > 0) {
                     already_packed = true;
                     break;
                 }
@@ -11707,15 +11724,15 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             if (already_packed) {
                 JOptionPane.showMessageDialog(null, "Нельзя вернуть заказ на оплату. Уже начата паковка!");
             } else {
-                int id_orders = Orders.getInt("ID"); 
+                int id_orders = Orders.getInt("ID");
                 boolean result = db.DoSQL("START TRANSACTION");
                 if (result) {
                     result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_PAY, id_orders});
                     if (result) {
-                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_PAY,id_orders});
-                        for (int i=0;i<SubOrders.getLength();i++) {
-                            result = result && db.UpdateSQL("UPDATE candy, gift_candy, suborder SET candy.reserved = candy.reserved - suborder.amount*gift_candy.amount WHERE gift_candy.ID_CANDY = candy.ID AND gift_candy.ID_GIFT=suborder.ID_GIFT AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")}); 
-                        }                    
+                        db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_PAY, id_orders});
+                        for (int i = 0; i < SubOrders.getLength(); i++) {
+                            result = result && db.UpdateSQL("UPDATE candy, gift_candy, suborder SET candy.reserved = candy.reserved - suborder.amount*gift_candy.amount WHERE gift_candy.ID_CANDY = candy.ID AND gift_candy.ID_GIFT=suborder.ID_GIFT AND suborder.ID=?", new Object[]{SubOrders.getInt(i, "ID")});
+                        }
                     }
                 }
                 if (result) {
@@ -11725,15 +11742,15 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 } else {
                     db.DoSQL("ROLLBACK");
                     JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
-                }                
+                }
             }
-        } else if (Orders.getInt("STATE")==Order.ORDER_STORAGE) {
-            int id_orders = Orders.getInt("ID"); 
+        } else if (Orders.getInt("STATE") == Order.ORDER_STORAGE) {
+            int id_orders = Orders.getInt("ID");
             boolean result = db.DoSQL("START TRANSACTION");
             if (result) {
                 result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_PACK, id_orders});
                 if (result) {
-                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_PACK,id_orders});
+                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_PACK, id_orders});
 //                    for (int i=0;i<SubOrders.getLength();i++) {
 //                        result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")});
 //                    }
@@ -11747,13 +11764,13 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 db.DoSQL("ROLLBACK");
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
-        } else if (Orders.getInt("STATE")==Order.ORDER_SEND) {
-            int id_orders = Orders.getInt("ID"); 
+        } else if (Orders.getInt("STATE") == Order.ORDER_SEND) {
+            int id_orders = Orders.getInt("ID");
             boolean result = db.DoSQL("START TRANSACTION");
             if (result) {
                 result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_STORAGE, id_orders});
                 if (result) {
-                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_STORAGE,id_orders});
+                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_STORAGE, id_orders});
 //                    for (int i=0;i<SubOrders.getLength();i++) {
 //                        result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")});
 //                    }
@@ -11767,13 +11784,13 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 db.DoSQL("ROLLBACK");
                 JOptionPane.showMessageDialog(null, "Не удалось сохранить изменения");
             }
-        } else if (Orders.getInt("STATE")==Order.ORDER_DONE) {
-            int id_orders = Orders.getInt("ID"); 
+        } else if (Orders.getInt("STATE") == Order.ORDER_DONE) {
+            int id_orders = Orders.getInt("ID");
             boolean result = db.DoSQL("START TRANSACTION");
             if (result) {
                 result = db.UpdateSQL("UPDATE orders SET state=? WHERE id=?", new Object[]{Order.ORDER_SEND, id_orders});
                 if (result) {
-                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?",new Object[]{Order.ORDER_SEND,id_orders});
+                    db.UpdateSQL("UPDATE delivery SET state=? WHERE id_orders=?", new Object[]{Order.ORDER_SEND, id_orders});
 //                    for (int i=0;i<SubOrders.getLength();i++) {
 //                        result = result && db.UpdateSQL("UPDATE packing, suborder SET packing.reserved = packing.reserved - suborder.amount WHERE packing.ID=suborder.id_packing AND suborder.ID=?",new Object[]{SubOrders.getInt(i,"ID")});
 //                    }
@@ -11799,14 +11816,14 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         }
 
         String s = "<html><center><b>ЛИСТ ИНВЕНТАРИЗАЦИИ</b><br><br><table border='1px'>";
-        s = s+"<tr><td align='center'>Фабрика</td><td align='center'>Конфета</td><td align='center'>На складе</td><td>Пометки</td></tr>";
+        s = s + "<tr><td align='center'>Фабрика</td><td align='center'>Конфета</td><td align='center'>На складе</td><td>Пометки</td></tr>";
         for (int i = 0; i < Candies.getLength(); i++) {
-            s = s+"<tr><td>"+Candies.getString(i,"FACTORY_NAME")+"</td><td>"+Candies.getString(i,"CANDY_NAME")+"</td><td>"+FormatUAH.format(Candies.getInt(i,"STORAGE")*1.0/Candies.getInt(i,"AMOUNT_IN_BOX"))+"</td><td></td></tr>";
+            s = s + "<tr><td>" + Candies.getString(i, "FACTORY_NAME") + "</td><td>" + Candies.getString(i, "CANDY_NAME") + "</td><td>" + FormatUAH.format(Candies.getInt(i, "STORAGE") * 1.0 / Candies.getInt(i, "AMOUNT_IN_BOX")) + "</td><td></td></tr>";
         }
         s = s + "</table><br><br></center></html>";
         JEditorPane ep = new JEditorPane();
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
+        ep.setFont(new Font("Arial", Font.PLAIN, 8));
         ep.setEditorKit(new HTMLEditorKit());
         ep.setText(s);
         try {
@@ -11814,14 +11831,13 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
         }
-        
-        
+
         s = "<html><center><b>ЛИСТ ИНВЕНТАРИЗАЦИИ</b><br><br><table border='1px'>";
-        s = s+"<tr><td align='center'>Тип</td><td align='center'>Название</td><td align='center'>На складе</td><td>Пометки</td></tr>";
+        s = s + "<tr><td align='center'>Тип</td><td align='center'>Название</td><td align='center'>На складе</td><td>Пометки</td></tr>";
         for (int i = 0; i < Packings.getLength(); i++) {
-            int t = Packings.getInt(i,"TYPE");
-            String type = (t==0 ? "картон" : (t==1 ? "пакет" : (t==2 ? "туба" : (t==3 ? "жесть" : "игрушка"))));
-            s = s+"<tr><td>"+type+"</td><td>"+Packings.getString(i,"NAME")+" №"+Packings.getInt(i,"NUMBER")+"</td><td>"+Packings.getInt(i,"STORAGE")+"</td><td></td></tr>";
+            int t = Packings.getInt(i, "TYPE");
+            String type = (t == 0 ? "картон" : (t == 1 ? "пакет" : (t == 2 ? "туба" : (t == 3 ? "жесть" : "игрушка"))));
+            s = s + "<tr><td>" + type + "</td><td>" + Packings.getString(i, "NAME") + " №" + Packings.getInt(i, "NUMBER") + "</td><td>" + Packings.getInt(i, "STORAGE") + "</td><td></td></tr>";
         }
         s = s + "</table><br><br></center></html>";
         ep.setText(s);
@@ -11829,7 +11845,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             ep.print();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Не удалось напечатать документ");
-        }        
+        }
     }//GEN-LAST:event_jButton105MousePressed
 
     private void jTextField38KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField38KeyReleased
@@ -11879,9 +11895,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 return "";
         }
     }
-    
+
     private void jButton108MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton108MousePressed
-        if (jTable3.getSelectedRow()==-1) {
+        if (jTable3.getSelectedRow() == -1) {
             return;
         }
         JFileChooser chooser = new JFileChooser();
@@ -11893,135 +11909,134 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             ChoosedDirectory = chooser.getCurrentDirectory();
             File selectedFile = chooser.getSelectedFile();
             if (selectedFile.isDirectory()) {
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                        WritableWorkbook workbook;
-                        WorkbookSettings ws = new WorkbookSettings();
-                        ws.setLocale(new Locale("ru", "RU"));
-                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() +"\\"+ Orders.getString("CLIENT_NAME")+"_"+sdf.format(new Date(Orders.getLong("DATE_TIME")))+ ".xls"), ws);
-                        WritableSheet s = workbook.createSheet("Замовлення", 0);
-                        jxl.write.NumberFormat nf = new jxl.write.NumberFormat("#0.00");
-                        WritableCellFormat cf1 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD,false,UnderlineStyle.SINGLE));
-                        WritableCellFormat cf2 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
-                        WritableCellFormat cf3 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 12, WritableFont.BOLD));
-                        WritableCellFormat cf4 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
-                        
-                        WritableCellFormat cf4_1 = new WritableCellFormat(nf);
-                        cf4_1.setAlignment(Alignment.CENTRE);
-                        cf4_1.setBorder(Border.ALL, BorderLineStyle.THIN);
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                    WritableWorkbook workbook;
+                    WorkbookSettings ws = new WorkbookSettings();
+                    ws.setLocale(new Locale("ru", "RU"));
+                    workbook = Workbook.createWorkbook(new File(selectedFile.getPath() + "\\" + Orders.getString("CLIENT_NAME") + "_" + sdf.format(new Date(Orders.getLong("DATE_TIME"))) + ".xls"), ws);
+                    WritableSheet s = workbook.createSheet("Замовлення", 0);
+                    jxl.write.NumberFormat nf = new jxl.write.NumberFormat("#0.00");
+                    WritableCellFormat cf1 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD, false, UnderlineStyle.SINGLE));
+                    WritableCellFormat cf2 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
+                    WritableCellFormat cf3 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 12, WritableFont.BOLD));
+                    WritableCellFormat cf4 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
 
-                        WritableCellFormat cf5 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));                        
-                        WritableCellFormat cf6 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
-                        
-                        WritableCellFormat cf7 = new WritableCellFormat(nf);
-                        cf7.setFont(new WritableFont(WritableFont.ARIAL, 10));
-                        cf7.setAlignment(Alignment.RIGHT);
-                        cf7.setBorder(Border.ALL, BorderLineStyle.THIN);
-                        
-                        WritableCellFormat cf8 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 11, WritableFont.BOLD));
-                        cf8.setAlignment(Alignment.RIGHT);
-                        
-                        WritableCellFormat cf9 = new WritableCellFormat(nf);
-                        cf9.setFont(new WritableFont(WritableFont.ARIAL, 11, WritableFont.BOLD));
-                        cf9.setAlignment(Alignment.RIGHT);
-                        cf9.setBorder(Border.ALL, BorderLineStyle.THIN);
-                        
-                        WritableCellFormat cf10 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 11));
-                        WritableCellFormat cf11 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 11, WritableFont.BOLD));
-                        WritableCellFormat cf12 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
-                        cf3.setAlignment(Alignment.CENTRE);
-                        cf4.setAlignment(Alignment.CENTRE);
-                        cf4.setBorder(Border.ALL, BorderLineStyle.THIN);
-                        cf5.setAlignment(Alignment.CENTRE);
-                        cf5.setBackground(Colour.GREY_25_PERCENT);
-                        cf5.setBorder(Border.ALL, BorderLineStyle.THIN);
-                        cf6.setAlignment(Alignment.LEFT);
-                        cf6.setBorder(Border.ALL, BorderLineStyle.THIN);
-                        cf12.setAlignment(Alignment.RIGHT);
-                        
-                        s.addCell(new jxl.write.Label(0, 0, "Постачальник", cf1));
-                        s.addCell(new jxl.write.Label(2, 0, "ФОП Бурдін Р.А.", cf2));
-                        s.addCell(new jxl.write.Label(2, 1, "ЄДРПОУ 3211013395, тел. (044) 599-13-00, (099) 651-44-00", cf2));
-                        s.addCell(new jxl.write.Label(2, 2, "Р/р 26007000027890 МФО 30023 ПАТ «Укрсоцбанк»", cf2));
-                        s.addCell(new jxl.write.Label(2, 3, "ІПН 3211013395, номер свідоцтва 271143", cf2));
-                        s.addCell(new jxl.write.Label(2, 4, "Не є платником податку на прибуток на загальних підставах", cf2));
-                        s.addCell(new jxl.write.Label(2, 5, "Адреса 02132 м. Київ, ул. Ареф'єва, 16", cf2));
-                        s.addCell(new jxl.write.Label(0, 6, "Одержувач", cf1));
-                        s.addCell(new jxl.write.Label(2, 6, Orders.getString("CLIENT_NAME"), cf2));
-                        
-                      
-                        s.mergeCells(0, 0, 1, 0);
-                        s.mergeCells(0, 1, 1, 1);
-                        s.setColumnView(0, 5);
-                        s.setColumnView(1, 10);
-                        s.setColumnView(2, 10);
-                        s.setColumnView(3, 10);
-                        s.setColumnView(4, 5);
-                        s.setColumnView(5, 10);
-                        s.setColumnView(6, 15);
-                        s.setColumnView(7, 15);
-                        
-                        s.mergeCells(0,11,7, 11);
-                        db.UpdateSQL("UPDATE constants SET current_number=current_number+1",null);
-                        GetConstants();
-                        s.addCell(new jxl.write.Label(0, 11, "Видаткова накладна № "+Constants.getInt("CURRENT_NUMBER"), cf3));
-                        s.mergeCells(0, 12, 7,12);
-                        Calendar cal = Calendar.getInstance();
-                        String today = "від "+Integer.toString(cal.get(Calendar.DAY_OF_MONTH))+" "+GetNameOfMonth(cal.get(Calendar.MONTH))+" "+cal.get(Calendar.YEAR)+" р.";
-                        s.addCell(new jxl.write.Label(0, 12, today, cf3));                        
-                        
-                        s.addCell(new jxl.write.Label(0, 14, "№", cf5));                        
-                        s.mergeCells(1, 14, 3, 14);
-                        s.addCell(new jxl.write.Label(1, 14, "Товар", cf5));                        
-                        s.addCell(new jxl.write.Label(4, 14, "Од.", cf5));                        
-                        s.addCell(new jxl.write.Label(5, 14, "Кількість", cf5));                        
-                        s.addCell(new jxl.write.Label(6, 14, "Ціна", cf5));                        
-                        s.addCell(new jxl.write.Label(7, 14, "Сума", cf5));                        
-                        
-                        double all_sum = 0;
-                        double sum;
-                        for (int i=0;i<SubOrders.getLength();i++) {
-                            s.addCell(new jxl.write.Number(0, 15+i, i+1, cf4));
-                            s.mergeCells(1, 15+i, 3, 15+i);
-                            s.addCell(new jxl.write.Label(1, 15+i, "Подарунковий набір "+SubOrders.getString(i,"GIFT_NAME"), cf6));
-                            s.addCell(new jxl.write.Label(4, 15+i, "шт.", cf4));
-                            s.addCell(new jxl.write.Number(5, 15+i, SubOrders.getInt(i,"AMOUNT"), cf4));
-                            s.addCell(new jxl.write.Number(6, 15+i, SubOrders.getDouble(i,"COST"), cf4_1));
-                            sum = SubOrders.getDouble(i,"COST")*SubOrders.getInt(i,"AMOUNT");
-                            all_sum+=sum;
-                            s.addCell(new jxl.write.Number(7, 15+i, sum, cf7));
-                        }
-                        double delivery_cost = ExtendedOrder.getDouble("DELIVERY_COST");
-                        double discount = ExtendedOrder.getDouble("DISCOUNT");
-                        double debt = delivery_cost + all_sum*(1-(discount*0.01)) - ExtendedOrder.getDouble("PREPAY");
-                        s.addCell(new jxl.write.Label(6, 15+SubOrders.getLength(), "Разом:", cf8));
-                        s.addCell(new jxl.write.Number(7, 15+SubOrders.getLength(), all_sum, cf9));
-                        s.addCell(new jxl.write.Label(6, 15+SubOrders.getLength()+1, "Доставка:", cf8));
-                        s.addCell(new jxl.write.Number(7, 15+SubOrders.getLength()+1, delivery_cost, cf9));
-                        s.addCell(new jxl.write.Label(6, 15+SubOrders.getLength()+2, "Передплата:", cf8));
-                        s.addCell(new jxl.write.Number(7, 15+SubOrders.getLength()+2, ExtendedOrder.getDouble("PREPAY"), cf9));
-                        s.addCell(new jxl.write.Label(6, 15+SubOrders.getLength()+2, "Знижка:", cf8));
-                        s.addCell(new jxl.write.Number(7, 15+SubOrders.getLength()+2, discount, cf9));
-                        s.addCell(new jxl.write.Label(6, 15+SubOrders.getLength()+3, "Борг:", cf8));
-                        s.addCell(new jxl.write.Number(7, 15+SubOrders.getLength()+3, debt, cf9));
-                        
-                        s.addCell(new jxl.write.Label(0, 15+SubOrders.getLength()+5, "Всього на суму:", cf10));
-                        all_sum = Math.round((all_sum+delivery_cost)*100)*1.0d/100;
-                        String money = new MoneyToString(all_sum).num2str();
-                        money = money.substring(0, 1).toUpperCase()+money.substring(1);
-                        s.addCell(new jxl.write.Label(0, 15+SubOrders.getLength()+6, money, cf11));
-                        
-                        s.addCell(new jxl.write.Label(1, 15+SubOrders.getLength()+10, "Відвантажив ", cf12));
-                        s.addCell(new jxl.write.Label(2, 15+SubOrders.getLength()+10, "_________________", cf2));
-                        s.addCell(new jxl.write.Label(5, 15+SubOrders.getLength()+10, "Отримав(ла) ", cf12));
-                        s.addCell(new jxl.write.Label(6, 15+SubOrders.getLength()+10, "_________________", cf2));
-                        
-                        workbook.write();
-                        workbook.close();
-                        JOptionPane.showMessageDialog(null, "Документ сохранен в " + selectedFile.getPath() +"\\"+ Orders.getString("CLIENT_NAME")+"_"+sdf.format(new Date(Orders.getLong("DATE_TIME")))+ ".xls");
-                    } catch (IOException | WriteException | HeadlessException ex) {
-                        JOptionPane.showMessageDialog(null, "Не удалось сохранить документ");
+                    WritableCellFormat cf4_1 = new WritableCellFormat(nf);
+                    cf4_1.setAlignment(Alignment.CENTRE);
+                    cf4_1.setBorder(Border.ALL, BorderLineStyle.THIN);
+
+                    WritableCellFormat cf5 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));
+                    WritableCellFormat cf6 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
+
+                    WritableCellFormat cf7 = new WritableCellFormat(nf);
+                    cf7.setFont(new WritableFont(WritableFont.ARIAL, 10));
+                    cf7.setAlignment(Alignment.RIGHT);
+                    cf7.setBorder(Border.ALL, BorderLineStyle.THIN);
+
+                    WritableCellFormat cf8 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 11, WritableFont.BOLD));
+                    cf8.setAlignment(Alignment.RIGHT);
+
+                    WritableCellFormat cf9 = new WritableCellFormat(nf);
+                    cf9.setFont(new WritableFont(WritableFont.ARIAL, 11, WritableFont.BOLD));
+                    cf9.setAlignment(Alignment.RIGHT);
+                    cf9.setBorder(Border.ALL, BorderLineStyle.THIN);
+
+                    WritableCellFormat cf10 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 11));
+                    WritableCellFormat cf11 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 11, WritableFont.BOLD));
+                    WritableCellFormat cf12 = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10));
+                    cf3.setAlignment(Alignment.CENTRE);
+                    cf4.setAlignment(Alignment.CENTRE);
+                    cf4.setBorder(Border.ALL, BorderLineStyle.THIN);
+                    cf5.setAlignment(Alignment.CENTRE);
+                    cf5.setBackground(Colour.GREY_25_PERCENT);
+                    cf5.setBorder(Border.ALL, BorderLineStyle.THIN);
+                    cf6.setAlignment(Alignment.LEFT);
+                    cf6.setBorder(Border.ALL, BorderLineStyle.THIN);
+                    cf12.setAlignment(Alignment.RIGHT);
+
+                    s.addCell(new jxl.write.Label(0, 0, "Постачальник", cf1));
+                    s.addCell(new jxl.write.Label(2, 0, "ФОП Бурдін Р.А.", cf2));
+                    s.addCell(new jxl.write.Label(2, 1, "ЄДРПОУ 3211013395, тел. (044) 599-13-00, (099) 651-44-00", cf2));
+                    s.addCell(new jxl.write.Label(2, 2, "Р/р 26007000027890 МФО 30023 ПАТ «Укрсоцбанк»", cf2));
+                    s.addCell(new jxl.write.Label(2, 3, "ІПН 3211013395, номер свідоцтва 271143", cf2));
+                    s.addCell(new jxl.write.Label(2, 4, "Не є платником податку на прибуток на загальних підставах", cf2));
+                    s.addCell(new jxl.write.Label(2, 5, "Адреса 02132 м. Київ, ул. Ареф'єва, 16", cf2));
+                    s.addCell(new jxl.write.Label(0, 6, "Одержувач", cf1));
+                    s.addCell(new jxl.write.Label(2, 6, Orders.getString("CLIENT_NAME"), cf2));
+
+                    s.mergeCells(0, 0, 1, 0);
+                    s.mergeCells(0, 1, 1, 1);
+                    s.setColumnView(0, 5);
+                    s.setColumnView(1, 10);
+                    s.setColumnView(2, 10);
+                    s.setColumnView(3, 10);
+                    s.setColumnView(4, 5);
+                    s.setColumnView(5, 10);
+                    s.setColumnView(6, 15);
+                    s.setColumnView(7, 15);
+
+                    s.mergeCells(0, 11, 7, 11);
+                    db.UpdateSQL("UPDATE constants SET current_number=current_number+1", null);
+                    GetConstants();
+                    s.addCell(new jxl.write.Label(0, 11, "Видаткова накладна № " + Constants.getInt("CURRENT_NUMBER"), cf3));
+                    s.mergeCells(0, 12, 7, 12);
+                    Calendar cal = Calendar.getInstance();
+                    String today = "від " + Integer.toString(cal.get(Calendar.DAY_OF_MONTH)) + " " + GetNameOfMonth(cal.get(Calendar.MONTH)) + " " + cal.get(Calendar.YEAR) + " р.";
+                    s.addCell(new jxl.write.Label(0, 12, today, cf3));
+
+                    s.addCell(new jxl.write.Label(0, 14, "№", cf5));
+                    s.mergeCells(1, 14, 3, 14);
+                    s.addCell(new jxl.write.Label(1, 14, "Товар", cf5));
+                    s.addCell(new jxl.write.Label(4, 14, "Од.", cf5));
+                    s.addCell(new jxl.write.Label(5, 14, "Кількість", cf5));
+                    s.addCell(new jxl.write.Label(6, 14, "Ціна", cf5));
+                    s.addCell(new jxl.write.Label(7, 14, "Сума", cf5));
+
+                    double all_sum = 0;
+                    double sum;
+                    for (int i = 0; i < SubOrders.getLength(); i++) {
+                        s.addCell(new jxl.write.Number(0, 15 + i, i + 1, cf4));
+                        s.mergeCells(1, 15 + i, 3, 15 + i);
+                        s.addCell(new jxl.write.Label(1, 15 + i, "Подарунковий набір " + SubOrders.getString(i, "GIFT_NAME"), cf6));
+                        s.addCell(new jxl.write.Label(4, 15 + i, "шт.", cf4));
+                        s.addCell(new jxl.write.Number(5, 15 + i, SubOrders.getInt(i, "AMOUNT"), cf4));
+                        s.addCell(new jxl.write.Number(6, 15 + i, SubOrders.getDouble(i, "COST"), cf4_1));
+                        sum = SubOrders.getDouble(i, "COST") * SubOrders.getInt(i, "AMOUNT");
+                        all_sum += sum;
+                        s.addCell(new jxl.write.Number(7, 15 + i, sum, cf7));
                     }
+                    double delivery_cost = ExtendedOrder.getDouble("DELIVERY_COST");
+                    double discount = ExtendedOrder.getDouble("DISCOUNT");
+                    double debt = delivery_cost + all_sum * (1 - (discount * 0.01)) - ExtendedOrder.getDouble("PREPAY");
+                    s.addCell(new jxl.write.Label(6, 15 + SubOrders.getLength(), "Разом:", cf8));
+                    s.addCell(new jxl.write.Number(7, 15 + SubOrders.getLength(), all_sum, cf9));
+                    s.addCell(new jxl.write.Label(6, 15 + SubOrders.getLength() + 1, "Доставка:", cf8));
+                    s.addCell(new jxl.write.Number(7, 15 + SubOrders.getLength() + 1, delivery_cost, cf9));
+                    s.addCell(new jxl.write.Label(6, 15 + SubOrders.getLength() + 2, "Передплата:", cf8));
+                    s.addCell(new jxl.write.Number(7, 15 + SubOrders.getLength() + 2, ExtendedOrder.getDouble("PREPAY"), cf9));
+                    s.addCell(new jxl.write.Label(6, 15 + SubOrders.getLength() + 2, "Знижка:", cf8));
+                    s.addCell(new jxl.write.Number(7, 15 + SubOrders.getLength() + 2, discount, cf9));
+                    s.addCell(new jxl.write.Label(6, 15 + SubOrders.getLength() + 3, "Борг:", cf8));
+                    s.addCell(new jxl.write.Number(7, 15 + SubOrders.getLength() + 3, debt, cf9));
+
+                    s.addCell(new jxl.write.Label(0, 15 + SubOrders.getLength() + 5, "Всього на суму:", cf10));
+                    all_sum = Math.round((all_sum + delivery_cost) * 100) * 1.0d / 100;
+                    String money = new MoneyToString(all_sum).num2str();
+                    money = money.substring(0, 1).toUpperCase() + money.substring(1);
+                    s.addCell(new jxl.write.Label(0, 15 + SubOrders.getLength() + 6, money, cf11));
+
+                    s.addCell(new jxl.write.Label(1, 15 + SubOrders.getLength() + 10, "Відвантажив ", cf12));
+                    s.addCell(new jxl.write.Label(2, 15 + SubOrders.getLength() + 10, "_________________", cf2));
+                    s.addCell(new jxl.write.Label(5, 15 + SubOrders.getLength() + 10, "Отримав(ла) ", cf12));
+                    s.addCell(new jxl.write.Label(6, 15 + SubOrders.getLength() + 10, "_________________", cf2));
+
+                    workbook.write();
+                    workbook.close();
+                    JOptionPane.showMessageDialog(null, "Документ сохранен в " + selectedFile.getPath() + "\\" + Orders.getString("CLIENT_NAME") + "_" + sdf.format(new Date(Orders.getLong("DATE_TIME"))) + ".xls");
+                } catch (IOException | WriteException | HeadlessException ex) {
+                    JOptionPane.showMessageDialog(null, "Не удалось сохранить документ");
+                }
             }
         }
     }//GEN-LAST:event_jButton108MousePressed
@@ -12052,11 +12067,12 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jRadioButton7ActionPerformed
 
     private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
-        if (jComboBox4.getItemCount()>0) {
+        if (jComboBox4.getItemCount() > 0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
         }
     }//GEN-LAST:event_jComboBox4ActionPerformed
 
@@ -12082,7 +12098,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
-        if (jComboBox5.getItemCount()>0) {
+        if (jComboBox5.getItemCount() > 0) {
             GetDelivery();
             MakeTableOfDelivery();
         }
@@ -12094,9 +12110,9 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
     private void jButton111ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton111ActionPerformed
         int row = jTable20.getSelectedRow();
-        if ((row!=-1) && (row!=jTable20.getRowCount()-1)) {
+        if ((row != -1) && (row != jTable20.getRowCount() - 1)) {
             if (JOptionPane.showConfirmDialog(null, "Удалить запись?", "Удаление записи расхода", JOptionPane.YES_NO_OPTION) == 0) {
-                db.UpdateSQL("DELETE FROM expense WHERE id=?",new Object[]{Expenses.getInt(row,"ID")});
+                db.UpdateSQL("DELETE FROM expense WHERE id=?", new Object[]{Expenses.getInt(row, "ID")});
                 GetExpenses();
                 MakeTableOfExpenses();
             }
@@ -12148,78 +12164,78 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             ChoosedDirectory = chooser.getCurrentDirectory();
             File selectedFile = chooser.getSelectedFile();
             if (selectedFile.isDirectory()) {
-                    try {
-                        WritableWorkbook workbook;
-                        WorkbookSettings ws = new WorkbookSettings();
-                        ws.setLocale(new Locale("ru", "RU"));
-                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() +"\\Клиенты.xls"), ws);
-                        WritableSheet s = workbook.createSheet("клиенты", 0);
-                        
-                        WritableFont wf = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
-                        WritableCellFormat cf = new WritableCellFormat(wf);
-                        cf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN); 
-                        cf.setAlignment(Alignment.CENTRE);
-                        
-                        jxl.write.WritableCellFormat cf2 = new jxl.write.WritableCellFormat();  
-                        cf2.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);  
-                        cf.setAlignment(Alignment.CENTRE);
-              
-                        s.setColumnView(0, 30);
-                        s.setColumnView(1, 20);
-                        s.setColumnView(2, 15);
-                        s.setColumnView(3, 30);
-                        s.setColumnView(4, 30);
-                        s.setColumnView(5, 30);
-                        s.setColumnView(6, 30);
-                        s.setColumnView(7, 30);
-                        s.setColumnView(8, 30);
-                        s.setColumnView(9, 30);
-                        s.setColumnView(10, 30);
-                        s.setColumnView(11, 30);
-                        
-                        for (int i=0;i<jTable10.getColumnCount();i++) {
-                            jxl.write.Label l = new jxl.write.Label(i, 0, jTable10.getColumnName(i), cf);
+                try {
+                    WritableWorkbook workbook;
+                    WorkbookSettings ws = new WorkbookSettings();
+                    ws.setLocale(new Locale("ru", "RU"));
+                    workbook = Workbook.createWorkbook(new File(selectedFile.getPath() + "\\Клиенты.xls"), ws);
+                    WritableSheet s = workbook.createSheet("клиенты", 0);
+
+                    WritableFont wf = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
+                    WritableCellFormat cf = new WritableCellFormat(wf);
+                    cf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                    cf.setAlignment(Alignment.CENTRE);
+
+                    jxl.write.WritableCellFormat cf2 = new jxl.write.WritableCellFormat();
+                    cf2.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                    cf.setAlignment(Alignment.CENTRE);
+
+                    s.setColumnView(0, 30);
+                    s.setColumnView(1, 20);
+                    s.setColumnView(2, 15);
+                    s.setColumnView(3, 30);
+                    s.setColumnView(4, 30);
+                    s.setColumnView(5, 30);
+                    s.setColumnView(6, 30);
+                    s.setColumnView(7, 30);
+                    s.setColumnView(8, 30);
+                    s.setColumnView(9, 30);
+                    s.setColumnView(10, 30);
+                    s.setColumnView(11, 30);
+
+                    for (int i = 0; i < jTable10.getColumnCount(); i++) {
+                        jxl.write.Label l = new jxl.write.Label(i, 0, jTable10.getColumnName(i), cf);
+                        s.addCell(l);
+                    }
+
+                    jxl.write.Label l;
+
+                    for (int j = 0; j < jTable10.getRowCount(); j++) {
+                        String value = jTable10.getValueAt(j, 0).toString();
+                        value = value.replace("<html><font color='gray'>", "");
+                        value = value.replace("<html><font color='blue'>", "");
+                        value = value.replace("</font></html>", "");
+                        System.out.println(value);
+//                            l  = new jxl.write.Label(0, j+1, value, cf2);
+                    }
+
+                    for (int j = 0; j < jTable10.getRowCount(); j++) {
+                        for (int i = 0; i < jTable10.getColumnCount(); i++) {
+                            if (i == 0) {
+                                String value = jTable10.getValueAt(j, i).toString();
+                                value = value.replace("<html><font color='gray'>", "");
+                                value = value.replace("<html><font color='blue'>", "");
+                                value = value.replace("</font></html>", "");
+                                l = new jxl.write.Label(i, j + 1, value, cf2);
+                            } else {
+                                l = new jxl.write.Label(i, j + 1, jTable10.getValueAt(j, i).toString(), cf2);
+                            }
                             s.addCell(l);
                         }
-                        
-                        jxl.write.Label l;
-                        
-                        for (int j=0;j<jTable10.getRowCount();j++) {
-                            String value = jTable10.getValueAt(j, 0).toString();
-                            value = value.replace("<html><font color='gray'>", "");
-                            value = value.replace("<html><font color='blue'>", "");
-                            value = value.replace("</font></html>", "");
-                            System.out.println(value);
-//                            l  = new jxl.write.Label(0, j+1, value, cf2);
-                        }
-                        
-                        for (int j=0;j<jTable10.getRowCount();j++) {
-                            for (int i=0;i<jTable10.getColumnCount();i++) {
-                                if (i==0) {
-                                    String value = jTable10.getValueAt(j, i).toString();
-                                    value = value.replace("<html><font color='gray'>", "");
-                                    value = value.replace("<html><font color='blue'>", "");
-                                    value = value.replace("</font></html>", "");
-                                    l  = new jxl.write.Label(i, j+1, value, cf2);                                    
-                                } else {
-                                    l = new jxl.write.Label(i, j+1, jTable10.getValueAt(j, i).toString(), cf2);
-                                }
-                                s.addCell(l);
-                            }
-                        }
-                        workbook.write();
-                        workbook.close();
-                        JOptionPane.showMessageDialog(null, "Документ сохранен в " + selectedFile.getPath() + "\\Клиенты.xls");
-                    } catch (IOException | WriteException | HeadlessException ex) {
-                        JOptionPane.showMessageDialog(null, "Не удалось сохранить документ");
                     }
+                    workbook.write();
+                    workbook.close();
+                    JOptionPane.showMessageDialog(null, "Документ сохранен в " + selectedFile.getPath() + "\\Клиенты.xls");
+                } catch (IOException | WriteException | HeadlessException ex) {
+                    JOptionPane.showMessageDialog(null, "Не удалось сохранить документ");
                 }
             }
-        
+        }
+
     }//GEN-LAST:event_jButton115ActionPerformed
 
     private void jButton116MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton116MousePressed
-        if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по складу (КОНФЕТЫ) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по складу (КОНФЕТЫ) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             db.UpdateSQL("UPDATE candy SET storage=0, reserved=0", new Object[]{});
             jTabbedPane2StateChanged(null);
             JOptionPane.showMessageDialog(null, "Выполнена очистка склада");
@@ -12234,17 +12250,17 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private void jButton118MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton118MousePressed
         String s = "<html><center>Заказ для склада<br><br><table border='1'>";
         s = s + "<tr>";
-        for (int j = 0; j < jTable22.getColumnCount()-1; j++) {
+        for (int j = 0; j < jTable22.getColumnCount() - 1; j++) {
             s = s + "<td width='80' align='center'>" + jTable22.getModel().getColumnName(j) + "</td>";
         }
         s = s + "</tr>";
         for (int i = 0; i < jTable22.getRowCount(); i++) {
             s = s + "<tr>";
-            for (int j = 0; j < jTable22.getColumnCount()-1; j++) {
+            for (int j = 0; j < jTable22.getColumnCount() - 1; j++) {
                 if (jTable22.getValueAt(i, j) == null) {
                     s = s + "<td></td>";
-                } else if (j==0) { //image
-                    s = s + "<td>" + "<img src='file://localhost/c:/temp/" + Packings.getString((Integer)jTable22.getValueAt(i,5),"FILENAME") + "' width='150px' height='150px'>"+"</td>";
+                } else if (j == 0) { //image
+                    s = s + "<td>" + "<img src='file://localhost/c:/temp/" + Packings.getString((Integer) jTable22.getValueAt(i, 5), "FILENAME") + "' width='150px' height='150px'>" + "</td>";
                 } else {
                     s = s + "<td>" + jTable22.getValueAt(i, j) + "</td>";
                 }
@@ -12252,10 +12268,10 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             s = s + "</tr>";
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        s = s + "</table><br><br></center>Дата: "+sdf.format(Calendar.getInstance().getTime())+"<br>Пользователь: "+CurrentUser.getString("NAME")+"<br></html>";
+        s = s + "</table><br><br></center>Дата: " + sdf.format(Calendar.getInstance().getTime()) + "<br>Пользователь: " + CurrentUser.getString("NAME") + "<br></html>";
         JEditorPane ep = new JEditorPane();
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        ep.setFont(new Font("Arial",Font.PLAIN,8));
+        ep.setFont(new Font("Arial", Font.PLAIN, 8));
         ep.setEditorKit(new HTMLEditorKit());
         ep.setText(s);
         try {
@@ -12275,77 +12291,77 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             ChoosedDirectory = chooser.getCurrentDirectory();
             File selectedFile = chooser.getSelectedFile();
             if (selectedFile.isDirectory()) {
-                    try {
-                        WritableWorkbook workbook;
-                        WorkbookSettings ws = new WorkbookSettings();
-                        ws.setLocale(new Locale("ru", "RU"));
-                        workbook = Workbook.createWorkbook(new File(selectedFile.getPath() +"\\заказ_упаковки_для_склада.xls"), ws);
-                        WritableSheet s = workbook.createSheet("заказ упаковки для склада", 0);
-                        
-                        WritableFont wf = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
-                        WritableCellFormat cf = new WritableCellFormat(wf);
-                        cf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN); 
-                        cf.setAlignment(Alignment.CENTRE);
-                        
-                        jxl.write.WritableCellFormat cf2 = new jxl.write.WritableCellFormat();  
-                        cf2.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);  
-                        cf.setAlignment(Alignment.CENTRE);
-              
-                        s.setColumnView(0, 10);
-                        s.setColumnView(1, 30);
-                        s.setColumnView(2, 20);
-                        s.setColumnView(3, 20);
-                        s.setColumnView(4, 20);
-                        
-                        for (int i=0;i<jTable22.getColumnCount()-1;i++) {
-                            String value = jTable22.getColumnName(i);
-                            value = value.replace("<html>&Sigma; ", "");
-                            value = value.replace("</html>", "");
-                            jxl.write.Label l = new jxl.write.Label(i, 0, value, cf);
-                            s.addCell(l);
-                        }
-                        
-                        jxl.write.Label l;
-                        
-                        for (int j=0;j<jTable22.getRowCount();j++) {
-                            for (int i=0;i<jTable22.getColumnCount()-1;i++) {
-                                if (i==0) { //image
-                                    if (jTable22.getValueAt(j,i)==null) {
-                                        s.setRowView(j, 1000);
-                                        continue;
-                                    }
-                                    String fileName = Packings.getString((Integer)jTable22.getValueAt(j,5),"FILENAME");
-                                    File imageFile = new File("c:\\temp\\" + fileName);
-                                    BufferedImage input = ImageIO.read(imageFile);
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    ImageIO.write(input,"PNG",baos);
-                                    jxl.write.WritableImage im = new jxl.write.WritableImage(i,j+1,1,1,baos.toByteArray());
-                                    l  = new jxl.write.Label(i, j+1, "", cf2);                                    
-                                    s.addCell(l);
-                                    s.addImage(im);
+                try {
+                    WritableWorkbook workbook;
+                    WorkbookSettings ws = new WorkbookSettings();
+                    ws.setLocale(new Locale("ru", "RU"));
+                    workbook = Workbook.createWorkbook(new File(selectedFile.getPath() + "\\заказ_упаковки_для_склада.xls"), ws);
+                    WritableSheet s = workbook.createSheet("заказ упаковки для склада", 0);
+
+                    WritableFont wf = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
+                    WritableCellFormat cf = new WritableCellFormat(wf);
+                    cf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                    cf.setAlignment(Alignment.CENTRE);
+
+                    jxl.write.WritableCellFormat cf2 = new jxl.write.WritableCellFormat();
+                    cf2.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                    cf.setAlignment(Alignment.CENTRE);
+
+                    s.setColumnView(0, 10);
+                    s.setColumnView(1, 30);
+                    s.setColumnView(2, 20);
+                    s.setColumnView(3, 20);
+                    s.setColumnView(4, 20);
+
+                    for (int i = 0; i < jTable22.getColumnCount() - 1; i++) {
+                        String value = jTable22.getColumnName(i);
+                        value = value.replace("<html>&Sigma; ", "");
+                        value = value.replace("</html>", "");
+                        jxl.write.Label l = new jxl.write.Label(i, 0, value, cf);
+                        s.addCell(l);
+                    }
+
+                    jxl.write.Label l;
+
+                    for (int j = 0; j < jTable22.getRowCount(); j++) {
+                        for (int i = 0; i < jTable22.getColumnCount() - 1; i++) {
+                            if (i == 0) { //image
+                                if (jTable22.getValueAt(j, i) == null) {
                                     s.setRowView(j, 1000);
-                                } else {
-                                    String value = jTable22.getValueAt(j, i).toString();
-                                    value = value.replace("<html><font color='#C80000'><b>", "");
-                                    value = value.replace("</b></font></html>", "");
-                                    l  = new jxl.write.Label(i, j+1, value, cf2);                                    
-                                    s.addCell(l);
+                                    continue;
                                 }
+                                String fileName = Packings.getString((Integer) jTable22.getValueAt(j, 5), "FILENAME");
+                                File imageFile = new File("c:\\temp\\" + fileName);
+                                BufferedImage input = ImageIO.read(imageFile);
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                ImageIO.write(input, "PNG", baos);
+                                jxl.write.WritableImage im = new jxl.write.WritableImage(i, j + 1, 1, 1, baos.toByteArray());
+                                l = new jxl.write.Label(i, j + 1, "", cf2);
+                                s.addCell(l);
+                                s.addImage(im);
+                                s.setRowView(j, 1000);
+                            } else {
+                                String value = jTable22.getValueAt(j, i).toString();
+                                value = value.replace("<html><font color='#C80000'><b>", "");
+                                value = value.replace("</b></font></html>", "");
+                                l = new jxl.write.Label(i, j + 1, value, cf2);
+                                s.addCell(l);
                             }
                         }
-                        workbook.write();
-                        workbook.close();
-                        JOptionPane.showMessageDialog(null, "Документ сохранен в " + selectedFile.getPath() + "\\заказ_упаковки_для_склада.xls");
-                    } catch (IOException | WriteException | HeadlessException ex) {
-                        JOptionPane.showMessageDialog(null, "Не удалось сохранить документ");
                     }
+                    workbook.write();
+                    workbook.close();
+                    JOptionPane.showMessageDialog(null, "Документ сохранен в " + selectedFile.getPath() + "\\заказ_упаковки_для_склада.xls");
+                } catch (IOException | WriteException | HeadlessException ex) {
+                    JOptionPane.showMessageDialog(null, "Не удалось сохранить документ");
                 }
             }
+        }
     }//GEN-LAST:event_jButton119MousePressed
 
     private void jButton121MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton121MousePressed
         String s = JOptionPane.showInputDialog("Введите имя новой папки");
-        if (s!=null) {
+        if (s != null) {
             if (db.UpdateSQL("INSERT INTO folder(name) VALUES(?)", new Object[]{s})) {
                 JOptionPane.showMessageDialog(null, "Папка успешно создана");
                 GetFolders();
@@ -12357,12 +12373,12 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private void jTree3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree3MouseDragged
         if (!clientDraggedInClientsTree) {
             DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree3.getLastSelectedPathComponent();
-            if (SelectedNode != null && SelectedNode.getLevel()==2) {
+            if (SelectedNode != null && SelectedNode.getLevel() == 2) {
                 jTree3.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                draggedClientID = (int)Clients.get((int)((Object[])SelectedNode.getUserObject())[1],"ID");
-                draggedClientName = (String)((Object[])SelectedNode.getUserObject())[0];
-                draggedFromFolderID = (int)((Object[])(((DefaultMutableTreeNode)SelectedNode.getParent()).getUserObject()))[0];
-                draggedFromFolderName = (String)((Object[])(((DefaultMutableTreeNode)SelectedNode.getParent()).getUserObject()))[1];
+                draggedClientID = (int) Clients.get((int) ((Object[]) SelectedNode.getUserObject())[1], "ID");
+                draggedClientName = (String) ((Object[]) SelectedNode.getUserObject())[0];
+                draggedFromFolderID = (int) ((Object[]) (((DefaultMutableTreeNode) SelectedNode.getParent()).getUserObject()))[0];
+                draggedFromFolderName = (String) ((Object[]) (((DefaultMutableTreeNode) SelectedNode.getParent()).getUserObject()))[1];
                 clientDraggedInClientsTree = true;
             }
         }
@@ -12370,18 +12386,18 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
     private void jTree3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree3MouseReleased
         if (clientDraggedInClientsTree) {
-            jTree3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));            
-            DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode)jTree3.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
-            if (SelectedNode!=null && SelectedNode.getLevel()!=0) {
+            jTree3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            DefaultMutableTreeNode SelectedNode = (DefaultMutableTreeNode) jTree3.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
+            if (SelectedNode != null && SelectedNode.getLevel() != 0) {
                 String draggedToFolderName = "";
-                if (SelectedNode.getLevel()==1) { //папка
-                    draggedToFolderID = (int)((Object[])SelectedNode.getUserObject())[0];
-                    draggedToFolderName = (String)((Object[])SelectedNode.getUserObject())[1];
-                } else if (SelectedNode.getLevel()==2) { //клиент в папке
-                    draggedToFolderID = (int)((Object[])((DefaultMutableTreeNode)SelectedNode.getParent()).getUserObject())[0];
-                    draggedToFolderName = (String)((Object[])((DefaultMutableTreeNode)SelectedNode.getParent()).getUserObject())[1];
+                if (SelectedNode.getLevel() == 1) { //папка
+                    draggedToFolderID = (int) ((Object[]) SelectedNode.getUserObject())[0];
+                    draggedToFolderName = (String) ((Object[]) SelectedNode.getUserObject())[1];
+                } else if (SelectedNode.getLevel() == 2) { //клиент в папке
+                    draggedToFolderID = (int) ((Object[]) ((DefaultMutableTreeNode) SelectedNode.getParent()).getUserObject())[0];
+                    draggedToFolderName = (String) ((Object[]) ((DefaultMutableTreeNode) SelectedNode.getParent()).getUserObject())[1];
                 }
-                if (draggedToFolderID!=draggedFromFolderID) {
+                if (draggedToFolderID != draggedFromFolderID) {
                     clientDraggedInClientsTree = false;
                     createWindowAfterDragClient(draggedToFolderName);
                 }
@@ -12390,7 +12406,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jTree3MouseReleased
 
     private void jButton126MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton126MousePressed
-        if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по складу (УПАКОВКА) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по складу (УПАКОВКА) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             db.UpdateSQL("UPDATE packing SET storage=0, reserved=0", new Object[]{});
             jTabbedPane2StateChanged(null);
             JOptionPane.showMessageDialog(null, "Выполнена очистка склада");
@@ -12412,21 +12428,21 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         if (jLabel129.isEnabled()) {
             while (true) {
                 String s = JOptionPane.showInputDialog(null, "Введите новый пароль");
-                if (s==null) {
+                if (s == null) {
                     break;
                 }
                 try {
                     MessageDigest digest = MessageDigest.getInstance("MD5");
                     digest.update(s.getBytes());
-                    if (db.UpdateSQL("UPDATE user SET finance_pass=? WHERE id=?", new Object[]{new String(digest.digest()),Users.getInt("ID")})) {
-                        if (Users.getInt("ID")==CurrentUser.getInt("ID")) {
-                            CurrentUser.set(db.SelectSQL("SELECT * FROM user WHERE login=? AND pass=?",new Object[]{CurrentUser.getString("LOGIN"),CurrentUser.getString("PASS")}));
+                    if (db.UpdateSQL("UPDATE user SET finance_pass=? WHERE id=?", new Object[]{new String(digest.digest()), Users.getInt("ID")})) {
+                        if (Users.getInt("ID") == CurrentUser.getInt("ID")) {
+                            CurrentUser.set(db.SelectSQL("SELECT * FROM user WHERE login=? AND pass=?", new Object[]{CurrentUser.getString("LOGIN"), CurrentUser.getString("PASS")}));
                         }
                         JOptionPane.showMessageDialog(null, "Пароль изменен");
                         break;
                     }
                 } catch (NoSuchAlgorithmException | HeadlessException ex) {
-                }        
+                }
             }
         }
     }//GEN-LAST:event_jLabel129MousePressed
@@ -12462,28 +12478,28 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
     private void jComboBox9ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox9ItemStateChanged
         GetClients(jToggleButton5.isSelected());
-        MakeTreeOfClients();              
+        MakeTreeOfClients();
     }//GEN-LAST:event_jComboBox9ItemStateChanged
 
     private void jButton129ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton129ActionPerformed
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)jTree3.getLastSelectedPathComponent();
-        if (selectedNode!=null && selectedNode.getLevel()==1) {
-            Object[] obj = (Object[])selectedNode.getUserObject();
-            int folderID = (int)obj[0];
-            String currentName = (String)obj[1];
-            
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree3.getLastSelectedPathComponent();
+        if (selectedNode != null && selectedNode.getLevel() == 1) {
+            Object[] obj = (Object[]) selectedNode.getUserObject();
+            int folderID = (int) obj[0];
+            String currentName = (String) obj[1];
+
             while (true) {
-                String s = JOptionPane.showInputDialog("Введите новое название папки",currentName);
-                if (s==null) {
+                String s = JOptionPane.showInputDialog("Введите новое название папки", currentName);
+                if (s == null) {
                     break;
                 }
                 if (!s.isEmpty()) {
-                    db.UpdateSQL("UPDATE folder SET name=? WHERE id=?", new Object[]{s,folderID});
+                    db.UpdateSQL("UPDATE folder SET name=? WHERE id=?", new Object[]{s, folderID});
                     GetFolders();
                     MakeTreeOfClients();
                     break;
                 }
-            }         
+            }
         }
     }//GEN-LAST:event_jButton129ActionPerformed
 
@@ -12491,7 +12507,8 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         try {
             GetClients(jToggleButton5.isSelected());
             MakeTreeOfClients();
-        } catch (Exception ex) {}        
+        } catch (Exception ex) {
+        }
     }//GEN-LAST:event_jComboBox10ItemStateChanged
 
     private void jTextField50KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField50KeyReleased
@@ -12520,7 +12537,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jTextField49KeyReleased
 
     private void jComboBox12ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox12ItemStateChanged
-        if (jComboBox12.getSelectedIndex()==STORAGE_WORKER_PACKER) {
+        if (jComboBox12.getSelectedIndex() == STORAGE_WORKER_PACKER) {
             int selectedIndex = jComboBox13.getSelectedIndex();
             fillListBrigadiers();
             jComboBox13.setSelectedIndex(selectedIndex);
@@ -12551,20 +12568,22 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jButton19ActionPerformed
 
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
-        if (jComboBox6.getItemCount()>0) {
+        if (jComboBox6.getItemCount() > 0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
         }
     }//GEN-LAST:event_jComboBox6ActionPerformed
 
     private void jComboBoxPaymentTypesOrderListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPaymentTypesOrderListActionPerformed
-        if (jComboBoxPaymentTypesOrderList.getItemCount()>0) {
+        if (jComboBoxPaymentTypesOrderList.getItemCount() > 0) {
             try {
                 GetOrders();
                 MakeTableOfOrders();
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
         }
     }//GEN-LAST:event_jComboBoxPaymentTypesOrderListActionPerformed
 
@@ -12582,31 +12601,31 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jTextField37ActionPerformed
 
     private void jTextField53KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField53KeyReleased
-        filterName = jTextField53.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField53.getText()+"%'";
+        filterName = jTextField53.getText().isEmpty() ? "" : " AND candy.name LIKE '" + jTextField53.getText() + "%'";
         GetCandies(jToggleButton1.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton2.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandies();
     }//GEN-LAST:event_jTextField53KeyReleased
 
     private void jTextField54KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField54KeyReleased
-        filterName = jTextField54.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField54.getText()+"%'";
+        filterName = jTextField54.getText().isEmpty() ? "" : " AND candy.name LIKE '" + jTextField54.getText() + "%'";
         GetCandies(jToggleButton3.isSelected() ? CandiesOrder.ALPHABET : (jToggleButton4.isSelected() ? CandiesOrder.COST : CandiesOrder.RELATIVE_COST));
         MakeTreeOfCandiesForGift();
     }//GEN-LAST:event_jTextField54KeyReleased
 
     private void jTextField55KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField55KeyReleased
-        filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField55.getText()+"%'";
+        filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '" + jTextField55.getText() + "%'";
         GetCandies(jToggleButton9.isSelected() ? CandiesOrder.ALPHABET : CandiesOrder.COST);
         MakeTreeOfCandiesInStorage();
     }//GEN-LAST:event_jTextField55KeyReleased
 
     private void jToggleButton9StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton9StateChanged
-        filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField55.getText()+"%'";
+        filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '" + jTextField55.getText() + "%'";
         GetCandies(jToggleButton9.isSelected() ? CandiesOrder.ALPHABET : CandiesOrder.COST);
         MakeTreeOfCandies();
     }//GEN-LAST:event_jToggleButton9StateChanged
 
     private void jToggleButton10StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton10StateChanged
-        filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '"+jTextField55.getText()+"%'";
+        filterName = jTextField55.getText().isEmpty() ? "" : " AND candy.name LIKE '" + jTextField55.getText() + "%'";
         GetCandies(jToggleButton9.isSelected() ? CandiesOrder.ALPHABET : CandiesOrder.COST);
         MakeTreeOfCandies();
     }//GEN-LAST:event_jToggleButton10StateChanged
@@ -12630,11 +12649,12 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jComboBox16ItemStateChanged
 
     private void jComboBoxDeliveryPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDeliveryPaymentActionPerformed
-        if (jComboBoxDeliveryPayment.getItemCount()>0) {
+        if (jComboBoxDeliveryPayment.getItemCount() > 0) {
             try {
                 GetDelivery();
                 MakeTableOfDelivery();
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
         }
     }//GEN-LAST:event_jComboBoxDeliveryPaymentActionPerformed
 
@@ -12657,8 +12677,8 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_jTextField60KeyReleased
 
     private void jButton120MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton120MousePressed
-        if (jTabbedPane2.getSelectedIndex()==0) {
-            if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по выбранной позиции (КОНФЕТЫ) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+        if (jTabbedPane2.getSelectedIndex() == 0) {
+            if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по выбранной позиции (КОНФЕТЫ) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 Object[] obj = (Object[]) ((DefaultMutableTreeNode) jTree10.getLastSelectedPathComponent()).getUserObject();
                 int id = Candies.getInt((Integer) obj[1], "ID");
                 db.UpdateSQL("UPDATE candy SET storage=0, reserved=0 WHERE id=?", new Object[]{id});
@@ -12666,15 +12686,15 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 jTabbedPane2StateChanged(null);
             }
         } else {
-            if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по выбранной позиции (УПАКОВКА) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+            if (JOptionPane.showConfirmDialog(null, "Остатки и резерв по выбранной позиции (УПАКОВКА) будут очищены.\nДанное действие нельзя будет отменить.\nПродолжить?", "Очистка склада", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 Object[] obj2 = (Object[]) ((DefaultMutableTreeNode) jTree11.getLastSelectedPathComponent()).getUserObject();
                 int id2 = FilteredPackings.getInt((Integer) obj2[1], "ID");
                 db.UpdateSQL("UPDATE packing SET storage=0, reserved=0 WHERE id=?", new Object[]{id2});
                 JOptionPane.showMessageDialog(null, "Выполнена очистка одной позиции (УПАКОВКА)");
                 jTabbedPane2StateChanged(null);
-            }             
-        }        
-        
+            }
+        }
+
     }//GEN-LAST:event_jButton120MousePressed
 
     private void jButtonSaveOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveOrderActionPerformed
@@ -12893,7 +12913,6 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JLabel jLabel132;
     private javax.swing.JLabel jLabel133;
     private javax.swing.JLabel jLabel134;
-    private javax.swing.JLabel jLabel135;
     private javax.swing.JLabel jLabel136;
     private javax.swing.JLabel jLabel137;
     private javax.swing.JLabel jLabel138;
@@ -12996,6 +13015,7 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private javax.swing.JLabel jLabel97;
     private javax.swing.JLabel jLabel98;
     private javax.swing.JLabel jLabel99;
+    private javax.swing.JLabel jLabelManager;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
@@ -13441,6 +13461,5 @@ private void jButton81MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     */
     private PackingsTree jTree6;
     // End of variables declaration//GEN-END:variables
-
 
 }
