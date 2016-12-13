@@ -428,7 +428,7 @@ public class MainForm extends javax.swing.JApplet {
        
        FTP.setParameters(Constants.getString("FTPaddress"),Constants.getString("FTPpass"));
        if (!FTP.setConnectionToFTP()) {
-            JOptionPane.showMessageDialog(null, "Невозможно соединиться с FTP-сервером");
+//            JOptionPane.showMessageDialog(null, "Невозможно соединиться с FTP-сервером");
        }
        
        try {
